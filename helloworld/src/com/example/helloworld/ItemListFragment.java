@@ -3,6 +3,7 @@ package com.example.helloworld;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -10,6 +11,7 @@ import android.widget.ListView;
 import com.example.helloworld.dummy.DummyContent;
 
 /**
+ * 定义首页的列表元素listView.
  * A list fragment representing a list of Items. This fragment also supports
  * tablet devices by allowing list items to be given an 'activated' state upon
  * selection. This helps indicate which item is currently being viewed in a
@@ -19,7 +21,7 @@ import com.example.helloworld.dummy.DummyContent;
  * interface.
  */
 public class ItemListFragment extends ListFragment {
-
+	public static final String TAG = "ItemListFragment";
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
@@ -69,8 +71,8 @@ public class ItemListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// TODO: replace with a real list adapter.
+		Log.i(TAG, "on onCreate method...");
+		
 		setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
 				android.R.layout.simple_list_item_activated_1,
 				android.R.id.text1, DummyContent.ITEMS));
@@ -79,7 +81,8 @@ public class ItemListFragment extends ListFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
+		
+		Log.i(TAG, "on onViewCreated...");
 		// Restore the previously serialized activated item position.
 		if (savedInstanceState != null
 				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
