@@ -1,4 +1,4 @@
-package com.example.helloworld.dummy;
+package com.exam.slieer.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.example.helloworld;
+package com.exam.slieer;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.helloworld.dummy.DummyContent;
+import com.exam.slieer.dummy.DummyContent;
+import com.example.helloworld.R;
 
 /**
  * A fragment representing a single Item detail screen. This fragment is either

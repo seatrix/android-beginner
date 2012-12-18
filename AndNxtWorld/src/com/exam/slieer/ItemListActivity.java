@@ -1,4 +1,6 @@
-package com.example.helloworld;
+package com.exam.slieer;
+
+import com.example.helloworld.R;
 
 import android.content.Intent;
 import android.os.Bundle;

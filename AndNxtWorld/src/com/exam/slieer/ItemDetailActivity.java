@@ -1,4 +1,4 @@
-package com.example.helloworld;
+/*package com.exam.slieer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,14 +7,14 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
-/**
+*//**
  * An activity representing a single Item detail screen. This activity is only
  * used on handset devices. On tablet-size devices, item details are presented
  * side-by-side with a list of items in a {@link ItemListActivity}.
  * <p>
  * This activity is mostly just a 'shell' activity containing nothing more than
  * a {@link ItemDetailFragment}.
- */
+ *//*
 public class ItemDetailActivity extends FragmentActivity {
 	private static String TAG = "itemDetail"; 
 	@Override
@@ -64,3 +64,4 @@ public class ItemDetailActivity extends FragmentActivity {
 		return super.onOptionsItemSelected(item);
 	}
 }
+*/

@@ -1,4 +1,4 @@
-package com.example.helloworld;
+package com.exam.slieer;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.helloworld.dummy.DummyContent;
+import com.exam.slieer.dummy.DummyContent;
 
 /**
  * 定义首页的列表元素listView.
