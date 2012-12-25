@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="GetLocalGroupsMap.java|NtlmHttpAuthExample.java|SmbShell.java" kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/File Explorer/libs/jcifs-1.3.17.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
