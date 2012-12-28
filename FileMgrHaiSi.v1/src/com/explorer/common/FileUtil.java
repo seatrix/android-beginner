@@ -77,7 +77,7 @@ public class FileUtil {
     // new add edittext
     private EditText myEditText;
 
-    private static boolean mIsSupportBD = false;
+    private static boolean mIsSupportBD = true;
 
     /**
      *
@@ -144,7 +144,7 @@ public class FileUtil {
         String type = "";
         String fName = f.getName();
 
-        try
+/*        try
         {
             mea.getPackageManager().getPackageInfo("com.hisilicon.hibdplayer", PackageManager.GET_ACTIVITIES);
             mIsSupportBD = true;
@@ -154,7 +154,7 @@ public class FileUtil {
             Log.e(TAG, "HiBDPlayer not found");
             mIsSupportBD = false;
         }
-
+*/
         if (mIsSupportBD)
         {
             fName = f.getAbsolutePath();
@@ -216,7 +216,7 @@ public class FileUtil {
         String type = "";
         String fName = fileName;
 
-        try
+/*        try
         {
             mea.getPackageManager().getPackageInfo("com.hisilicon.hibdplayer", PackageManager.GET_ACTIVITIES);
             mIsSupportBD = true;
@@ -226,7 +226,7 @@ public class FileUtil {
             Log.e(TAG, "HiBDPlayer not found");
             mIsSupportBD = false;
         }
-
+*/
         if (mIsSupportBD)
         {
             if (mx.getBDInfo().isBDFile(fName))

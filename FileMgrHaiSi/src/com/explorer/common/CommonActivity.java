@@ -3,7 +3,6 @@ package com.explorer.common;
 import com.explorer.R;
 import com.explorer.activity.FileMenu;
 import com.explorer.activity.TabBarExample;
-import com.explorer.bd.BDInfo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,7 +10,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -320,20 +318,8 @@ public abstract class CommonActivity extends Activity {
     /*CNcomment:获得文件列表*/
     public abstract void getFiles(String path);
 
-    // 主要判断网络是否断开
-    private ConnectivityManager mConnectivityManager = null;
-
-    private BDInfo mBDInfo;
-    
-    /**
-     * 是否存在hisi的播放器？
-     */
-    protected boolean mIsSupportBD = true;
-
-    protected String mBDISOName = "";
-
-    protected String mBDISOPath = "";
-
+	// 主要判断网络是否断开
+	private ConnectivityManager mConnectivityManager = null;
     // close Toast
     public static void cancleToast() {
         if (FileUtil.getToast() != null) {
@@ -366,56 +352,23 @@ public abstract class CommonActivity extends Activity {
         arrayDir = new ArrayList<File>();
 
         listFile = new ArrayList<File>();
-        mConnectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-
-        mBDInfo = new BDInfo();
-
-/*        try
-        {
-            this.getPackageManager().getPackageInfo("com.hisilicon.hibdplayer", PackageManager.GET_ACTIVITIES);
-            mIsSupportBD = true;
-        }
-        catch (Exception e)
-        {
-            Log.e(TAG, "HiBDPlayer not found");
-            mIsSupportBD = false;
-        }
-*/    }
-
-    protected BDInfo getBDInfo()
-    {
-        return mBDInfo;
+		mConnectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
     }
 
-    protected void launchHiBDPlayer(String path)
-    {
-        Intent intent = new Intent();
-        intent.setData(Uri.parse("bluray://"));
-        intent.putExtra("path", path);
-        intent.putExtra("isNetworkFile", isNetworkFile);
-        int index = mBDISOName.lastIndexOf(".");
-        if (index != -1)
-        {
-            intent.putExtra("BDISOName", mBDISOName.substring(0, index));
-        }
-        intent.putExtra("BDISOPath", mBDISOPath);
-        startActivity(intent);
-    }
-
-    /* 判断网络是否关闭 */
+	/* 判断网络是否关闭 */
     public boolean IsNetworkDisconnect() {
-        boolean bDisconnect = false;
-        if (null != mConnectivityManager) {
-            NetworkInfo tmpInfo = mConnectivityManager.getActiveNetworkInfo();
-            if ((null == tmpInfo) || (false == tmpInfo.isConnected())) {
-                Toast.makeText(this,
-                        getString(R.string.network_error_notbrowse),
-                        Toast.LENGTH_LONG).show();
-                bDisconnect = true;
-            }
-        }
-        return bDisconnect;
-    }
+		boolean bDisconnect = false;
+		if (null != mConnectivityManager) {
+			NetworkInfo tmpInfo = mConnectivityManager.getActiveNetworkInfo();
+			if ((null == tmpInfo) || (false == tmpInfo.isConnected())) {
+				Toast.makeText(this,
+						getString(R.string.network_error_notbrowse),
+						Toast.LENGTH_LONG).show();
+				bDisconnect = true;
+			}
+		}
+		return bDisconnect;
+	}
     /*open the file method*/
     /*CNcomment: 打开文件方法*/
 
@@ -425,7 +378,7 @@ public abstract class CommonActivity extends Activity {
         Intent intent = new Intent();
         String type = "*/*";
         type = FileUtil.getMIMEType(f, activity);
-      Log.i(TAG, "type:" + type);
+        Log.i(TAG, "type:" + type);
 //        if (activity.getIntent().getBooleanExtra("subFlag", false))
 //        {
 //            intent.setClassName("com.huawei.activity",
@@ -436,11 +389,11 @@ public abstract class CommonActivity extends Activity {
 //            activity.finish();
 //            return;
 //        }
-//        else
+//        else 
         if (type.equals("audio/*")) {
-//            intent.setClassName("com.android.music",
-//                    "com.android.music.MediaPlaybackActivity");
-//            intent.setDataAndType(Uri.fromFile(f), type);
+//			intent.setClassName("com.android.music",
+//					"com.android.music.MediaPlaybackActivity");
+//			intent.setDataAndType(Uri.fromFile(f), type);
 //                        intent.putExtra("sortCount", sortCount);
             intent.setType(type);
             intent.setAction(Intent.ACTION_VIEW);
@@ -459,25 +412,22 @@ public abstract class CommonActivity extends Activity {
 //            intent.setClassName("com.huawei.activity",
 //                    "com.huawei.activity.MediaFileListService");
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        	
+//            intent.setDataAndType(Uri.fromFile(f), type);
+//            intent.putExtra("sortCount", sortCount);
+//            activity.startService(intent);
+//            return;
             intent.setType(type);
             intent.setAction(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.fromFile(f), type);
-
-            //intent.setDataAndType(Uri.fromFile(f), type);
-            intent.putExtra("sortCount", sortCount);
-            //activity.startService(intent);
-            //return;
         } else if (type.equals("apk/*")) {
             intent.setClassName("com.android.packageinstaller",
                     "com.android.packageinstaller.PackageInstallerActivity");
             intent.setDataAndType(Uri.fromFile(f),
                     "application/vnd.android.package-archive");
         } else if (f.getAbsolutePath().toLowerCase().contains(".bdmv")) {
-/*            if (mIsSupportBD) {
-                launchHiBDPlayer(f.getAbsolutePath());
-            }
-*/            //return;
+            intent.setData(Uri.parse("bluray://"));
+            intent.putExtra("path", f.getAbsolutePath());
+            intent.putExtra("isNetworkFile", isNetworkFile);
         } else {
             /*if (activity.getIntent().getBooleanExtra("subFlag", false)) {
                 intent.setClassName("com.huawei.activity",
@@ -961,19 +911,19 @@ public abstract class CommonActivity extends Activity {
      */
     public void chmodFile(String path) {
         //BEGIN : modify by z00120637
-//        Log.e(TAG,"==== chmodFile path=="+path);
-//        socketClient = new SocketClient(this, false);
-//        if (null != socketClient)
-//        {
-//            try
-//            {
+//    	Log.e(TAG,"==== chmodFile path=="+path);
+//    	socketClient = new SocketClient(this, false);
+//    	if (null != socketClient)
+//    	{
+//    		try
+//    		{
 //              socketClient.writeMess("system /system/busybox/bin/chmod 777 " +tranString(path));
 //              socketClient.readNetResponseSync();
-//            }catch(Exception e)
-//            {
-//                Log.e(TAG,"=== chmodFile e="+e);
-//            }
-//        }
+//    		}catch(Exception e)
+//    		{
+//    			Log.e(TAG,"=== chmodFile e="+e);
+//    		}
+//    	}
         //END : modify
     }
     // end add by qian_wei/zhou_yong 2011/10/20
