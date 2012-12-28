@@ -70,6 +70,7 @@
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
         </activity>
+<!-- 
         <activity
             android:name=".remote.smb.SmbMainActivity" 
        		android:exported="false"
@@ -86,6 +87,7 @@
        		android:launchMode="singleTask"
        		>
         </activity>
+ -->
         
         <meta-data
             android:name="android.app.default_searchable"

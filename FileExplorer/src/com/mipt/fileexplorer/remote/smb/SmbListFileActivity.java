@@ -1,41 +1,56 @@
 package com.mipt.fileexplorer.remote.smb;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.mipt.fileexplorer.R;
+import com.mipt.fileexplorer.local.FileExplorerTabActivity.IBackPressedListener;
 
-public class SmbListFileActivity extends Activity {
+public class SmbListFileActivity extends Fragment  implements IBackPressedListener{
 	public static final String TAG = "SmbListFileActivity";
-	private Handler handler;
-	private Runnable runnable;
-
+	private Activity mActivity;
+	private View mRootView;
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.smb_file_list);
-		ListView listView = (ListView) findViewById(R.id.list_view);
-		ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		Log.i(TAG, "init Smb.List.File.Activity....");
+		Log.i(TAG, "replication output info....");
+        mActivity = getActivity();
+        
+        mRootView = inflater.inflate(R.layout.smb_file_list, container, false);
+        ListView listView = (ListView)mRootView.findViewById(R.id.list_view);
+		ProgressBar progressBar = (ProgressBar) mRootView.findViewById(R.id.progress_bar);
 
-		String url = getIntent().getStringExtra("url");
+		String url = (String)getArguments().get("url");
 		Log.i(TAG, "visit remote computer by NTLM... url:" + url);
+		Log.i(TAG, "listView:" + listView );
 
-		handler = new SmbAsynFileAdapter.BakFileHandler(this, progressBar,
+		Handler handler = new SmbAsynFileAdapter.BakFileHandler(mActivity, progressBar,
 				listView);
-		runnable = new SmbAsynFileAdapter.BakFileRunnable(handler, url);
-		new Thread().start();
+		Runnable runnable = new SmbAsynFileAdapter.BakFileRunnable(handler, url);
+		new Thread(runnable).start();
 
 		// OnItemClickListener listener = new OnItemClick(this);
 		// listView.setOnItemClickListener(listener);
+		
+		return mRootView;
 	}
 
 	@Override
-	protected void onDestroy() {
-		handler.removeCallbacks(runnable);
-		super.onDestroy();
+	public boolean onBack() {
+		return false;
 	}
 }

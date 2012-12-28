@@ -4,15 +4,16 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jcifs.smb.SmbFile;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -79,9 +80,9 @@ public class SmbAsynLanBrowserAdpter {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case Constants.GUI_THREADING_NOTIIER:
-				//bar.setVisibility(View.VISIBLE);
+				bar.setVisibility(View.VISIBLE);
 				if(msg.obj != null){
-					Log.i(TAG, "obtain Msg:" + msg.obj.toString());
+					//Log.i(TAG, "obtain Msg:" + msg.obj.toString());
 					LanNodeInfo nodeInfo = (LanNodeInfo) msg.obj;
 					
 					if(listView.getAdapter() == null){
@@ -90,7 +91,7 @@ public class SmbAsynLanBrowserAdpter {
 								.LanBrowserAdapter(act, nodeInfoList));
 						
 					}else {
-						Log.i(TAG, "add ...listadapter.");
+						//Log.i(TAG, "add ...listadapter.");
 						nodeInfoList.add(nodeInfo);
 						((ArrayAdapter<LanNodeInfo>)listView.getAdapter()).notifyDataSetChanged();
 						listView.setSelection(0);
@@ -100,6 +101,7 @@ public class SmbAsynLanBrowserAdpter {
 				break;
 			case Constants.GUI_STOP_NOTIFIER:
 				listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+				bar.setVisibility(View.GONE);
 /*				bar.setVisibility(View.GONE);
 				if(msg.obj != null){
 					@SuppressWarnings("unchecked")
@@ -163,6 +165,7 @@ public class SmbAsynLanBrowserAdpter {
 					}
 				}
 				Log.i(TAG, "scan finish ! comsume time:" + (System.currentTimeMillis() - start));
+				
 				m = handler.obtainMessage();
 				m.what = Constants.GUI_STOP_NOTIFIER;
 /*				if(list != null){
@@ -220,10 +223,19 @@ public class SmbAsynLanBrowserAdpter {
 					
 	        		String url = SmbUtils.URL_SHOW_LAN_NODE + name + ":" + passwd + "@" + ip + "/";
 	        		Log.i(TAG, "smb url:" + url + ", call SmbListFileActivity...");
-	        		Intent intent = new Intent();
-					intent.setClass(activity, SmbListFileActivity.class);
-	        		intent.putExtra("url", url);
-	        		activity.startActivity(intent);
+	        		
+	        		activity.getActionBar()
+					FragmentManager fragmentManager = activity.getFragmentManager(); 
+					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction(); 
+					SmbListFileActivity fragment = new SmbListFileActivity();
+					
+					Bundle bundle = new Bundle();  
+					bundle.putString("url", url);  
+					fragment.setArguments(bundle);  
+
+					fragmentTransaction.add(R.id.smb_main_layout,fragment);
+					
+					fragmentTransaction.commit();	        		
 				}
 				
 			}) 

@@ -1,6 +1,5 @@
 package com.mipt.fileexplorer.remote.smb;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import jcifs.smb.NtStatus;
@@ -45,12 +44,10 @@ public class SmbAsynFileAdapter {
 			TextView lastDate = (TextView)row.findViewById(R.id.last_date);
 			
 			SmbFile file = servers[position];
-			//Log.i(TAG, file.getCanonicalPath());
-			if(file != null){
-				fileName.setText(file.getName());
-				//Constants.simpleDateFormat.format(new Date(file.getLastModified()))
-				lastDate.setText(new Date(file.getLastModified()).toLocaleString());				
-			}
+			Log.i(TAG, "position:" + position + ", file:" + file.toString() + ",fileName:" + fileName + ",lastDate:" + lastDate);
+			fileName.setText(file.getName());
+			//Constants.simpleDateFormat.format(new Date(file.getLastModified()))
+			lastDate.setText(new Date(file.getLastModified()).toLocaleString());				
 			return row;
 		}
 	}	
@@ -104,7 +101,8 @@ public class SmbAsynFileAdapter {
 					
 					if(result.status == SmbResult.STATUS_OK){
 						SmbFile[] files = result.smbFiles;						
-						Log.i(TAG, Arrays.toString(files));
+						//Log.i(TAG, Arrays.toString(files));
+						Log.i(TAG, "file amount:" + files.length + ",fileListView:" + listView.toString());
 						ArrayAdapter<SmbFile> adapter = new SmbAsynFileAdapter.SmbServerListAdapter(act, files);
 						listView.setAdapter(adapter);						
 						
