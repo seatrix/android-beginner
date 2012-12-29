@@ -1,6 +1,7 @@
 package com.explorer.bd;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
 import android.util.Log;
 
@@ -43,9 +44,14 @@ public class BDInfo
 	 */
 	public boolean isBDFile(String pPath)
 	{
-		Log.v(TAG, "path is " + pPath);
-
-		if (!hasBDMVDir(pPath))
+		try {
+			pPath = new String(pPath.getBytes(), "gb2312");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		Log.v(TAG, "file Name is: " + pPath);
+		
+/*		if (!hasBDMVDir(pPath))
 		{
 			return false;
 		}
@@ -54,8 +60,8 @@ public class BDInfo
 		{
 			return false;
 		}
-
-		return true;
+*/
+		return false;
 	}
 
 	/**

@@ -94,7 +94,7 @@ public class MountInfo {
 				}
 			}*/
 		}catch (Exception e) {
-			System.out.println(e);
+			Log.e(TAG, "mountInfo error", e);
 		}
 	}
 

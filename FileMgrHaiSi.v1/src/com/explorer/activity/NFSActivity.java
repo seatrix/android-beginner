@@ -10,13 +10,14 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
+import android.os.ServiceManager;
+import android.os.storage.IMountService;
 import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,6 +28,8 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -37,8 +40,6 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.explorer.R;
 import com.explorer.common.CommonActivity;
@@ -52,22 +53,18 @@ import com.explorer.common.SocketClient;
 import com.explorer.jni.Mountinfo;
 import com.explorer.jni.NfsClient;
 
-import android.os.storage.IMountService;
-import android.os.ServiceManager;
-import android.os.IBinder;
-
 /**
  * 浏览NFS网络文件
- *
+ * 
  * @author ni_guanhua
  */
 public class NFSActivity extends CommonActivity {
 
     static final String TAG = " NFSActivity ";
 
-	// 挂载失败
-	private static final int MOUNT_FAILD = 10;
-	private static final int  NFSRESULT_GETSELFIPERROR = 3;
+    // 挂载失败
+    private static final int MOUNT_FAILD = 10;
+    private static final int NFSRESULT_GETSELFIPERROR = 3;
 
     // 挂载成功
     private static final int MOUNT_SUCCESS = 11;
@@ -130,7 +127,7 @@ public class NFSActivity extends CommonActivity {
     private String pSvrIP = "";
 
     // 文件列表集合
-    //    private List<File> li = null;
+    // private List<File> li = null;
 
     // 文件列表的点击位置
     private int myPosition = 0;
@@ -154,7 +151,7 @@ public class NFSActivity extends CommonActivity {
     int clickCount = 0;
 
     // 显示文件列表
-//    private List<File> listFile;
+    // private List<File> listFile;
 
     // 删除挂载、取消自动挂载列表对话框
     AlertDialog dialog;
@@ -169,7 +166,7 @@ public class NFSActivity extends CommonActivity {
     List<File> fileL = null;
 
     // 文件适配器对象
-//    FileAdapter adapter;
+    // FileAdapter adapter;
 
     // 菜单操作标识
     int menu_item = 0;
@@ -181,7 +178,7 @@ public class NFSActivity extends CommonActivity {
     private String baseStr = "/mnt/nfsclt";
 
     // 挂载ISO所在目录
-//    private String prevPath = "";
+    // private String prevPath = "";
 
     // 父目录点击位置
     private int parentPosition;
@@ -254,8 +251,9 @@ public class NFSActivity extends CommonActivity {
                 Log.d(TAG, "397::init()_mountedList=" + mountedList);
                 if (mountedList.length() > 0) {
                     List<Mountinfo> fmtMountList = wrap2Mountinfo(mountedList);
-                    Log.i(TAG, "400::[init]fmtMountList.size="
-                            + fmtMountList.size());
+                    Log.i(TAG,
+                            "400::[init]fmtMountList.size="
+                                    + fmtMountList.size());
                     for (int i = 0; i < fmtMountList.size(); i++) {
                         Log.i(TAG, "402::[init]isAuto="
                                 + fmtMountList.get(i).getUcIsMounted());
@@ -263,13 +261,13 @@ public class NFSActivity extends CommonActivity {
                                 + fmtMountList.get(i).getSzCltFold());
                         // begin modify by qian_wei/zhou_yong 2011/10/26
                         // for determine whether the changes need to mount
-//                        if (fmtMountList.get(i).getUcIsAuto() == 1) {
+                        // if (fmtMountList.get(i).getUcIsAuto() == 1) {
                         if (fmtMountList.get(i).getUcIsMounted() == 0) {
-                        // end modify by qian_wei/zhou_yong 2011/10/26
-                            int flag = nNfsClient.mountNFSSvr(fmtMountList.get(
-                                    i).getSzSvrIP(), fmtMountList.get(i)
-                                    .getSzSvrFold(), fmtMountList.get(i)
-                                    .getSzCltFold(), 1);
+                            // end modify by qian_wei/zhou_yong 2011/10/26
+                            int flag = nNfsClient.mountNFSSvr(
+                                    fmtMountList.get(i).getSzSvrIP(),
+                                    fmtMountList.get(i).getSzSvrFold(),
+                                    fmtMountList.get(i).getSzCltFold(), 1);
                             Log.w("TAG", " FLAG= " + flag);
                             if (flag == 0) {
                                 fmtMountList.get(i).setUcIsMounted(1);
@@ -308,7 +306,7 @@ public class NFSActivity extends CommonActivity {
                     progress.cancel();
                 }
 
-                synchronized(lock){
+                synchronized (lock) {
                     // 无搜索结果
                     if (arrayFile.size() == 0 && arrayDir.size() == 0) {
                         FileUtil.showToast(NFSActivity.this,
@@ -346,119 +344,115 @@ public class NFSActivity extends CommonActivity {
                 }
                 intList.add(myPosition);
                 String OpenFilePath = ISO_PATH;
-                //BEGIN : z00120637 暂时屏蔽掉ISO过滤功能，如果需要时再开放开来
-//                File fileISO = new File(ISO_PATH);
-//                File[] ISOList = fileISO.listFiles();
-//                for (int i=0; i < ISOList.length; i++)
-//                {
-//                    if(ISOList[i].getName().equalsIgnoreCase("bdmv"))
-//                    {
-//                        File[] TempList = ISOList[i].listFiles();
-//                        for(int j=0; j < TempList.length; j++)
-//                        {
-//                            if(TempList[j].getName().equalsIgnoreCase("stream"))
-//                            {
-//                                OpenFilePath = TempList[j].getPath();
-//                            }
-//                        }
-//                    }
-//                    else if(ISOList[i].getName().equalsIgnoreCase("video_ts"))
-//                    {
-//                        OpenFilePath = ISOList[i].getPath();
-//                    }
-//                }
-                //BEN  : z00120637 暂时屏蔽掉ISO过滤功能，如果需要时再开放开来
+                // BEGIN : z00120637 暂时屏蔽掉ISO过滤功能，如果需要时再开放开来
+                // File fileISO = new File(ISO_PATH);
+                // File[] ISOList = fileISO.listFiles();
+                // for (int i=0; i < ISOList.length; i++)
+                // {
+                // if(ISOList[i].getName().equalsIgnoreCase("bdmv"))
+                // {
+                // File[] TempList = ISOList[i].listFiles();
+                // for(int j=0; j < TempList.length; j++)
+                // {
+                // if(TempList[j].getName().equalsIgnoreCase("stream"))
+                // {
+                // OpenFilePath = TempList[j].getPath();
+                // }
+                // }
+                // }
+                // else if(ISOList[i].getName().equalsIgnoreCase("video_ts"))
+                // {
+                // OpenFilePath = ISOList[i].getPath();
+                // }
+                // }
+                // BEN : z00120637 暂时屏蔽掉ISO过滤功能，如果需要时再开放开来
                 getFiles(OpenFilePath);
                 break;
             // end modify by yuejun 2011/12/14
             case ADD_MOUNT: // 新增挂载
-			{
-				int nMountResult = msg.arg1;
-				closeWaitingDlg();
-				if (nMountResult == 0) {
-					Mountinfo info = new Mountinfo();
-					info.setSzSvrIP(pSvrIP);
-					info.setSzSvrFold(pSvrFold);
-					info.setSzCltFold(getCltFolder(pSvrIP, pSvrFold));
-					info.setUcIsAuto(ucIsAuto);
-					info.setPcName(pSvrIP);
-					// begin modify by qian_wei/cao_shanshan 2011/10/25
-					// for modify the return result
-//					info.setUcIsMounted(0);
-					info.setUcIsMounted(1);
-					// end modify by qian_wei/cao_shanshan 2011/10/25
-					postFormatedMountinfos.add(info);
-					FileUtil.showToast(NFSActivity.this,
-							getString(R.string.new_mout_successfully));
-					refreshView();// 更新显示列表
-				// begin modify by qian_wei/cao_shanshan 2011/10/25
-				// for add the mount self can not allow	
-//				} else {
-//                    FileUtil.showToast(NFSActivity.this,
-//                            getString(R.string.mount_self));
-				} else if (nMountResult == 1) {
-					FileUtil.showToast(NFSActivity.this,
-							getString(R.string.new_mout_fail));
-				} else if (NFSRESULT_GETSELFIPERROR == nMountResult)
-				{
-					FileUtil.showToast(NFSActivity.this,
-							getString(R.string.network_nfsmount_getiperror));
-				}
-				else {
-				    FileUtil.showToast(NFSActivity.this,
-				            getString(R.string.mount_self));
-				}
-				// end modify by qian_wei/cao_shanshan 2011/10/25
-				edtIpAddress.setText("");
-				edtServerFolder.setText("");
-				checkAuto.setChecked(false);
-				edtIpAddress.requestFocus();
-				break;
-			}
-			case DEL_MOUNT: // 卸载挂载
-				closeWaitingDlg();
-				// 删除失败
-				if (delFlag == 1) {
-					FileUtil.showToast(NFSActivity.this,
-							getString(R.string.delete_error));
-				}
-				// 删除成功
-				if (delFlag == 0) {
-					FileUtil.showToast(NFSActivity.this,
-							getString(R.string.delete_v));
-				}
-				Log.d(TAG, "569::postFormatedMountinfos="
-						+ postFormatedMountinfos);
-				refreshView();
-				break;
-			case ISO_MOUNT_FAILD: // 挂载ISO失败
-				if (progress != null && progress.isShowing()) {
-					progress.dismiss();
-				}
-				FileUtil.showToast(NFSActivity.this,
-						getString(R.string.new_mout_fail));
-				break;
-			case MOUNT_FAILD:
-			{
-				int nMountResult = msg.arg1;
-				String strTipString = getString(R.string.new_mout_fail);
-				if (progress != null && progress.isShowing()) {
-					progress.cancel();
-				}
-				if (NFSRESULT_GETSELFIPERROR == nMountResult)
-				{
-					strTipString = getString(R.string.network_nfsmount_getiperror);
-				}
-				FileUtil.showToast(NFSActivity.this,strTipString);
-				break;
-			}
-			case MOUNT_SUCCESS:
-				if (progress != null && progress.isShowing()) {
-					progress.cancel();
-				}
-				getFiles(baseStr);
-				break;
-			}
+            {
+                int nMountResult = msg.arg1;
+                closeWaitingDlg();
+                if (nMountResult == 0) {
+                    Mountinfo info = new Mountinfo();
+                    info.setSzSvrIP(pSvrIP);
+                    info.setSzSvrFold(pSvrFold);
+                    info.setSzCltFold(getCltFolder(pSvrIP, pSvrFold));
+                    info.setUcIsAuto(ucIsAuto);
+                    info.setPcName(pSvrIP);
+                    // begin modify by qian_wei/cao_shanshan 2011/10/25
+                    // for modify the return result
+                    // info.setUcIsMounted(0);
+                    info.setUcIsMounted(1);
+                    // end modify by qian_wei/cao_shanshan 2011/10/25
+                    postFormatedMountinfos.add(info);
+                    FileUtil.showToast(NFSActivity.this,
+                            getString(R.string.new_mout_successfully));
+                    refreshView();// 更新显示列表
+                    // begin modify by qian_wei/cao_shanshan 2011/10/25
+                    // for add the mount self can not allow
+                    // } else {
+                    // FileUtil.showToast(NFSActivity.this,
+                    // getString(R.string.mount_self));
+                } else if (nMountResult == 1) {
+                    FileUtil.showToast(NFSActivity.this,
+                            getString(R.string.new_mout_fail));
+                } else if (NFSRESULT_GETSELFIPERROR == nMountResult) {
+                    FileUtil.showToast(NFSActivity.this,
+                            getString(R.string.network_nfsmount_getiperror));
+                } else {
+                    FileUtil.showToast(NFSActivity.this,
+                            getString(R.string.mount_self));
+                }
+                // end modify by qian_wei/cao_shanshan 2011/10/25
+                edtIpAddress.setText("");
+                edtServerFolder.setText("");
+                checkAuto.setChecked(false);
+                edtIpAddress.requestFocus();
+                break;
+            }
+            case DEL_MOUNT: // 卸载挂载
+                closeWaitingDlg();
+                // 删除失败
+                if (delFlag == 1) {
+                    FileUtil.showToast(NFSActivity.this,
+                            getString(R.string.delete_error));
+                }
+                // 删除成功
+                if (delFlag == 0) {
+                    FileUtil.showToast(NFSActivity.this,
+                            getString(R.string.delete_v));
+                }
+                Log.d(TAG, "569::postFormatedMountinfos="
+                        + postFormatedMountinfos);
+                refreshView();
+                break;
+            case ISO_MOUNT_FAILD: // 挂载ISO失败
+                if (progress != null && progress.isShowing()) {
+                    progress.dismiss();
+                }
+                FileUtil.showToast(NFSActivity.this,
+                        getString(R.string.new_mout_fail));
+                break;
+            case MOUNT_FAILD: {
+                int nMountResult = msg.arg1;
+                String strTipString = getString(R.string.new_mout_fail);
+                if (progress != null && progress.isShowing()) {
+                    progress.cancel();
+                }
+                if (NFSRESULT_GETSELFIPERROR == nMountResult) {
+                    strTipString = getString(R.string.network_nfsmount_getiperror);
+                }
+                FileUtil.showToast(NFSActivity.this, strTipString);
+                break;
+            }
+            case MOUNT_SUCCESS:
+                if (progress != null && progress.isShowing()) {
+                    progress.cancel();
+                }
+                getFiles(baseStr);
+                break;
+            }
 
         }
     };
@@ -709,12 +703,12 @@ public class NFSActivity extends CommonActivity {
             if (null == path || BLANK.equals(path)) {
                 // begin modify by qian_wei/zhou_yong 2011/10/26
                 // for if mounted, into the directory, other mount the directory
-//                progress = new ProgressDialog(NFSActivity.this);
-//              progress.show();
-//              MountThread thread = new MountThread();
-//              thread.start();
+                // progress = new ProgressDialog(NFSActivity.this);
+                // progress.show();
+                // MountThread thread = new MountThread();
+                // thread.start();
                 Mountinfo info = postFormatedMountinfos.get(myPosition);
-                if(info.getUcIsMounted() == 1) {
+                if (info.getUcIsMounted() == 1) {
                     intList.add(myPosition);
                     parentPosition = 0;
                     baseStr = info.getSzCltFold();
@@ -729,19 +723,20 @@ public class NFSActivity extends CommonActivity {
                 // modify by qian_wei/zhou_yong 2011/10/26
             } else {
                 // 如果是文件夹，记录点击位置
-                if(listFile.size() > 0) {
-                    if(position >= listFile.size()){
-                        position = listFile.size()-1;
+                if (listFile.size() > 0) {
+                    if (position >= listFile.size()) {
+                        position = listFile.size() - 1;
                     }
                     File f = listFile.get(position);
                     // begin add by qian_wei/zhou_yong 2011/10/20
                     // for chmod the file
-                    //START : change by z00120637 for chmod nfs file cuase error
-                    //chmodFile(f.getPath());
-                    //END   : change by z00120637 for chmod nfs file cuase error
+                    // START : change by z00120637 for chmod nfs file cuase
+                    // error
+                    // chmodFile(f.getPath());
+                    // END : change by z00120637 for chmod nfs file cuase error
                     // end modify by qian_wei/zhou_yong 2011/10/20
                     if (f.canRead()) {
-                        if(f.isDirectory()) {
+                        if (f.isDirectory()) {
                             intList.add(position);
                             parentPosition = 0;
                             fileL.clear();
@@ -749,7 +744,8 @@ public class NFSActivity extends CommonActivity {
                             parentPosition = position;
                         }
                         // begin modify by qian_wei/xiong_cuifan 2011/11/05
-                        // for broken into the directory contains many files,click again error
+                        // for broken into the directory contains many
+                        // files,click again error
                         preCurrentPath = currentFileString;
                         keyBack = false;
                         // end modify by qian_wei/xiong_cuifan 2011/11/08
@@ -767,7 +763,7 @@ public class NFSActivity extends CommonActivity {
 
         public void run() {
             Mountinfo info = postFormatedMountinfos.get(myPosition);
-            Log.w("INFO", " = "+info.getSzCltFold());
+            Log.w("INFO", " = " + info.getSzCltFold());
 
             // begin add by qian_wei/ma_zhongying 2011/10/17
             // for sometimes can not mount the has mounted nfs server
@@ -778,8 +774,9 @@ public class NFSActivity extends CommonActivity {
             }
             // end modify by qian_wei/ma_zhongying 2011/10/17
 
-            int mountResult = nNfsClient.mountNFSSvr(info.getSzSvrIP(), info
-                    .getSzSvrFold(), info.getSzCltFold(), info.getUcIsAuto());
+            int mountResult = nNfsClient.mountNFSSvr(info.getSzSvrIP(),
+                    info.getSzSvrFold(), info.getSzCltFold(),
+                    info.getUcIsAuto());
             if (mountResult == 0) {
                 Log.w(TAG, "444 = mount success");
                 intList.add(myPosition);
@@ -788,23 +785,23 @@ public class NFSActivity extends CommonActivity {
                 mountSdPath = baseStr;
                 // begin modify by qian_wei/zhou_yong 2011/10/26
                 // for modify the return result
-//              info.setUcIsMounted(0);
+                // info.setUcIsMounted(0);
                 info.setUcIsMounted(1);
                 // end modify by qian_wei/zhou_yong 2011/10/26
                 // begin modify by qian_wei/zhou_yong 2011/10/21
                 // for click back key quit application, then into error
-//                handler.sendEmptyMessage(MOUNT_SUCCESS);
-                if(!NFSActivity.this.isFinishing()) {
+                // handler.sendEmptyMessage(MOUNT_SUCCESS);
+                if (!NFSActivity.this.isFinishing()) {
                     handler.sendEmptyMessage(MOUNT_SUCCESS);
                 }
             } else {
                 Log.w(TAG, "555 = mount fa");
-//                handler.sendEmptyMessage(MOUNT_FAILD);
-                if(!NFSActivity.this.isFinishing()) {
-					Message message = new Message();
-		        	message.what = MOUNT_FAILD;
-		    		message.arg1 = mountResult;
-		    		handler.sendMessage(message);
+                // handler.sendEmptyMessage(MOUNT_FAILD);
+                if (!NFSActivity.this.isFinishing()) {
+                    Message message = new Message();
+                    message.what = MOUNT_FAILD;
+                    message.arg1 = mountResult;
+                    handler.sendMessage(message);
                 }
                 // end modify by by qian_wei/zhou_yong 2011/10/21
             }
@@ -834,32 +831,32 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 根据文件路径判断执行的操作 目录:进入目录 文件:系统应用打开文件
-     *
-     * @param path 文件路径
+     * 
+     * @param path
+     *            文件路径
      */
-//    SocketClient socketClient = null;
-//    private File openFile;
+    // SocketClient socketClient = null;
+    // private File openFile;
 
     public void getFiles(String path) {
         openFile = new File(path);
-        Log.w("FILENAME", " = "+openFile.getName());
+        Log.w("FILENAME", " = " + openFile.getName());
         if (openFile.isDirectory()) {
             // begin modify by qian_wei/xiong_cuifan 2011/11/05
-            // for broken into the directory contains many files,click again error
+            // for broken into the directory contains many files,click again
+            // error
             Log.w("DIR", "DIR");
-//            if (currentFileString.length() < path.length()) {
-//                myPosition = 0;
-//            }
+            // if (currentFileString.length() < path.length()) {
+            // myPosition = 0;
+            // }
             // end modify by qian_wei/xiong_cuifan 2011/11/08
 
             if (mIsSupportBD) {
-                if (FileUtil.getMIMEType(openFile, this).equals("video/bd"))
-                {
+                if (FileUtil.getMIMEType(openFile, this).equals("video/bd")) {
                     launchHiBDPlayer(path);
                     return;
                 }
             }
-
 
             currentFileString = path;
             updateList(true);
@@ -872,15 +869,16 @@ public class NFSActivity extends CommonActivity {
                 socketClient = new SocketClient(this);
                 progress = new ProgressDialog(this);
                 progress.show();
-                try
-                {
-					String mntPath = getMountService().mountISO(openFile.getPath());
-                  socketClient.writeMess("mountiso " + super.tranString(openFile.getPath()) + " " + mntPath);
-                  mBDISOName = openFile.getName();
-                  mBDISOPath = openFile.getAbsolutePath();
-                }catch(Exception e)
-                {
-                    Log.e(TAG," error e="+e);
+                try {
+                    String mntPath = getMountService().mountISO(
+                            openFile.getPath());
+                    socketClient.writeMess("mountiso "
+                            + super.tranString(openFile.getPath()) + " "
+                            + mntPath);
+                    mBDISOName = openFile.getName();
+                    mBDISOPath = openFile.getAbsolutePath();
+                } catch (Exception e) {
+                    Log.e(TAG, " error e=" + e);
                     FileUtil.showToast(this, "mountiso file error");
                 }
 
@@ -893,18 +891,20 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 将文件列表填充到数据容器中
-     *
-     * @param files 文件列表
-     * @param fileroot 文件目录
+     * 
+     * @param files
+     *            文件列表
+     * @param fileroot
+     *            文件目录
      */
     public void fill(File fileroot) {
         try {
-//            li = adapter.getFiles();
-//            Log.w("LIST", " = " + li.size());
+            // li = adapter.getFiles();
+            // Log.w("LIST", " = " + li.size());
             // 设置路径文件框字体颜色
             // pathTxt.setTextColor(Color.BLACK);
-            if(parentPosition >= listFile.size()) {
-                parentPosition = listFile.size() -1;
+            if (parentPosition >= listFile.size()) {
+                parentPosition = listFile.size() - 1;
             }
             numInfo.setText((parentPosition + 1) + "/" + listFile.size());
             if (!fileroot.getPath().equals(baseStr)) {
@@ -933,13 +933,13 @@ public class NFSActivity extends CommonActivity {
 
             Log.w("INFO NUM", numInfo.getText().toString());
             Log.w("INFO PATH", pathTxt.getText().toString());
-            if(parentPosition >= 0) {
-            if (listView.getVisibility() == View.VISIBLE) {
-                listView.requestFocus();
-                listView.setSelection(parentPosition);
-            } else if (gridView.getVisibility() == View.VISIBLE) {
-                gridView.requestFocus();
-                gridView.setSelection(parentPosition);
+            if (parentPosition >= 0) {
+                if (listView.getVisibility() == View.VISIBLE) {
+                    listView.requestFocus();
+                    listView.setSelection(parentPosition);
+                } else if (gridView.getVisibility() == View.VISIBLE) {
+                    gridView.requestFocus();
+                    gridView.setSelection(parentPosition);
                 }
             }
         } catch (Exception e) {
@@ -949,15 +949,17 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 管理文件操作
-     *
-     * @param position 操作文件在列表中位置
-     * @param item 操作类型
+     * 
+     * @param position
+     *            操作文件在列表中位置
+     * @param item
+     *            操作类型
      */
     private void managerF(final int position, final int item) {
 
         // begin modify by qian_wei/cao_shanshan 2011/10/24
         // for while first delete more than one file then cause exception
-//        if (position == listFile.size()) {
+        // if (position == listFile.size()) {
         if (position >= listFile.size()) {
             myPosition = listFile.size() - 1;
         }
@@ -1013,10 +1015,13 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 操作菜单
-     *
-     * @param position 目标文件位置
-     * @param item 操作
-     * @param list 数据容器
+     * 
+     * @param position
+     *            目标文件位置
+     * @param item
+     *            操作
+     * @param list
+     *            数据容器
      */
     private void getMenu(final int position, final int item, final ListView list) {
         int selectionRowID = (int) position;
@@ -1075,8 +1080,9 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 文件列表排序
-     *
-     * @param sort 排序方式
+     * 
+     * @param sort
+     *            排序方式
      */
     FileUtil util;
 
@@ -1088,14 +1094,15 @@ public class NFSActivity extends CommonActivity {
             sortBut.setOnClickListener(clickListener);
             filterBut.setOnClickListener(clickListener);
             // begin modify by qian_wei/xiong_cuifan 2011/11/05
-            // for broken into the directory contains many files,click again error
+            // for broken into the directory contains many files,click again
+            // error
             listFile.clear();
             if (progress != null && progress.isShowing()) {
                 progress.dismiss();
             }
             progress = new ProgressDialog(NFSActivity.this);
             progress.show();
-            if(adapter != null) {
+            if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
             waitThreadToIdle(thread);
@@ -1103,17 +1110,19 @@ public class NFSActivity extends CommonActivity {
             thread.setStopRun(false);
             progress.setOnCancelListener(new OnCancelListener() {
                 public void onCancel(DialogInterface arg0) {
-                    Log.v("\33[32m Main1","onCancel" + "\33[0m");
+                    Log.v("\33[32m Main1", "onCancel" + "\33[0m");
                     thread.setStopRun(true);
-                    if(keyBack) {
+                    if (keyBack) {
                         intList.add(parentPosition);
                     } else {
                         parentPosition = myPosition;
                         currentFileString = preCurrentPath;
-                        Log.v("\33[32m Main1","onCancel" + currentFileString +"\33[0m");
-                        intList.remove(intList.size()-1);
+                        Log.v("\33[32m Main1", "onCancel" + currentFileString
+                                + "\33[0m");
+                        intList.remove(intList.size() - 1);
                     }
-                    FileUtil.showToast(NFSActivity.this, getString(R.string.cause_anr));
+                    FileUtil.showToast(NFSActivity.this,
+                            getString(R.string.cause_anr));
                 }
             });
             // end modify by qian_wei/xiong_cuifan 2011/11/08
@@ -1123,7 +1132,7 @@ public class NFSActivity extends CommonActivity {
             adapter.notifyDataSetChanged();
             // begin delete by qian_wei/zhou_yong 2011/10/21
             // for delete failed then can not do nothing
-//            listFile = new ArrayList<File>();
+            // listFile = new ArrayList<File>();
             // end delete by qian_wei/zhou_yong 2011/10/21
             fill(new File(currentFileString));
         }
@@ -1141,8 +1150,8 @@ public class NFSActivity extends CommonActivity {
                     getMenu(myPosition, menu_item, list);
                     dialog.cancel();
                 } else {
-                    FileUtil.showToast(NFSActivity.this, NFSActivity.this
-                            .getString(R.string.select_file));
+                    FileUtil.showToast(NFSActivity.this,
+                            NFSActivity.this.getString(R.string.select_file));
                 }
             } else {
                 dialog.cancel();
@@ -1195,8 +1204,8 @@ public class NFSActivity extends CommonActivity {
                     Log.i(TAG, "intList.size()=" + (intList.size() - 1));
                     // begin modify by qian_wei/cao_shanshan 2011/10/25
                     // for prevent the index < 0
-//                    parentPosition = intList.get(intList.size() - 1);
-                    if(intList.size() > 0) {
+                    // parentPosition = intList.get(intList.size() - 1);
+                    if (intList.size() > 0) {
                         parentPosition = intList.get(intList.size() - 1);
                     } else {
                         parentPosition = 0;
@@ -1276,7 +1285,7 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 获取当前文件路径
-     *
+     * 
      * @return 当前文件路径
      */
     public String getCurrentFileString() {
@@ -1303,9 +1312,10 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 将挂载列表格式化成Mountinfo对象列表
-     *
+     * 
      * @author ni_guanhua
-     * @param mountedList 调用jni返回的挂载列表字符串
+     * @param mountedList
+     *            调用jni返回的挂载列表字符串
      * @return 挂载信息对象列表
      */
     public List<Mountinfo> wrap2Mountinfo(String mountedList) {
@@ -1363,16 +1373,20 @@ public class NFSActivity extends CommonActivity {
         }
         // 服务器ip地址
         if (BLANK.equals(pSvrIP) || null == pSvrIP) {
-            FileUtil.showToast(NFSActivity.this, getString(R.string.nfsAddHint,
-                    getString(R.string.ip_address)));
+            FileUtil.showToast(
+                    NFSActivity.this,
+                    getString(R.string.nfsAddHint,
+                            getString(R.string.ip_address)));
         } else if (!pSvrIP.matches(IP_REGEX)) {
             FileUtil.showToast(NFSActivity.this,
                     getString(R.string.server_ip_fmt_err));
         }
         // 服务器目录
         else if (BLANK.equals(pSvrFold) || null == pSvrFold) {
-            FileUtil.showToast(NFSActivity.this, getString(R.string.nfsAddHint,
-                    getString(R.string.server_folder)));
+            FileUtil.showToast(
+                    NFSActivity.this,
+                    getString(R.string.nfsAddHint,
+                            getString(R.string.server_folder)));
         } else {
 
             if (!pSvrFold.startsWith("/")) {
@@ -1394,13 +1408,13 @@ public class NFSActivity extends CommonActivity {
                 new Thread(new Runnable() {
                     public void run() {
                         // 当输入内容均不为空时
-						int nMountResult = nNfsClient.mountNFSSvr(pSvrIP, pSvrFold, BLANK,
-								ucIsAuto);
-						Log.d(TAG, "326::new_mount_flag=" + nMountResult);
-						Message message = new Message();
-			        	message.what = ADD_MOUNT;
-			    		message.arg1 = nMountResult;
-			    		handler.sendMessage(message);
+                        int nMountResult = nNfsClient.mountNFSSvr(pSvrIP,
+                                pSvrFold, BLANK, ucIsAuto);
+                        Log.d(TAG, "326::new_mount_flag=" + nMountResult);
+                        Message message = new Message();
+                        message.what = ADD_MOUNT;
+                        message.arg1 = nMountResult;
+                        handler.sendMessage(message);
                     }
                 }).start();
             }
@@ -1421,7 +1435,7 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 显示设置自动挂载对话框
-     *
+     * 
      * @author ni_guanhua
      */
     private void showSetAutoDlg() {
@@ -1486,7 +1500,7 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 对话框多选监听器
-     *
+     * 
      * @author ni_guanhua
      */
     private class DlgClickListener implements DialogInterface.OnClickListener {
@@ -1552,7 +1566,7 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 设置自动挂载数据适配器
-     *
+     * 
      * @author ni_guanhua
      */
     class SetAutoShareDataAdapter extends BaseAdapter {
@@ -1614,7 +1628,7 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 显示卸载列表对话框
-     *
+     * 
      * @author ni_guanhua
      */
     private void showUninstallDlg() {
@@ -1658,7 +1672,7 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 删除挂载数据
-     *
+     * 
      * @author ni_guanhua
      */
     static class DelShareDataAdapter extends BaseAdapter {
@@ -1704,7 +1718,7 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 卸载挂载列表单机监听器
-     *
+     * 
      * @author ni_guanhua
      */
     private class UninstallDlgClickListener implements
@@ -1717,9 +1731,9 @@ public class NFSActivity extends CommonActivity {
                 // 确认删除对话框
                 confirmDelDlg = new AlertDialog.Builder(NFSActivity.this)
                         .setTitle(R.string.confirm_delete_dlg_title)
-                        .setMessage(R.string.comfirm_delete_hint).setIcon(
-                                R.drawable.alert).setPositiveButton(
-                                R.string.ok,
+                        .setMessage(R.string.comfirm_delete_hint)
+                        .setIcon(R.drawable.alert)
+                        .setPositiveButton(R.string.ok,
                                 new DialogInterface.OnClickListener() {
                                     // 在点击确认删除对话框后，对选项进行删除
                                     public void onClick(
@@ -1735,7 +1749,8 @@ public class NFSActivity extends CommonActivity {
                                         }).start();
 
                                     }
-                                }).setNegativeButton(R.string.cancel,
+                                })
+                        .setNegativeButton(R.string.cancel,
                                 new DialogInterface.OnClickListener() {
 
                                     public void onClick(
@@ -1761,8 +1776,9 @@ public class NFSActivity extends CommonActivity {
 
     /**
      * 进行删除操作
-     *
-     * @param dialog 卸载对话框
+     * 
+     * @param dialog
+     *            卸载对话框
      */
     private int delFlag = Integer.MAX_VALUE;
 
@@ -1772,8 +1788,9 @@ public class NFSActivity extends CommonActivity {
         dlg.cancel();
         Log.d(TAG, "512::dlgLstView=" + dlgLstView);
         int count = dlgLstView.getCount();// 获取列表中的条目数
-        Log.d(TAG, "459::postFormatedMountinfos_size="
-                + postFormatedMountinfos.size());
+        Log.d(TAG,
+                "459::postFormatedMountinfos_size="
+                        + postFormatedMountinfos.size());
         Log.d(TAG, "460::list_count=" + count);
         Mountinfo info = null;
         for (int i = count - 1; i >= 0; i--) {
@@ -1786,7 +1803,7 @@ public class NFSActivity extends CommonActivity {
             if (isChecked) {
                 // 从配置文件中删除
                 delFlag = nNfsClient.umountNFS(info.getSzCltFold());
-				Log.d(TAG, "467::delete_flag=" + delFlag);
+                Log.d(TAG, "467::delete_flag=" + delFlag);
                 // 在删除失败后，退出循环并关闭对话框
                 if (delFlag == 1) {
                     break;
@@ -1808,9 +1825,9 @@ public class NFSActivity extends CommonActivity {
         public void run() {
             if (getFlag()) {
                 setFlag(false);
-                synchronized(lock){
-                    util = new FileUtil(NFSActivity.this, filterCount, arrayDir,
-                        arrayFile, currentFileString);
+                synchronized (lock) {
+                    util = new FileUtil(NFSActivity.this, filterCount,
+                            arrayDir, arrayFile, currentFileString);
                 }
             } else {
                 util = new FileUtil(NFSActivity.this, filterCount,
@@ -1818,43 +1835,42 @@ public class NFSActivity extends CommonActivity {
             }
             listFile = util.getFiles(sortCount, "net");
 
-//            //BEGIN : z00120637 暂时屏蔽掉ISO过滤功能，如果需要时再开放开来
-//            // begin modify by yuejun 2011/12/16
-//            List<File> temp1ListFile = new ArrayList<File>();
-//            List<File> temp2ListFile = new ArrayList<File>();
-//            if(currentFileString.toLowerCase().contains("bdmv"))
-//            {
-//                temp1ListFile.add(getMaxFile(listFile));
-//                listFile=temp1ListFile;
-//            }
-//            else if(currentFileString.toLowerCase().contains("video_ts"))
-//            {
-//                for(int i=0; i<listFile.size(); i++)
-//                {
-//                    if(listFile.get(i).toString().substring(listFile.get(i).toString().lastIndexOf(".")).equalsIgnoreCase(".vob"))
-//                        temp1ListFile.add(listFile.get(i));
-//                }
-//
-//                for(int j=0; j<temp1ListFile.size(); j++)
-//                {
-//                    if(temp1ListFile.get(j).length() >= (long)100*1024*1024)
-//                        temp2ListFile.add(temp1ListFile.get(j));
-//                }
-//                listFile = temp2ListFile;
-//            }
-//            // end modify by yuejun 2011/12/16
-//            //END : z00120637 暂时屏蔽掉ISO过滤功能，如果需要时再开放开来
+            // //BEGIN : z00120637 暂时屏蔽掉ISO过滤功能，如果需要时再开放开来
+            // // begin modify by yuejun 2011/12/16
+            // List<File> temp1ListFile = new ArrayList<File>();
+            // List<File> temp2ListFile = new ArrayList<File>();
+            // if(currentFileString.toLowerCase().contains("bdmv"))
+            // {
+            // temp1ListFile.add(getMaxFile(listFile));
+            // listFile=temp1ListFile;
+            // }
+            // else if(currentFileString.toLowerCase().contains("video_ts"))
+            // {
+            // for(int i=0; i<listFile.size(); i++)
+            // {
+            // if(listFile.get(i).toString().substring(listFile.get(i).toString().lastIndexOf(".")).equalsIgnoreCase(".vob"))
+            // temp1ListFile.add(listFile.get(i));
+            // }
+            //
+            // for(int j=0; j<temp1ListFile.size(); j++)
+            // {
+            // if(temp1ListFile.get(j).length() >= (long)100*1024*1024)
+            // temp2ListFile.add(temp1ListFile.get(j));
+            // }
+            // listFile = temp2ListFile;
+            // }
+            // // end modify by yuejun 2011/12/16
+            // //END : z00120637 暂时屏蔽掉ISO过滤功能，如果需要时再开放开来
 
-            if(getStopRun()) {
-                if(keyBack) {
-                    if(pathTxt.getText().toString().equals(ISO_PATH)) {
+            if (getStopRun()) {
+                if (keyBack) {
+                    if (pathTxt.getText().toString().equals(ISO_PATH)) {
                         currentFileString = util.currentFilePath;
                     }
                 }
             } else {
                 // begin modify by yuejun 2011/12/21
-                if(util.currentFilePath.startsWith(ISO_PATH))
-                {
+                if (util.currentFilePath.startsWith(ISO_PATH)) {
                     util.currentFilePath = isoParentPath;
                 }
                 // end modify by yuejun 2011/12/21
@@ -1868,10 +1884,10 @@ public class NFSActivity extends CommonActivity {
          * 过滤蓝光ISO文件，获取最大视频文件
          */
         // begin modify by yuejun 2011/12/16
-        public File getMaxFile(List<File> listFile){
+        public File getMaxFile(List<File> listFile) {
             int temp = 0;
-            for(int i=0; i<listFile.size(); i++){
-                if(listFile.get(temp).length() <= listFile.get(i).length())
+            for (int i = 0; i < listFile.size(); i++) {
+                if (listFile.get(temp).length() <= listFile.get(i).length())
                     temp = i;
             }
             return listFile.get(temp);
@@ -1924,18 +1940,20 @@ public class NFSActivity extends CommonActivity {
     // for grally3D delete the file, flush the data
     protected void onResume() {
         super.onResume();
-        if(!currentFileString.equals("") && preCurrentPath.equals(currentFileString)) {
+        if (!currentFileString.equals("")
+                && preCurrentPath.equals(currentFileString)) {
             updateList(true);
         }
     }
+
     // end add by qian_wei/xiong_cuifan 2011/11/08
-	private static IMountService getMountService() {
-		IBinder service = ServiceManager.getService("mount");
-		if (service != null) {
-			return IMountService.Stub.asInterface(service);
-		} else {
-			Log.e(TAG, "Can't get mount service");
-		}
-		return null;
-	}
+    private static IMountService getMountService() {
+        IBinder service = ServiceManager.getService("mount");
+        if (service != null) {
+            return IMountService.Stub.asInterface(service);
+        } else {
+            Log.e(TAG, "Can't get mount service");
+        }
+        return null;
+    }
 }

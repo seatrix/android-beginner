@@ -14,7 +14,7 @@ import android.util.Log;
  // @author qian_wei
 
 public class SocketClient {
-
+	private static final String TAG = "SocketClient";
 	// server name
 	private static final String SOCKET_NAME = "configserver";
 
@@ -92,10 +92,11 @@ public class SocketClient {
 			s.connect(l);
 			is = s.getInputStream();
 			os = s.getOutputStream();
-			System.out.println(os);
+			Log.i(TAG, os.toString());
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(TAG, "connect error", e);
+			//e.printStackTrace();
 		}
 
 	}
@@ -114,7 +115,7 @@ public class SocketClient {
 			}
 			dos = new DataOutputStream(os);
 			int strLen = s.getBytes().length;
-			System.out.println(strLen);
+			Log.i(TAG, String.valueOf(strLen));
 			byte[] sendLen = intToBytes2(strLen);
 			byte[] allLen = new byte[s.getBytes().length + 4];
 
@@ -123,9 +124,9 @@ public class SocketClient {
 			for (int i = 0; i < (s.getBytes().length + 4); i++) {
 				if (i < 4) {
 					allLen[i] = sendLen[i];
-					System.out.println(i);
+					Log.i(TAG, String.valueOf(i));
 				} else {
-					System.out.println("=" + i);
+					Log.i(TAG, "=" + i);
 					allLen[i] = srcLen[i - 4];
 				}
 			}
