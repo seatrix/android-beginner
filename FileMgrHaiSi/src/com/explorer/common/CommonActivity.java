@@ -3,6 +3,7 @@ package com.explorer.common;
 import com.explorer.R;
 import com.explorer.activity.FileMenu;
 import com.explorer.activity.TabBarExample;
+import com.explorer.bd.BDInfo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -320,6 +321,7 @@ public abstract class CommonActivity extends Activity {
 
 	// 主要判断网络是否断开
 	private ConnectivityManager mConnectivityManager = null;
+    private BDInfo mBDInfo;
     // close Toast
     public static void cancleToast() {
         if (FileUtil.getToast() != null) {
@@ -353,6 +355,22 @@ public abstract class CommonActivity extends Activity {
 
         listFile = new ArrayList<File>();
 		mConnectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        mBDInfo = new BDInfo();
+
+/*        try
+        {
+            this.getPackageManager().getPackageInfo("com.hisilicon.hibdplayer", PackageManager.GET_ACTIVITIES);
+            mIsSupportBD = true;
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, "HiBDPlayer not found");
+            mIsSupportBD = false;
+        }
+*/    }
+    protected BDInfo getBDInfo()
+    {
+        return mBDInfo;
     }
 
 	/* 判断网络是否关闭 */

@@ -613,7 +613,7 @@ public class FileMenu {
                                                     //mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,uri));
                                                     intent.putExtra("scan", true);
                                                     mContext.sendBroadcast(intent);
-                                                    Log.e("tangxiaodi","rename file-------------f_old="+f_old.getParent()+" f_new="+f_new.getPath());
+                                                    Log.i("FileMenu","rename file-------------f_old="+f_old.getParent()+" f_new="+f_new.getPath());
                                                 }
 											}
                                             else 
@@ -821,13 +821,18 @@ public class FileMenu {
 //					handler.sendEmptyMessage(1);
                     if(f2.getPath().contains("/mnt/nand") || f2.getPath().contains("/mnt/sd"))
                     {
-                        Uri uri = Uri.parse("file://" + f1.getParent());
-                        Intent intent = new Intent("MEDIA_SCANNER_DESIGNATED_PATH",uri);
-                        //mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,uri));
-                        intent.putExtra("scan", true);
+                        Uri uri_1 = Uri.parse("file://" + f1.getParent());
+                        Intent intent_1 = new Intent("MEDIA_SCANNER_DESIGNATED_PATH",uri_1);
+                        intent_1.putExtra("scan", true);
+                                                Uri uri_2 = Uri.parse("file://" + f2.getParent());
+                        Intent intent_2 = new Intent("MEDIA_SCANNER_DESIGNATED_PATH",uri_2);
+                        intent_2.putExtra("scan", true);
                         if(mContext != null)
-                            mContext.sendBroadcast(intent);
-                        Log.e("tangxiaodi","paste file-------------f1="+f1.getParent()+" f2="+f2.getPath());
+                        {
+                                mContext.sendBroadcast(intent_1);
+                                mContext.sendBroadcast(intent_2);
+                                Log.i("FileMenu","paste file-------------f1="+f1.getParent()+" f2="+f2.getPath());
+                        }
                     }
 				} else {
 //					if(moveSameDirectory.size() > 0) {
@@ -926,7 +931,7 @@ public class FileMenu {
                             }*/
                             if(f2.getPath().contains("/mnt/nand") || f2.getPath().contains("/mnt/sd"))
                             {
-                                Log.e("tangxiaodi","rename file-------------f2="+f2.getParent());
+                                Log.i("FileMenu","rename file-------------f2="+f2.getParent());
                                 Uri uri_2 = Uri.parse("file://" + f2.getParent());
                                 Intent intent_2 = new Intent("MEDIA_SCANNER_DESIGNATED_PATH",uri_2);
                                 //mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,uri));
@@ -1122,11 +1127,15 @@ public class FileMenu {
 					ret = true;
                     if(f.getPath().contains("/mnt/nand") || f.getPath().contains("/mnt/sd"))
                     {
+                        Uri uri_media = Uri.parse("file://" + f.getPath());
+                        Intent intent_media = new Intent("MEDIA_SCANNER_MEDIA_PATH",uri_media);
+                        mContext.sendBroadcast(intent_media);
+                        Log.i("FileMenu","delFile-------------------------delete file="+f.getPath());
                         Uri uri = Uri.parse("file://" + f.getParent());
                         Intent intent = new Intent("MEDIA_SCANNER_DESIGNATED_PATH",uri);
                         intent.putExtra("scan", true);
                         mContext.sendBroadcast(intent);
-                        Log.e("tangxiaodi","delFile-------------------------delete file="+f.getParent());
+                        Log.i("FileMenu","delFile-------------------------delete file="+f.getParent());
                     }
 				}
 			}

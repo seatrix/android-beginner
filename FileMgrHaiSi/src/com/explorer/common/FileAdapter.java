@@ -6,6 +6,7 @@ import java.util.List;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils.TruncateAt;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ public class FileAdapter extends BaseAdapter {
 
 	// vedio file
 	private Bitmap vedio_File;
+	private Bitmap bd_File;
 
 	// APK file
 	private Bitmap apk_File;
@@ -86,6 +88,8 @@ public class FileAdapter extends BaseAdapter {
 				R.drawable.list);
 		vedio_File = BitmapFactory.decodeResource(context.getResources(),
 				R.drawable.vediofile);
+		bd_File = BitmapFactory.decodeResource(context.getResources(),
+				R.drawable.bdfile);
 		music_File_mp3 = BitmapFactory.decodeResource(context.getResources(),
 				R.drawable.mp3file);
 		folder_File = BitmapFactory.decodeResource(context.getResources(),
@@ -175,7 +179,14 @@ public class FileAdapter extends BaseAdapter {
 				holder.icon.setImageBitmap(other_File);
 			}
 		} else {
+			if ("video/bd".equals(f_type))
+			{
+				holder.icon.setImageBitmap(bd_File);
+			}
+			else
+			{
 			holder.icon.setImageBitmap(folder_File);
+			}
 		}
 
 		//Judge the thumbnail display format of the text

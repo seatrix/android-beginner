@@ -219,6 +219,7 @@
 	<string name="hold_type">The %1$s format is now supported：%2$s</string>
 	<string name="is_add_short">Whether to add the directory as a shortcut</string>
 	<string name="file_is_searching">File is searching...</string>
+	<string name="install_equi">Install the equipment success</string>
 	<string name="uninstall_equi">Uninstall the equipment success</string>
 	<string name="quary_error">Query is Error</string>
 	<string name="shortcut_exist">Shortcut already exists</string>
@@ -228,4 +229,5 @@
 
 	<string name="network_error_exitnetbrowse">Network error,exist to local files</string>
 	<string name="network_error_notbrowse">Network error,so can not to browser</string>
+    <string name="network_nfsmount_getiperror">Get the ip error,Please see the network is ok</string>
 </resources>

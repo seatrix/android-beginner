@@ -75,7 +75,10 @@ public class SocketClient {
     // end add by qian_wei/zhou_yong 2011/10/20
     
 	
-	 // Socket
+	public SocketClient() {
+		running = true;
+		connect();
+	}
 	 
 	public void connect() {
 		try {
@@ -99,7 +102,7 @@ public class SocketClient {
 	 
 	public void writeMess(String s) {
 		try {
-			Log.w("STR", s);
+			Log.e("SocketClient", s);
 			if(s.startsWith("mountiso")) {
 			    cmdFlag = false;
 			} else {

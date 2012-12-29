@@ -219,6 +219,7 @@
 	<string name="hold_type">目前已支持的%1$s格式：%2$s</string>
 	<string name="is_add_short">是否添加该目录为快捷方式</string>
 	<string name="file_is_searching">文件搜索中......</string>
+	<string name="install_equi">设备加载成功</string>
 	<string name="uninstall_equi">设备卸载成功</string>
 	<string name="quary_error">查询出错</string>
 	<string name="shortcut_exist">快捷方式已存在</string>
@@ -228,4 +229,5 @@
 
 	<string name="network_error_exitnetbrowse">网络连接失败，退出网络文件浏览，切换到本地文件浏览</string>
 	<string name="network_error_notbrowse">网络连接失败，不能浏览网络文件</string>
+	<string name="network_nfsmount_getiperror">获取有效IP地址失败，请确保网络连接成功，并分配到IP地址</string>
 </resources>

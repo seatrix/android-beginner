@@ -12,6 +12,8 @@ import android.os.storage.StorageVolume;
 import android.preference.Preference;
 import android.content.Context;
 
+import com.explorer.common.SocketClient;
+import java.io.*;
 public class MountInfo {
 	private static final String TAG="MountInfo";
 	public String[] path = new String[64];
@@ -37,7 +39,8 @@ public class MountInfo {
 				if (path[i].contains("/mnt/nand")) {
 					type[i] = 2;
 					label[i] = "";
-				}else
+				}
+				else
 				{
 					type[i] = 1;
 				}
@@ -139,12 +142,79 @@ public class MountInfo {
 		if(storageVolumes != null && storageVolumes.length > 0){
 			for (int i = 0; i < storageVolumes.length; i++) {
 				if(storageVolumes[i].getPath().contains(fileSuffix)){
+					Log.e(TAG,"---YUEJUN---- storageVolumes[i].getPath() = " + i +" >> "+storageVolumes[i].getPath());
 					return storageVolumes[i].getPath();
 				}
 			}
 		}
 		return "/mnt/nand";
 
+	}
+	public void isSata(int i)
+	{
+		Log.e(TAG,"----YUEJUN---- isSATA = 1");
+		SocketClient sc1 = new SocketClient();
+	    sc1.writeMess(
+		"system /system/busybox/bin/find /sys/devices/platform/hiusb-ehci.0/usb1/1-1 -name \"sd*\" >> /mnt/SATA.txt");
+		sc1.readNetResponseSync();
+		Log.e(TAG,"----YUEJUN---- isSATA = 2");
+		String fileName = "/mnt/SATA.txt";
+		File f = new File(fileName);
+		long size = f.length();
+		if(size > 0)
+		{
+			Log.e(TAG,"----YUEJUN---- isSATA = 3");
+			String out = "";
+			out = readFile(fileName);
+			String sataName = "";
+			sataName = out.substring(out.lastIndexOf("/"));
+			if(path[i].contains(sataName))
+			{
+				type[i] = 0;
+			}
+			else
+			{
+				type[i] = 1;
+			}
+			SocketClient sc3 = new SocketClient();
+			sc3.writeMess(
+			"system /system/busybox/bin/rm /mnt/SATA.txt");
+			sc3.readNetResponseSync();
+		}
+		else
+		{
+			type[i] = 1;
+			SocketClient sc4 = new SocketClient();
+			sc4.writeMess(
+			"system /system/busybox/bin/rm /mnt/SATA.txt");
+			sc4.readNetResponseSync();
+		}
+	}
+	public String readFile(String fileName)
+	{
+		String output = "";
+        File file = new File(fileName);
+        if(file.exists())
+		{
+            if(file.isFile())
+			{
+                try{
+                    BufferedReader input = new BufferedReader(new FileReader(file));
+					output = input.readLine();
+					Log.e(TAG, "----YUEJUN---- ouput = "+ output);
+					input.close();
+                }
+                catch(IOException ioException)
+				{
+                    System.err.println("File Error!");
+                }
+            }
+        }
+        else
+		{
+            System.err.println("File Does Not Exit!");
+        }
+        return output;
 	}
 }
 

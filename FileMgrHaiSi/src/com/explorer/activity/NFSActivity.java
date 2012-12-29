@@ -471,9 +471,11 @@ public class NFSActivity extends CommonActivity {
 		edtServerFolder = (EditText) nfsAddDlg.findViewById(R.id.serverFolder1);
 		checkAuto = (CheckBox) nfsAddDlg.findViewById(R.id.checkAuto);
 
-		//edtIpAddress.setText("192.168.52.13");
+		edtIpAddress.setText("192.168.52.13");
+		edtServerFolder.setText("/opt/a");
+		/*
 		edtIpAddress.setText("192.168.51.158");
-		edtServerFolder.setText("/nfs/public");
+		edtServerFolder.setText("/nfs/public");*/
 		checkAuto.setChecked(true);
 		edtIpAddress.requestFocus();
 	}

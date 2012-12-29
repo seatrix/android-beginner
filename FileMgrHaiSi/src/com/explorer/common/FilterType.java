@@ -125,7 +125,7 @@ public class FilterType {
 			shareVideo.putString("RGB", "RGB");
 			shareVideo.putString("VC1", "VC1");
 			shareVideo.putString("Y4M", "Y4M");
-
+			shareVideo.putString("WEBM", "WEBM");
 			editor.putBoolean("videoFlag", false);
 			editor.commit();
 			shareVideo.commit();

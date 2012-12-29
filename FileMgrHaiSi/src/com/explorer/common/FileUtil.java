@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.pm.PackageManager;
 import android.content.SharedPreferences;
 import android.os.StatFs;
 import android.text.Editable;
@@ -76,6 +77,7 @@ public class FileUtil {
 	// new add edittext
 	private EditText myEditText;
 
+    private static boolean mIsSupportBD = true;
 	/**
 	 * 
 	 * 
@@ -140,6 +142,15 @@ public class FileUtil {
 		mx = mea;
 		String type = "";
 		String fName = f.getName();
+        if (mIsSupportBD)
+        {
+            fName = f.getAbsolutePath();
+            if (mx.getBDInfo().isBDFile(fName))
+            {
+                type = "video/bd";
+                return type;
+            }
+        }
 		// Get file extension
 		String end = fName
 				.substring(fName.lastIndexOf(".") + 1, fName.length())
@@ -190,6 +201,14 @@ public class FileUtil {
 		mx = mea;
 		String type = "";
 		String fName = fileName;
+        if (mIsSupportBD)
+        {
+            if (mx.getBDInfo().isBDFile(fName))
+            {
+                type = "video/bd";
+                return type;
+            }
+        }
 		// get file extension
 
 		String end = fName

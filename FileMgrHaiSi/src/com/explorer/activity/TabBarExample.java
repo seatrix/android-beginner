@@ -172,8 +172,7 @@ public class TabBarExample extends TabActivity {
 					CommonActivity.cancleToast();
 					MainExplorerActivity mainActivity = (MainExplorerActivity) getCurrentActivity();
 					if (mainActivity.isFileCut) {
-						if (!mainActivity.getPathTxt().getText().toString()
-								.equals("")) {
+						if (!mainActivity.getPathTxt().getText().toString().equals("")) {
 							mainActivity.updateList(true);
 							mainActivity.isFileCut = false;
 						}
