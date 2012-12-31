@@ -10,14 +10,13 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnCancelListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.os.ServiceManager;
-import android.os.storage.IMountService;
 import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -28,8 +27,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -40,6 +37,8 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.explorer.R;
 import com.explorer.common.CommonActivity;
@@ -53,6 +52,9 @@ import com.explorer.common.SocketClient;
 import com.explorer.jni.Mountinfo;
 import com.explorer.jni.NfsClient;
 
+import android.os.storage.IMountService;
+import android.os.ServiceManager;
+import android.os.IBinder;
 /**
  * 浏览NFS网络文件
  * 
@@ -251,8 +253,7 @@ public class NFSActivity extends CommonActivity {
                 Log.d(TAG, "397::init()_mountedList=" + mountedList);
                 if (mountedList.length() > 0) {
                     List<Mountinfo> fmtMountList = wrap2Mountinfo(mountedList);
-                    Log.i(TAG,
-                            "400::[init]fmtMountList.size="
+                    Log.i(TAG, "400::[init]fmtMountList.size="
                                     + fmtMountList.size());
                     for (int i = 0; i < fmtMountList.size(); i++) {
                         Log.i(TAG, "402::[init]isAuto="
@@ -264,10 +265,10 @@ public class NFSActivity extends CommonActivity {
                         // if (fmtMountList.get(i).getUcIsAuto() == 1) {
                         if (fmtMountList.get(i).getUcIsMounted() == 0) {
                             // end modify by qian_wei/zhou_yong 2011/10/26
-                            int flag = nNfsClient.mountNFSSvr(
-                                    fmtMountList.get(i).getSzSvrIP(),
-                                    fmtMountList.get(i).getSzSvrFold(),
-                                    fmtMountList.get(i).getSzCltFold(), 1);
+                            int flag = nNfsClient.mountNFSSvr(fmtMountList.get(
+							i).getSzSvrIP(), fmtMountList.get(i)
+							.getSzSvrFold(), fmtMountList.get(i)
+							.getSzCltFold(), 1);
                             Log.w("TAG", " FLAG= " + flag);
                             if (flag == 0) {
                                 fmtMountList.get(i).setUcIsMounted(1);
@@ -397,10 +398,12 @@ public class NFSActivity extends CommonActivity {
                 } else if (nMountResult == 1) {
                     FileUtil.showToast(NFSActivity.this,
                             getString(R.string.new_mout_fail));
-                } else if (NFSRESULT_GETSELFIPERROR == nMountResult) {
+                } else if (NFSRESULT_GETSELFIPERROR == nMountResult) 
+				{
                     FileUtil.showToast(NFSActivity.this,
                             getString(R.string.network_nfsmount_getiperror));
-                } else {
+                } 
+				else {
                     FileUtil.showToast(NFSActivity.this,
                             getString(R.string.mount_self));
                 }
@@ -434,13 +437,15 @@ public class NFSActivity extends CommonActivity {
                 FileUtil.showToast(NFSActivity.this,
                         getString(R.string.new_mout_fail));
                 break;
-            case MOUNT_FAILD: {
+            case MOUNT_FAILD: 
+			{
                 int nMountResult = msg.arg1;
                 String strTipString = getString(R.string.new_mout_fail);
                 if (progress != null && progress.isShowing()) {
                     progress.cancel();
                 }
-                if (NFSRESULT_GETSELFIPERROR == nMountResult) {
+                if (NFSRESULT_GETSELFIPERROR == nMountResult) 
+				{
                     strTipString = getString(R.string.network_nfsmount_getiperror);
                 }
                 FileUtil.showToast(NFSActivity.this, strTipString);
@@ -774,9 +779,8 @@ public class NFSActivity extends CommonActivity {
             }
             // end modify by qian_wei/ma_zhongying 2011/10/17
 
-            int mountResult = nNfsClient.mountNFSSvr(info.getSzSvrIP(),
-                    info.getSzSvrFold(), info.getSzCltFold(),
-                    info.getUcIsAuto());
+            int mountResult = nNfsClient.mountNFSSvr(info.getSzSvrIP(),info
+                    .getSzSvrFold(), info.getSzCltFold(),info.getUcIsAuto());
             if (mountResult == 0) {
                 Log.w(TAG, "444 = mount success");
                 intList.add(myPosition);
@@ -852,7 +856,8 @@ public class NFSActivity extends CommonActivity {
             // end modify by qian_wei/xiong_cuifan 2011/11/08
 
             if (mIsSupportBD) {
-                if (FileUtil.getMIMEType(openFile, this).equals("video/bd")) {
+                if (FileUtil.getMIMEType(openFile, this).equals("video/bd")) 
+				{
                     launchHiBDPlayer(path);
                     return;
                 }
@@ -869,15 +874,14 @@ public class NFSActivity extends CommonActivity {
                 socketClient = new SocketClient(this);
                 progress = new ProgressDialog(this);
                 progress.show();
-                try {
-                    String mntPath = getMountService().mountISO(
-                            openFile.getPath());
-                    socketClient.writeMess("mountiso "
-                            + super.tranString(openFile.getPath()) + " "
-                            + mntPath);
+                try 
+				{
+                    String mntPath = getMountService().mountISO(openFile.getPath());
+                    socketClient.writeMess("mountiso " + super.tranString(openFile.getPath()) + " " + mntPath);
                     mBDISOName = openFile.getName();
                     mBDISOPath = openFile.getAbsolutePath();
-                } catch (Exception e) {
+                } catch (Exception e) 
+				{
                     Log.e(TAG, " error e=" + e);
                     FileUtil.showToast(this, "mountiso file error");
                 }
@@ -1117,12 +1121,10 @@ public class NFSActivity extends CommonActivity {
                     } else {
                         parentPosition = myPosition;
                         currentFileString = preCurrentPath;
-                        Log.v("\33[32m Main1", "onCancel" + currentFileString
-                                + "\33[0m");
+                        Log.v("\33[32m Main1", "onCancel" + currentFileString + "\33[0m");
                         intList.remove(intList.size() - 1);
                     }
-                    FileUtil.showToast(NFSActivity.this,
-                            getString(R.string.cause_anr));
+                    FileUtil.showToast(NFSActivity.this, getString(R.string.cause_anr));
                 }
             });
             // end modify by qian_wei/xiong_cuifan 2011/11/08
@@ -1150,8 +1152,8 @@ public class NFSActivity extends CommonActivity {
                     getMenu(myPosition, menu_item, list);
                     dialog.cancel();
                 } else {
-                    FileUtil.showToast(NFSActivity.this,
-                            NFSActivity.this.getString(R.string.select_file));
+                    FileUtil.showToast(NFSActivity.this, NFSActivity.this
+                            .getString(R.string.select_file));
                 }
             } else {
                 dialog.cancel();
@@ -1373,9 +1375,8 @@ public class NFSActivity extends CommonActivity {
         }
         // 服务器ip地址
         if (BLANK.equals(pSvrIP) || null == pSvrIP) {
-            FileUtil.showToast(
-                    NFSActivity.this,
-                    getString(R.string.nfsAddHint,
+            FileUtil.showToast(NFSActivity.this, getString(R.string.nfsAddHint,
+                    
                             getString(R.string.ip_address)));
         } else if (!pSvrIP.matches(IP_REGEX)) {
             FileUtil.showToast(NFSActivity.this,
@@ -1383,9 +1384,7 @@ public class NFSActivity extends CommonActivity {
         }
         // 服务器目录
         else if (BLANK.equals(pSvrFold) || null == pSvrFold) {
-            FileUtil.showToast(
-                    NFSActivity.this,
-                    getString(R.string.nfsAddHint,
+            FileUtil.showToast(NFSActivity.this, getString(R.string.nfsAddHint,
                             getString(R.string.server_folder)));
         } else {
 
@@ -1408,8 +1407,8 @@ public class NFSActivity extends CommonActivity {
                 new Thread(new Runnable() {
                     public void run() {
                         // 当输入内容均不为空时
-                        int nMountResult = nNfsClient.mountNFSSvr(pSvrIP,
-                                pSvrFold, BLANK, ucIsAuto);
+                        int nMountResult = nNfsClient.mountNFSSvr(pSvrIP, pSvrFold, BLANK, 
+                                ucIsAuto);
                         Log.d(TAG, "326::new_mount_flag=" + nMountResult);
                         Message message = new Message();
                         message.what = ADD_MOUNT;
@@ -1731,9 +1730,9 @@ public class NFSActivity extends CommonActivity {
                 // 确认删除对话框
                 confirmDelDlg = new AlertDialog.Builder(NFSActivity.this)
                         .setTitle(R.string.confirm_delete_dlg_title)
-                        .setMessage(R.string.comfirm_delete_hint)
-                        .setIcon(R.drawable.alert)
-                        .setPositiveButton(R.string.ok,
+                        .setMessage(R.string.comfirm_delete_hint).setIcon(
+                        R.drawable.alert).setPositiveButton(
+                        R.string.ok,
                                 new DialogInterface.OnClickListener() {
                                     // 在点击确认删除对话框后，对选项进行删除
                                     public void onClick(
@@ -1749,8 +1748,8 @@ public class NFSActivity extends CommonActivity {
                                         }).start();
 
                                     }
-                                })
-                        .setNegativeButton(R.string.cancel,
+                                
+                        }).setNegativeButton(R.string.cancel,
                                 new DialogInterface.OnClickListener() {
 
                                     public void onClick(
@@ -1788,9 +1787,8 @@ public class NFSActivity extends CommonActivity {
         dlg.cancel();
         Log.d(TAG, "512::dlgLstView=" + dlgLstView);
         int count = dlgLstView.getCount();// 获取列表中的条目数
-        Log.d(TAG,
-                "459::postFormatedMountinfos_size="
-                        + postFormatedMountinfos.size());
+        Log.d(TAG, "459::postFormatedMountinfos_size="                        
+		        + postFormatedMountinfos.size());
         Log.d(TAG, "460::list_count=" + count);
         Mountinfo info = null;
         for (int i = count - 1; i >= 0; i--) {
@@ -1826,8 +1824,8 @@ public class NFSActivity extends CommonActivity {
             if (getFlag()) {
                 setFlag(false);
                 synchronized (lock) {
-                    util = new FileUtil(NFSActivity.this, filterCount,
-                            arrayDir, arrayFile, currentFileString);
+                    util = new FileUtil(NFSActivity.this, filterCount, arrayDir,
+                             arrayFile, currentFileString);
                 }
             } else {
                 util = new FileUtil(NFSActivity.this, filterCount,
@@ -1870,7 +1868,8 @@ public class NFSActivity extends CommonActivity {
                 }
             } else {
                 // begin modify by yuejun 2011/12/21
-                if (util.currentFilePath.startsWith(ISO_PATH)) {
+                if (util.currentFilePath.startsWith(ISO_PATH)) 
+				{
                     util.currentFilePath = isoParentPath;
                 }
                 // end modify by yuejun 2011/12/21
@@ -1940,8 +1939,7 @@ public class NFSActivity extends CommonActivity {
     // for grally3D delete the file, flush the data
     protected void onResume() {
         super.onResume();
-        if (!currentFileString.equals("")
-                && preCurrentPath.equals(currentFileString)) {
+        if (!currentFileString.equals("") && preCurrentPath.equals(currentFileString)) {
             updateList(true);
         }
     }
