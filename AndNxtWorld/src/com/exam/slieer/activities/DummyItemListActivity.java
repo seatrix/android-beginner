@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+import com.exam.slieer.R;
 import com.exam.slieer.ui.fragment.DummyItemDetailFragment;
 import com.exam.slieer.ui.fragment.DummyItemListFragment;
-import com.example.helloworld.R;
 
 /**
  * 程序入口, FragmentActivity 在内部的某个ViewGroup内动态添加或替代一个Fragment

@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.exam.slieer.R;
 import com.exam.slieer.activities.DummyItemListActivity;
 import com.exam.slieer.data.DummyContent;
-import com.example.helloworld.R;
 
 /**
  * A fragment representing a single Item detail screen. This fragment is either
