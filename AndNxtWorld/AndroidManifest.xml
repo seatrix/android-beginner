@@ -3,7 +3,9 @@
     package="com.exam.slieer"
     android:versionCode="1"
     android:versionName="1.0" >
-
+    
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="15" />
@@ -14,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".ItemListActivity"
+            android:name="ApiDemos"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,15 +24,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- 
         <activity
-            android:name=".ItemDetailActivity"
-            android:label="@string/title_item_detail" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ItemListActivity" />
+            android:name=".activities.DummyItemListActivity"
+            android:label="@string/fragment" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
         </activity>
-         -->
+        <activity
+            android:name=".activities.LoadListActivity"
+            android:label="@string/dynamic_Load_list" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.DoubanMainActivity"
+            android:label="@string/dynamic_Load_douban_list" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

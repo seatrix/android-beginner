@@ -1,4 +1,4 @@
-package com.exam.slieer.dummy;
+package com.exam.slieer.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;

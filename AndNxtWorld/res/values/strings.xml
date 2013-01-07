@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="app_name">AndNxtWorld</string>
+    <string name="app_name">andnxt</string>
     <string name="title_item_detail">Item Detail</string>
-
+    <string name="fragment">Fragment</string>
+    <string name="dynamic_Load_list">DynamicLoad</string>
+    <string name="dynamic_Load_douban_list">DoubanList</string>
+    
+    <item name="tag_first" type="id"></item>
+    <item name="tag_second" type="id"></item>
 </resources>

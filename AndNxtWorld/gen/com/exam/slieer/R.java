@@ -10,40 +10,56 @@ package com.exam.slieer;
 public final class R {
     public static final class attr {
     }
+    public static final class color {
+        public static final int gold=0x7f040002;
+        public static final int transparent=0x7f040001;
+        public static final int white=0x7f040000;
+    }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int arrow=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int jia=0x7f020002;
+        public static final int one=0x7f020003;
+        public static final int three=0x7f020004;
+        public static final int two=0x7f020005;
     }
     public static final class id {
-        public static final int expandableListView1=0x7f060003;
-        public static final int item_detail=0x7f060002;
-        public static final int item_detail_container=0x7f060000;
-        public static final int item_list=0x7f060001;
+        public static final int head_arrowImageView=0x7f06000c;
+        public static final int head_contentLayout=0x7f06000b;
+        public static final int head_lastUpdatedTextView=0x7f06000f;
+        public static final int head_progressBar=0x7f06000d;
+        public static final int head_tipsTextView=0x7f06000e;
+        public static final int item_detail=0x7f06000a;
+        public static final int item_detail_container=0x7f060002;
+        public static final int item_list=0x7f060003;
+        public static final int iv_icon=0x7f060006;
+        public static final int listView=0x7f060010;
+        public static final int ll_main_progress=0x7f060005;
+        public static final int lv_main_books=0x7f060004;
+        public static final int pic_pages=0x7f060011;
+        public static final int tag_first=0x7f060000;
+        public static final int tag_second=0x7f060001;
+        public static final int tv_message=0x7f060008;
+        public static final int tv_name=0x7f060007;
+        public static final int tv_synopsis=0x7f060009;
     }
     public static final class layout {
         public static final int activity_item_detail=0x7f030000;
-        /** 
-    Layout alias to replace the single-pane version of the layout with a
-    two-pane version on Large screens.
-
-    For more on layout aliases, see:
-    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
-    
-
-    Layout alias to replace the single-pane version of the layout with a
-    two-pane version on Large screens.
-
-    For more on layout aliases, see:
-    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
-    
-         */
         public static final int activity_item_list=0x7f030001;
         public static final int activity_item_twopane=0x7f030002;
-        public static final int fragment_item_detail=0x7f030003;
-        public static final int layout_pageview=0x7f030004;
+        public static final int douban_main=0x7f030003;
+        public static final int douban_main_item=0x7f030004;
+        public static final int fragment_item_detail=0x7f030005;
+        public static final int load_list_head=0x7f030006;
+        public static final int load_list_main=0x7f030007;
+        public static final int load_list_page=0x7f030008;
     }
     public static final class string {
-        public static final int app_name=0x7f040000;
-        public static final int title_item_detail=0x7f040001;
+        public static final int app_name=0x7f050000;
+        public static final int dynamic_Load_douban_list=0x7f050004;
+        public static final int dynamic_Load_list=0x7f050003;
+        public static final int fragment=0x7f050002;
+        public static final int title_item_detail=0x7f050001;
     }
     public static final class style {
         /** 
@@ -67,10 +83,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f050000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f050001;
+        public static final int AppTheme=0x7f070001;
     }
 }
