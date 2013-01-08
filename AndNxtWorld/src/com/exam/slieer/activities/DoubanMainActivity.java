@@ -1,30 +1,13 @@
 package com.exam.slieer.activities;
 
-import java.io.IOException;
-
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.exam.slieer.R;
-import com.exam.slieer.data.NewBook;
-import com.exam.slieer.data.NewBookDao;
-import com.exam.slieer.utils.AsyncImageLoader.ImageCallback;
-import com.exam.slieer.utils.NetUtil;
-import com.exam.slieer.utils.ViewCache;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -36,13 +19,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.exam.slieer.R;
+import com.exam.slieer.data.NewBook;
+import com.exam.slieer.data.NewBookDao;
+import com.exam.slieer.utils.AsyncImageLoader.ImageCallback;
+import com.exam.slieer.utils.NetUtil;
+import com.exam.slieer.utils.ViewCache;
+
 public class DoubanMainActivity extends Activity {
-    private ListView lv_main_books;//listView对象
-    private LinearLayout ll_loading;//控制显示正在加载的progress
-    private List<NewBook> list;//要显示的列表
-    private boolean isScrolling = false;//是否正在滚动
-    private SubjectListAdapter adapter;//数据适配器
-    private boolean isloading = false;//判断是否正在加载中
+    private final static String TAG = "DoubanMainActivity";
+    /**listView对象*/
+    private ListView lv_main_books;
+    /**控制显示正在加载的progress*/
+    private LinearLayout ll_loading;
+    /**要显示的列表*/
+    private List<NewBook> list;
+    /**是否正在滚动*/
+    private boolean isScrolling = false;
+    /**数据适配器*/
+    private SubjectListAdapter adapter;
+    /**判断是否正在加载中*/
+    private boolean isloading = false;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,9 +127,11 @@ public class DoubanMainActivity extends Activity {
                         protected void onPostExecute(List<NewBook> result) {
                             list.addAll(result);
                             ll_loading.setVisibility(View.GONE);
-                                System.out.println("更新adapter");
-                                adapter.notifyDataSetChanged();
-                            System.out.println("一共有" + list.size() + "本书");
+                            Log.i(TAG, "更新adapter");
+                            
+                            adapter.notifyDataSetChanged();
+                            Log.i(TAG, "一共有" + list.size() + "本书");
+                            
                             isloading = false;
                             super.onPostExecute(result);
                         }
@@ -171,8 +171,9 @@ public class DoubanMainActivity extends Activity {
             protected void onPostExecute(List<NewBook> result) {
                 list=result;
                 ll_loading.setVisibility(View.GONE);
-                    lv_main_books.setAdapter(adapter);
-                System.out.println("一共有" + list.size() + "本书");
+                lv_main_books.setAdapter(adapter);
+                
+                Log.i(TAG, "一共有" + list.size() + "本书");
                 super.onPostExecute(result);
             }
 

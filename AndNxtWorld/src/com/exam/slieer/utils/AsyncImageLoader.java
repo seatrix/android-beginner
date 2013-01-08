@@ -1,4 +1,5 @@
 package com.exam.slieer.utils;
+
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.net.URL;
@@ -15,6 +16,24 @@ public class AsyncImageLoader {
 	public AsyncImageLoader() {
 		imageCache = new HashMap<String, SoftReference<Drawable>>();
 	}
+	
+    //没的情况
+    static class LoadHandler extends Handler {
+        private static ImageCallback imageCallback;
+        private String imageUrl;
+        
+        public LoadHandler(final ImageCallback imageCallback, String imageUrl){
+            LoadHandler.imageCallback = imageCallback;
+            this.imageUrl = imageUrl;
+        }
+        
+        public void handleMessage(Message message) {
+            if (imageCallback != null) {
+                imageCallback.imageLoaded((Drawable) message.obj, imageUrl);
+            }
+        }
+    };
+	
 	//判断是否有缓存的图片，有的话返回缓存，没得话开启线程下载
 	public Drawable loadDrawable(final String imageUrl,
 			final ImageCallback imageCallback) {
@@ -27,14 +46,8 @@ public class AsyncImageLoader {
 				return drawable;
 			}
 		}
-		//没的情况
-		final Handler handler = new Handler() {
-			public void handleMessage(Message message) {
-				if (imageCallback != null) {
-					imageCallback.imageLoaded((Drawable) message.obj, imageUrl);
-				}
-			}
-		};
+		
+		final Handler handler = new LoadHandler(imageCallback, imageUrl);
 		new Thread() {
 			@Override
 			public void run() {

@@ -31,10 +31,6 @@ public class DummyItemListActivity extends FragmentActivity implements
         itemListFragment.setActivateOnItemClick(true);
     }
 
-    /**
-     * Callback method from {@link DummyItemListFragment.Callbacks} indicating
-     * that the item with the given ID was selected.
-     */
     @Override
     public void onItemSelected(String id) {
         // In two-pane mode, show the detail view in this activity by
