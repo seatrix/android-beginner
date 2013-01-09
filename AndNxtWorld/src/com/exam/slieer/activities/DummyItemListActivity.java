@@ -15,17 +15,13 @@ import com.exam.slieer.ui.fragment.DummyItemListFragment;
 public class DummyItemListActivity extends FragmentActivity implements
         DummyItemListFragment.Callbacks {
     private final static String TAG = "ItemListActivity";
-
+    private FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
-         * 左侧带导航模式
-         */
+        /*左侧带导航模式*/
         setContentView(R.layout.activity_item_twopane);
-        // In two-pane mode, list items should be given the
-        // 'activated' state when touched.
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         DummyItemListFragment itemListFragment = (DummyItemListFragment)fragmentManager
                 .findFragmentById(R.id.item_list);
         itemListFragment.setActivateOnItemClick(true);
@@ -33,17 +29,19 @@ public class DummyItemListActivity extends FragmentActivity implements
 
     @Override
     public void onItemSelected(String id) {
-        // In two-pane mode, show the detail view in this activity by
-        // adding or replacing the detail fragment using a
-        // fragment transaction.
-        Bundle arguments = new Bundle();
-        arguments.putString(DummyItemDetailFragment.ARG_ITEM_ID, id);
         DummyItemDetailFragment fragment = new DummyItemDetailFragment();
 
         /* 在FragmentActivity内，切换Fragment. */
+        Bundle arguments = new Bundle();
+        arguments.putString(DummyItemDetailFragment.ARG_ITEM_ID, id);
         fragment.setArguments(arguments);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.item_detail_container, fragment).commit();
 
+        fragmentManager.beginTransaction()
+            /*一个fragment替换为另一个, 并在后台堆栈中保留之前的状态，
+             * 通过调用 addToBackStack(), replace事务被保存到back stack, 
+             * 用户通过按下BACK按键带回前一个fragment.
+             * */
+            .addToBackStack(null)
+            .replace(R.id.item_detail_container, fragment).commit();
     }
 }

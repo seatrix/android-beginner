@@ -37,7 +37,7 @@ import java.util.Map;
 public class ApiDemos extends ListActivity {
     private final static String TAG = "ApiDemos";
     private final static String CURR_PATH = "com.exam.Path";
-    private static String APP_NAME; 
+    private String APP_NAME; 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
