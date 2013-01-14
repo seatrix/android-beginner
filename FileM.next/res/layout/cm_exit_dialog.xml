@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="511dp"
+    android:layout_height="274dp"
+    android:background="@drawable/cm_exit_dialog_bg"
+    android:padding="50dp" >
+    <TextView
+        android:id="@+id/cm_exit_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/white"
+        android:textSize="25sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cm_exit_title"
+        android:layout_marginTop="50dp" >
+
+        <Button
+            android:id="@+id/cm_exit_btn_ok"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="110dp"
+            android:background="@drawable/cm_exit_btn_bg"
+            android:text="@string/confirm"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/cm_exit_btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cm_exit_btn_bg"
+            android:text="@string/cancle"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>

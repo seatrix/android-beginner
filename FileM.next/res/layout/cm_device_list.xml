@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/device_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/cm_content_bg"
+    android:cacheColorHint="#00000000"
+    android:divider="@drawable/cm_devcice_divi"
+    android:footerDividersEnabled="false"
+    android:headerDividersEnabled="false"
+    android:focusableInTouchMode="true"
+    android:listSelector="@drawable/cm_item_select"
+    android:scrollbarThumbVertical="@drawable/cm_scroll_thumb"
+    android:scrollbarTrackVertical="@drawable/cm_scroll_track"
+    android:scrollbars="vertical" />

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ListView
+        android:id="@+id/file_content"
+        android:layout_width="950dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/cm_content_bg"
+        android:cacheColorHint="#00000000"
+        android:listSelector="@drawable/cm_item_select"
+        android:scrollbarThumbVertical="@drawable/cm_scroll_thumb"
+        android:scrollbarTrackVertical="@drawable/cm_scroll_track" >
+    </ListView>
+
+    <include
+        android:layout_toRightOf="@id/file_content"
+        layout="@layout/cm_right_info" />
+
+    <include layout="@layout/cm_file_empty_back" />
+
+</RelativeLayout>

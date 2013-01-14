@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <GridView
+        android:id="@+id/file_content"
+        android:layout_width="936dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/cm_content_bg"
+        android:listSelector="@drawable/cm_item_select"
+        android:numColumns="2"
+        android:scrollbarThumbVertical="@drawable/cm_scroll_thumb"
+        android:scrollbarTrackVertical="@drawable/cm_scroll_track"
+        android:scrollbars="vertical"
+        android:scrollingCache="false"
+        android:verticalSpacing="10dp" 
+        android:focusableInTouchMode="true">
+    </GridView>
+
+    <include
+        android:layout_toRightOf="@id/file_content"
+        layout="@layout/cm_right_info" />
+
+    <include layout="@layout/cm_file_empty_back" />
+
+    <include layout="@layout/cm_data_loading" />
+
+</RelativeLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/empty_view"
+    android:layout_width="460dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@drawable/cm_item_select"
+    android:focusable="true"
+    android:visibility="gone" >
+
+    <ImageView
+        android:id="@+id/back_up_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:paddingBottom="13dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="8dp"
+        android:src="@drawable/cm_back_folder" />
+
+    <TextView
+        android:id="@+id/back_up_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/back_up_file"
+        android:text="@string/up_file"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/back_up_name"
+        android:src="@drawable/cm_empty_back" />
+
+</RelativeLayout>

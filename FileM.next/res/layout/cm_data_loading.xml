@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cm_progress_small"
+    android:layout_width="300dp"
+    android:layout_height="100dp"
+    android:layout_alignParentRight="true"
+    android:background="@drawable/cm_loading_bg"
+    android:orientation="horizontal"
+    android:visibility="gone" >
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:indeterminateDrawable="@drawable/cm_progress_anim" >
+    </ProgressBar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/cm_data_loading"
+        android:textColor="#ffffff"
+        android:textSize="24dp" >
+    </TextView>
+
+</LinearLayout>

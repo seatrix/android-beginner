@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00141f" >
+
+    <include
+        android:id="@+id/title_tag"
+        layout="@layout/cm_head" />
+
+    <include
+        android:id="@+id/tail_tag"
+        layout="@layout/cm_tail" />
+
+    <FrameLayout
+        android:id="@+id/file_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/tail_tag"
+        android:layout_below="@id/title_tag" />
+
+    <include layout="@layout/cm_data_loading" />
+
+</RelativeLayout>

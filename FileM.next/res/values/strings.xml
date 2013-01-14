@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="app_name">File Explorer</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+     <string name="tab_favorite">favorite</string>
+    <string name="tab_pic">picture</string>
+    <string name="tab_video">video</string>
+    <string name="tab_audio">audio</string>
+    <string name="category_all">all</string>
+    <string name="category_music">music</string>
+   <string name="enable_sd_card">enable_sd_card</string>
+   <string name="no_file">no_file</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="360dp"
+    android:layout_height="match_parent"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/item_select_title_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/change_view"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/tpe_item_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_select_title_tag"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="30dp"
+        android:cacheColorHint="#00000000"
+        android:listSelector="@drawable/cm_pop_item_select" />
+
+</RelativeLayout>
