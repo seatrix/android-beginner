@@ -39,13 +39,9 @@ import com.mipt.mediacenter.utils.Util.SDCardInfo;
  */
 public class MainActivity extends Activity {
 	public static final String TAG = "MainActivity";
-	//private RadioGroup tabGroup;
-	//private int tabId = MediacenterConstant.IntentFlags.PIC_ID;
-	//private int checkId = getcheckedIdByTabId(tabId);
 	private Context cxt;
 	private ArrayList<DeviceInfo> deviceInfos = new ArrayList<DeviceInfo>();
 	private ArrayList<DeviceInfo> oldDeviceInfos = new ArrayList<DeviceInfo>();
-	private static final String InstanceState = "tabId";
 	private boolean createNew;
 
 	@Override
@@ -189,17 +185,15 @@ public class MainActivity extends Activity {
 					R.drawable.cm_usb_remove_tag));
 		}
 		
-        /*ArrayList<DeviceInfo> dlanList = cover2DLANDevice(AllShareProxy.getInstance(cxt).getDeviceList());		
+        ArrayList<DeviceInfo> dlanList = cover2DLANDevice(AllShareProxy.getInstance(cxt).getDeviceList());		
 		temp.addAll(dlanList);
 		if (!isHasTypeDevice(DeviceInfo.TYPE_DLAN, temp)) {
 			temp.add(new DeviceInfo(null, "DLNA", null, null, null,
 					DeviceInfo.TYPE_DLAN, false, R.drawable.cm_dlan_remove_tag));
-		}*/
-		deviceInfos = temp;
-		DeviceInfo reomoveDevice = null;
-/*		if (tabId != MediacenterConstant.IntentFlags.FAV_ID) {
 		}
-*/		DeviceFragment f = (DeviceFragment) getFragmentManager()
+		deviceInfos = temp;
+		DeviceInfo reomoveDevice = null;		
+		DeviceFragment f = (DeviceFragment) getFragmentManager()
 					.findFragmentById(R.id.tabcontent);
 		if (f != null) {
 		    Log.i(TAG, "deviceInfos.size:" + deviceInfos.size());
