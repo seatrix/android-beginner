@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.cm_activity_main);
 		cxt = MainActivity.this;
 		Log.i(TAG, "MainActivity.oncreate...");
+		/**dlna*/
 		addBroadCast();
 		createNew = true;
 		initData();

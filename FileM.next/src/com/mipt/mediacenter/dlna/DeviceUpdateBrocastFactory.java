@@ -14,7 +14,9 @@ import android.content.Context;
 import android.content.Intent;
 
 
-
+/**
+ *dlna listener factory. 
+ */
 public class DeviceUpdateBrocastFactory {
 	private static final CommonLog log = LogFactory.createLog();
 	

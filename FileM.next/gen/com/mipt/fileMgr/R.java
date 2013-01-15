@@ -14,20 +14,12 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int black=0x7f050007;
         public static final int cm_device_unused=0x7f050002;
         public static final int cm_file_info=0x7f050001;
-        public static final int lyrics=0x7f050003;
-        public static final int lyrics_hl=0x7f050004;
         public static final int path_title=0x7f050000;
-        public static final int seekbar_bg=0x7f05000b;
-        public static final int seekbar_progress=0x7f05000c;
-        public static final int seekbar_secondary_progress=0x7f05000d;
-        public static final int transparent=0x7f050009;
-        public static final int transparent2=0x7f05000a;
-        public static final int visualize_fx=0x7f050005;
-        public static final int white=0x7f050006;
-        public static final int yellow=0x7f050008;
+        public static final int transparent=0x7f050005;
+        public static final int white=0x7f050003;
+        public static final int yellow=0x7f050004;
     }
     public static final class dimen {
         public static final int bottom_tab_padding_drawable=0x7f060003;
@@ -37,7 +29,7 @@ public final class R {
         public static final int padding_small=0x7f060000;
     }
     public static final class drawable {
-        public static final int blue=0x7f02004d;
+        public static final int blue=0x7f020049;
         public static final int cm_back=0x7f020000;
         public static final int cm_back_folder=0x7f020001;
         public static final int cm_bg=0x7f020002;
@@ -91,7 +83,7 @@ public final class R {
         public static final int cm_scroll_track=0x7f020032;
         public static final int cm_sd_remove_tag=0x7f020033;
         public static final int cm_sd_tag=0x7f020034;
-        public static final int cm_tag_color=0x7f02004b;
+        public static final int cm_tag_color=0x7f020047;
         public static final int cm_toast_bg=0x7f020035;
         public static final int cm_usb_remove_tag=0x7f020036;
         public static final int cm_usb_tag=0x7f020037;
@@ -101,22 +93,17 @@ public final class R {
         public static final int cm_video_tag_normal=0x7f02003b;
         public static final int cm_video_tag_select=0x7f02003c;
         public static final int cn_progress00=0x7f02003d;
-        public static final int green=0x7f02004e;
+        public static final int green=0x7f02004a;
         public static final int ic_action_search=0x7f02003e;
         public static final int ic_launcher=0x7f02003f;
-        public static final int mp_btn_prev=0x7f020040;
-        public static final int mp_btn_random=0x7f020041;
-        public static final int mp_btn_selected=0x7f020042;
-        public static final int mp_btn_single=0x7f020043;
-        public static final int mp_music_default=0x7f020044;
-        public static final int mp_seekbar_thumb=0x7f020045;
-        public static final int mp_thumb=0x7f020046;
-        public static final int mp_thumb_blank=0x7f020047;
-        public static final int mp_tips_move=0x7f020048;
-        public static final int pp_help_bg=0x7f020049;
-        public static final int pp_subtitle_set_bg=0x7f02004a;
-        public static final int red=0x7f02004c;
-        public static final int yellow=0x7f02004f;
+        public static final int mp_music_default=0x7f020040;
+        public static final int mp_seekbar_thumb=0x7f020041;
+        public static final int mp_thumb=0x7f020042;
+        public static final int mp_thumb_blank=0x7f020043;
+        public static final int mp_tips_move=0x7f020044;
+        public static final int pp_help_bg=0x7f020045;
+        public static final int pp_subtitle_set_bg=0x7f020046;
+        public static final int red=0x7f020048;
     }
     public static final class id {
         public static final int app_img_tag=0x7f0a001b;
@@ -164,6 +151,7 @@ public final class R {
         public static final int file_size=0x7f0a003f;
         public static final int file_tag=0x7f0a0013;
         public static final int file_video_tag=0x7f0a0017;
+        public static final int item1=0x7f0a0042;
         public static final int item_select_title_tag=0x7f0a0023;
         public static final int menu_settings=0x7f0a0041;
         public static final int more_fav_content=0x7f0a0040;
@@ -210,6 +198,7 @@ public final class R {
     }
     public static final class menu {
         public static final int activity_main=0x7f090000;
+        public static final int file_list_page_op_menu=0x7f090001;
     }
     public static final class string {
         public static final int album_view_type=0x7f07001d;
