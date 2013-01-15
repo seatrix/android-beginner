@@ -110,8 +110,7 @@ public class DeviceFragment extends Fragment implements
 									FileMainActivity.class);
 							intent.putExtra(MediacenterConstant.INTENT_EXTRA,
 									file);
-							//intent.putExtra(
-									//MediacenterConstant.INTENT_TYPE_VIEW, tabId);
+							//intent.putExtra(MediacenterConstant.INTENT_TYPE_VIEW, file.type);
 							startActivity(intent);
 						}
 
@@ -132,7 +131,7 @@ public class DeviceFragment extends Fragment implements
 		return rootView;
 	}
 
-	private String getToastName(int tabId) {
+/*	private String getToastName(int tabId) {
 		String name = getString(R.string.category_picture);
 		if (tabId == MediacenterConstant.IntentFlags.MUSIC_ID) {
 			name = getString(R.string.category_music);
@@ -141,7 +140,7 @@ public class DeviceFragment extends Fragment implements
 		}
 		return name;
 	}
-
+*/
 	public DeviceInfo getCurrentDevice() {
 		return currentDevice;
 	}

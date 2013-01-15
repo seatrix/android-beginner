@@ -71,7 +71,7 @@ public class DLANViewFragment extends Fragment implements
 	public static DLANViewFragment newInstance(DeviceInfo di, int type) {
 		DLANViewFragment f = new DLANViewFragment();
 		Bundle args = new Bundle();
-		args.putInt(MediacenterConstant.INTENT_TYPE_VIEW, type);
+		//args.putInt(MediacenterConstant.INTENT_TYPE_VIEW, type);
 		args.putSerializable(MediacenterConstant.INTENT_EXTRA, di);
 		f.setArguments(args);
 		return f;

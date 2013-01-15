@@ -67,7 +67,7 @@ public class FileMainActivity extends Activity {
     private static final String LOG_TAG = "FileActivity";
     private static final String DATA_BUNDEL = "data_bundel";
     private int viewType;
-    private int tabId;
+    //private int tabId;
     private DeviceInfo dInfo;
     private ArrayList<FileInfo> dataList;
     private ArrayList<FileInfo> albumList;
@@ -98,11 +98,11 @@ public class FileMainActivity extends Activity {
         currentNum = (TextView) findViewById(R.id.current_num_tag);
         dInfo = (DeviceInfo) getIntent().getSerializableExtra(
                 MediacenterConstant.INTENT_EXTRA);
-        tabId = getIntent().getIntExtra(MediacenterConstant.INTENT_TYPE_VIEW,
+/*        tabId = getIntent().getIntExtra(MediacenterConstant.INTENT_TYPE_VIEW,
                 MediacenterConstant.IntentFlags.PIC_ID);
-        if (savedInstanceState != null) {
-            tabId = savedInstanceState
-                    .getInt(MediacenterConstant.IntentFlags.TAG_ID);
+*/      if (savedInstanceState != null) {
+            /*tabId = savedInstanceState
+                    .getInt(MediacenterConstant.IntentFlags.TAG_ID);*/
             dInfo = (DeviceInfo) savedInstanceState.getBundle(DATA_BUNDEL).get(
                     MediacenterConstant.INTENT_EXTRA);
         }
@@ -112,8 +112,8 @@ public class FileMainActivity extends Activity {
         progressBar = (LinearLayout) findViewById(R.id.cm_progress_small);
         ActivitiesManager.getInstance().registerActivity(
                 ActivitiesManager.ACTIVITY_FILE_VIEW, this);
-        viewType = Util.getLastType(cxt, tabId + "");
-        if (tabId == MediacenterConstant.IntentFlags.MUSIC_ID) {
+        //viewType = Util.getLastType(cxt);
+        /*        if (tabId == MediacenterConstant.IntentFlags.MUSIC_ID) {
             fileNameFilter = FileCategoryHelper.filters.get(FileCategory.Music);
         } else if (tabId == MediacenterConstant.IntentFlags.VIDEO_ID) {
             fileNameFilter = FileCategoryHelper.filters.get(FileCategory.Video);
@@ -121,10 +121,12 @@ public class FileMainActivity extends Activity {
             fileNameFilter = FileCategoryHelper.filters
                     .get(FileCategory.Picture);
         }
+*/        
         posPath = null;
         isUserPause = false;
         isCheck = false;
-        addFragmentToStack(viewType, dInfo);
+        Log.i(LOG_TAG, "viewType:" + viewType + ",dInfo:" + dInfo);
+        addFragmentToStack(-1, dInfo);
 
     }
 
@@ -134,7 +136,7 @@ public class FileMainActivity extends Activity {
         Bundle budle = new Bundle();
         budle.putSerializable(MediacenterConstant.INTENT_EXTRA, dInfo);
         outState.putBundle(DATA_BUNDEL, budle);
-        outState.putInt(MediacenterConstant.IntentFlags.TAG_ID, tabId);
+        //outState.putInt(MediacenterConstant.IntentFlags.TAG_ID, tabId);
     }
 
     @Override
@@ -142,7 +144,7 @@ public class FileMainActivity extends Activity {
         // TODO Auto-generated method stub
         dInfo = (DeviceInfo) intent
                 .getSerializableExtra(MediacenterConstant.INTENT_EXTRA);
-        tabId = intent.getIntExtra(MediacenterConstant.INTENT_TYPE_VIEW,
+/*        tabId = intent.getIntExtra(MediacenterConstant.INTENT_TYPE_VIEW,
                 MediacenterConstant.IntentFlags.PIC_ID);
         viewType = Util.getLastType(cxt, tabId + "");
         if (tabId == MediacenterConstant.IntentFlags.MUSIC_ID) {
@@ -153,6 +155,7 @@ public class FileMainActivity extends Activity {
             fileNameFilter = FileCategoryHelper.filters
                     .get(FileCategory.Picture);
         }
+*/        
         posPath = null;
         isCheck = false;
         isUserPause = false;
@@ -176,17 +179,18 @@ public class FileMainActivity extends Activity {
 
     @Override
     protected void onResume() {
-        if (tabId == MediacenterConstant.IntentFlags.MUSIC_ID) {
+/*        if (tabId == MediacenterConstant.IntentFlags.MUSIC_ID) {
             tyeStr = new String[] { this.getString(R.string.file_view_type),
                     this.getString(R.string.music_view_type),
                     this.getString(R.string.album_view_type),
                     this.getString(R.string.artist_view_type),
                     this.getString(R.string.genre_view_type) };
         } else {
-            tyeStr = new String[] { this.getString(R.string.file_view_type),
-                    this.getString(R.string.all_file_view_type) };
 
         }
+*/        
+        tyeStr = new String[] { this.getString(R.string.file_view_type),
+                this.getString(R.string.all_file_view_type) };
         showChoose = new ViewTypeChooseDialog(cxt,
                 R.style.show_choose_type_dialog, new OnItemClickListener() {
                     @Override
@@ -218,7 +222,7 @@ public class FileMainActivity extends Activity {
                 && viewType != MediacenterConstant.FileViewType.VIEW_DIR
                 && dInfo.type != DeviceInfo.TYPE_DLAN && !isUserPause) {
             isCheck = true;
-            scanFileTask = new ScanFileTask(cxt, dInfo, viewType, tabId,
+            scanFileTask = new ScanFileTask(cxt, dInfo, viewType, -1,
                     fileNameFilter, posPath);
             scanFileTask.execute();
         }
@@ -238,7 +242,7 @@ public class FileMainActivity extends Activity {
     }
     
     private void addFragmentToStack(int _viewTpe, DeviceInfo _dInfo) {
-        Util.putLastType(cxt, tabId + "", _viewTpe);
+        //Util.putLastType(cxt, tabId + "", _viewTpe);
         MediaCenterApplication.getInstance().resetData();
         MediaCenterApplication.getInstance().resetAlbumData();
         if (getFileTask != null && !getFileTask.isStop()) {
@@ -253,7 +257,7 @@ public class FileMainActivity extends Activity {
         mHandler.removeMessages(MESSAGE_SCAN_END);
         mHandler.removeMessages(MESSAGE_SCAN_BEGIN);
         mHandler.removeMessages(MESSAGE_CHANGE_DATA);
-        viewType = _viewTpe;
+        //viewType = _viewTpe;
         Fragment fg = getFragmentManager().findFragmentById(R.id.file_content);
         if (fg != null) {
             fg.onDetach();
@@ -262,64 +266,34 @@ public class FileMainActivity extends Activity {
         Fragment newFragment = null;
         boolean task = false;
         String title = null;
-        if (_dInfo != null && _dInfo.type == DeviceInfo.TYPE_DLAN) {
-            newFragment = DLANViewFragment.newInstance(dInfo, tabId);
-            currentPath.setText(getRootName(tabId) + "/" + dInfo.devName);
+        if (_dInfo.type == DeviceInfo.TYPE_DLAN) {
+            newFragment = DLANViewFragment.newInstance(dInfo, -1);
+            currentPath.setText("/" + dInfo.devName);
             viewTypeTag.setText(getString(R.string.file_view_type));
             task = false;
-        } else {
-            currentPath.setText(getRootName(tabId)
-                    + Util.handlePath(dInfo.devPath));
-            if (viewType == MediacenterConstant.FileViewType.VIEW_DIR) {
+        } else if(_dInfo.type == DeviceInfo.TYPE_LOCAL || _dInfo.type == DeviceInfo.TYPE_USB) {
+            currentPath.setText(Util.handlePath(dInfo.devPath));
+            /*if (viewType == MediacenterConstant.FileViewType.VIEW_DIR) {
                 viewTypeTag.setText(getString(R.string.file_view_type));
-                newFragment = DirViewFragment.newInstance(dInfo.devPath, tabId);
+                newFragment = DirViewFragment.newInstance(dInfo.devPath, -1);
                 task = false;
                 progressBar.setVisibility(View.GONE);
-            } else {
-                task = true;
-                title = null;
-                if (viewType == MediacenterConstant.FileViewType.VIEW_FILE) {
-                    viewTypeTag.setText(getString(R.string.all_file_view_type));
-                    newFragment = AllFileViewFragment.newInstance(dataList,
-                            tabId);
-                } /*else if (viewType == MediacenterConstant.FileViewType.VIEW_MSUIC) {
-                    newFragment = MusicListViewFragment.newInstance(dataList,
-                            tabId, true);
-                    viewTypeTag.setText(getString(R.string.music_view_type));
-
-                } else if (viewType == MediacenterConstant.FileViewType.VIEW_ALBUM) {
-                    title = "album";
-                    newFragment = MusicGridViewFragment.newInstance(albumList,
-                            tabId, dInfo.devPath, viewType, true);
-                    viewTypeTag.setText(getString(R.string.album_view_type));
-
-                } else if (viewType == MediacenterConstant.FileViewType.VIEW_ARTIST) {
-                    newFragment = MusicGridViewFragment.newInstance(albumList,
-                            tabId, dInfo.devPath, viewType, true);
-                    viewTypeTag.setText(getString(R.string.artist_view_type));
-                    title = "artist";
-
-                } else if (viewType == MediacenterConstant.FileViewType.VIEW_GENRE) {
-                    newFragment = MusicGridViewFragment.newInstance(albumList,
-                            tabId, dInfo.devPath, viewType, true);
-                    viewTypeTag.setText(getString(R.string.genre_view_type));
-                    title = "genre";
-
-                }*/ else {
-                    title = null;
-                }
-
-            }
+            }*/ 
+            Log.i(LOG_TAG, "view all files ....");
+            task = true;
+            title = null;
+            viewTypeTag.setText(getString(R.string.all_file_view_type));
+            newFragment = AllFileViewFragment.newInstance(dataList, -1);
         }
         ft.replace(R.id.file_content, newFragment);
         ft.commit();
         if (task) {
             if (_dInfo.type == DeviceInfo.TYPE_USB) {
-                scanFileTask = new ScanFileTask(cxt, dInfo, viewType, tabId,
+                scanFileTask = new ScanFileTask(cxt, dInfo, viewType, -1,
                         fileNameFilter);
                 scanFileTask.execute();
             } else {
-                getFileTask = new GetFileTask(cxt, dInfo, viewType, tabId,
+                getFileTask = new GetFileTask(cxt, dInfo, viewType, -1,
                         title);
                 getFileTask.execute();
             }
@@ -339,25 +313,20 @@ public class FileMainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (viewType == MediacenterConstant.FileViewType.VIEW_DIR
-                || dInfo.type == DeviceInfo.TYPE_DLAN) {
-            IBackPressedListener backPressedListener = (IBackPressedListener) getFragmentManager()
-                    .findFragmentById(R.id.file_content);
-            if (backPressedListener != null && !backPressedListener.onBack()) {
-                super.onBackPressed();
-            }
-        } else {
-            if (scanFileTask != null && !scanFileTask.isStop()) {
-                scanFileTask.cancel();
-                posPath = null;
-                isUserPause = true;
-                // scanFileTask.onCancelled();
-            } else {
-                super.onBackPressed();
-            }
-
+        IBackPressedListener backPressedListener = (IBackPressedListener) getFragmentManager()
+                .findFragmentById(R.id.file_content);
+        if (backPressedListener != null && !backPressedListener.onBack()) {
+            super.onBackPressed();
         }
 
+        if (scanFileTask != null && !scanFileTask.isStop()) {
+            scanFileTask.cancel();
+            posPath = null;
+            isUserPause = true;
+            // scanFileTask.onCancelled();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -380,7 +349,7 @@ public class FileMainActivity extends Activity {
         return dInfo;
     }
 
-    private String getRootName(int type) {
+/*    private String getRootName(int type) {
         String str = "/";
         if (type == MediacenterConstant.IntentFlags.PIC_ID) {
             str += getString(R.string.tab_pic);
@@ -392,7 +361,7 @@ public class FileMainActivity extends Activity {
         return str;
 
     }
-
+*/
     private int getTypeByName(String name) {
         int type = MediacenterConstant.FileViewType.VIEW_DIR;
         if (name.equals(getString(R.string.file_view_type))) {
@@ -522,9 +491,9 @@ public class FileMainActivity extends Activity {
                 break;
             case MESSAGE_SCAN_END:
                 progressBar.setVisibility(View.GONE);
-                if (viewType == msg.arg2 && tabId == msg.arg1) {
+                
                     if (msg.obj != null) {
-                        ArrayList<FileInfo> fileInfo = (ArrayList<FileInfo>) msg.obj;
+                        ArrayList<FileInfo> fileInfo = (ArrayList<FileInfo>)msg.obj;
                         if (fileInfo != null) {
                             dataList.clear();
                             dataList.addAll(fileInfo);
@@ -535,27 +504,27 @@ public class FileMainActivity extends Activity {
                         public void run() {
                             // TODO Auto-generated method stub
                             if (dataList != null) {
-                                Collections.sort(dataList, fsortHelper
-                                        .getComparator(SortMethod.name));
+                                Collections.sort(dataList,
+                                        fsortHelper.getComparator(SortMethod.name));
                             }
                             if (albumList != null && !albumList.isEmpty()) {
-                                Collections.sort(albumList, fsortHelper
-                                        .getComparator(SortMethod.name));
+                                Collections.sort(albumList,
+                                        fsortHelper.getComparator(SortMethod.name));
                             }
-                            DataChangeListener dataChangeListener = (DataChangeListener) getFragmentManager()
+                            DataChangeListener dataChangeListener = (DataChangeListener)getFragmentManager()
                                     .findFragmentById(R.id.file_content);
                             if (dataChangeListener != null) {
                                 dataChangeListener.dataChange();
                             }
                         }
                     });
-                }
+                
                 break;
             case MESSAGE_CHANGE_DATA:
                 progressBar.setVisibility(View.VISIBLE);
                 if (msg.obj != null
                         && viewType == msg.arg2
-                        && tabId == msg.arg1
+                        
                         && viewType != MediacenterConstant.FileViewType.VIEW_DIR) {
                     FileInfo fi = (FileInfo) msg.obj;
                     String handle = null;
