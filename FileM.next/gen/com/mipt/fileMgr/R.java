@@ -37,7 +37,7 @@ public final class R {
         public static final int padding_small=0x7f060000;
     }
     public static final class drawable {
-        public static final int blue=0x7f02004f;
+        public static final int blue=0x7f02004d;
         public static final int cm_back=0x7f020000;
         public static final int cm_back_folder=0x7f020001;
         public static final int cm_bg=0x7f020002;
@@ -91,7 +91,7 @@ public final class R {
         public static final int cm_scroll_track=0x7f020032;
         public static final int cm_sd_remove_tag=0x7f020033;
         public static final int cm_sd_tag=0x7f020034;
-        public static final int cm_tag_color=0x7f02004d;
+        public static final int cm_tag_color=0x7f02004b;
         public static final int cm_toast_bg=0x7f020035;
         public static final int cm_usb_remove_tag=0x7f020036;
         public static final int cm_usb_tag=0x7f020037;
@@ -101,7 +101,7 @@ public final class R {
         public static final int cm_video_tag_normal=0x7f02003b;
         public static final int cm_video_tag_select=0x7f02003c;
         public static final int cn_progress00=0x7f02003d;
-        public static final int green=0x7f020050;
+        public static final int green=0x7f02004e;
         public static final int ic_action_search=0x7f02003e;
         public static final int ic_launcher=0x7f02003f;
         public static final int mp_btn_prev=0x7f020040;
@@ -114,11 +114,9 @@ public final class R {
         public static final int mp_thumb_blank=0x7f020047;
         public static final int mp_tips_move=0x7f020048;
         public static final int pp_help_bg=0x7f020049;
-        public static final int pp_pause=0x7f02004a;
-        public static final int pp_play=0x7f02004b;
-        public static final int pp_subtitle_set_bg=0x7f02004c;
-        public static final int red=0x7f02004e;
-        public static final int yellow=0x7f020051;
+        public static final int pp_subtitle_set_bg=0x7f02004a;
+        public static final int red=0x7f02004c;
+        public static final int yellow=0x7f02004f;
     }
     public static final class id {
         public static final int app_img_tag=0x7f0a001b;

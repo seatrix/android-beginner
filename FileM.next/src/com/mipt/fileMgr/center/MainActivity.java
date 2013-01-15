@@ -19,16 +19,18 @@ import android.util.Log;
 import android.view.Window;
 
 import com.mipt.fileMgr.R;
-import com.mipt.fileMgr.center.server.DeviceInfo;
-import com.mipt.fileMgr.center.server.MediacenterConstant;
-import com.mipt.fileMgr.dlna.AllShareProxy;
-import com.mipt.fileMgr.dlna.DeviceUpdateBrocastFactory;
-import com.mipt.fileMgr.utils.ActivitiesManager;
-import com.mipt.fileMgr.utils.HandlerManager;
-import com.mipt.fileMgr.utils.ToastFactory;
-import com.mipt.fileMgr.utils.UsbScanManager;
-import com.mipt.fileMgr.utils.Util;
-import com.mipt.fileMgr.utils.Util.SDCardInfo;
+import com.mipt.mediacenter.center.DeviceFragment;
+import com.mipt.mediacenter.center.FavFragment;
+import com.mipt.mediacenter.center.server.DeviceInfo;
+import com.mipt.mediacenter.center.server.MediacenterConstant;
+import com.mipt.mediacenter.dlna.AllShareProxy;
+import com.mipt.mediacenter.dlna.DeviceUpdateBrocastFactory;
+import com.mipt.mediacenter.utils.ActivitiesManager;
+import com.mipt.mediacenter.utils.HandlerManager;
+import com.mipt.mediacenter.utils.ToastFactory;
+import com.mipt.mediacenter.utils.UsbScanManager;
+import com.mipt.mediacenter.utils.Util;
+import com.mipt.mediacenter.utils.Util.SDCardInfo;
 
 /**
  * 
@@ -52,71 +54,19 @@ public class MainActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.cm_activity_main);
 		cxt = MainActivity.this;
-		//tabGroup = (RadioGroup) findViewById(R.id.main_table);
 		Log.i(TAG, "MainActivity.oncreate...");
 		addBroadCast();
-		/*
-        if (savedInstanceState != null) {
-			checkId = savedInstanceState.getInt(InstanceState);
-			if (checkId != 0) {
-				lastView = (RadioButton) findViewById(checkId);
-				switchTab(checkId);
-			}
-
-		}*/
-		initData();
 		createNew = true;
-/*		if (lastView == null) {
-			RadioButton radio = (RadioButton) tabGroup.getChildAt(0);
-			lastView = radio;
-			radio.requestFocus();
-			radio.setTextColor(Color.WHITE);
-			radio.setTextSize(34);
-			radio.setSelected(true);
-			switchTab(radio.getId());
-		}
-*/
+		initData();
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		//outState.putInt(InstanceState, getcheckedIdByTabId(tabId));
 	}
 
 	private void initData() {
-		/*for (int i = 0; i < tabGroup.getChildCount(); i++) {
-			RadioButton radio = (RadioButton) tabGroup.getChildAt(i);
-			radio.requestFocus();
-			radio.setOnFocusChangeListener(this);
-			radio.setOnClickListener(this);
-			radio.setOnHoverListener(new OnHoverListener() {
-				@Override
-				public boolean onHover(View v, MotionEvent event) {
-					if (MotionEvent.ACTION_HOVER_ENTER == event.getAction()) {
-						RadioButton radio = (RadioButton) v;
-						lastView = radio;
-						radio.requestFocus();
-						radio.setTextColor(Color.WHITE);
-						radio.setTextSize(34);
-						radio.setSelected(true);
-						switchTab(v.getId());
-						return true;
-					}
-					return false;
-				}
-			});
-		}
-		tabGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				// TODO Auto-generated method stub
-				switchTab(checkedId);
-				// lastView = group.getFocusedChild();
-			}
-		});
-		*/
-	    
+	    Log.i(TAG, "initData...");
 	    addFragmentToStack(false, deviceInfos);
 		AllShareProxy.getInstance(cxt).initSearchEngine();
 		onDataChanged(0, null);
@@ -125,54 +75,6 @@ public class MainActivity extends Activity {
 		//oldDeviceInfos.addAll(deviceInfos);
 	}
 
-	//private RadioButton lastView;
-
-/*	private int getcheckedIdByTabId(int tabId) {
-		int checkedId = R.id.pic_id;
-		if (tabId == MediacenterConstant.IntentFlags.VIDEO_ID) {
-			checkedId = R.id.video_id;
-		} else if (tabId == MediacenterConstant.IntentFlags.MUSIC_ID) {
-			checkedId = R.id.music_id;
-		}
-		return checkedId;
-	}
-
-	private void switchTab(final int checkedId) {
-		ToastFactory.getInstance().cancelToast();
-		for (int i = 0; i < tabGroup.getChildCount(); i++) {
-			RadioButton radio = (RadioButton) tabGroup.getChildAt(i);
-			if (lastView != null && radio.getId() != lastView.getId()) {
-				radio.setSelected(false);
-				radio.setTextColor(0xff0092e0);
-				radio.setTextSize(32);
-			}
-
-		}
-		switch (checkedId) {
-
-		// case R.id.favorite_id:
-		// currentPath.setText(getString(R.string.tab_favorite));
-		// tabId = MediacenterConstant.IntentFlags.FAV_ID;
-		// addFragmentToStack(tabId, true, null);
-		// break;
-
-		case R.id.pic_id:
-			tabId = MediacenterConstant.IntentFlags.PIC_ID;
-			addFragmentToStack(tabId, false, deviceInfos, R.id.pic_id);
-			break;
-		case R.id.video_id:
-			tabId = MediacenterConstant.IntentFlags.VIDEO_ID;
-			addFragmentToStack(tabId, false, deviceInfos, R.id.video_id);
-			break;
-		case R.id.music_id:
-			tabId = MediacenterConstant.IntentFlags.MUSIC_ID;
-			addFragmentToStack(tabId, false, deviceInfos, R.id.music_id);
-			break;
-
-		}
-
-	}
-*/
 	public interface DataChanged {
 		void onDataChanged(int _tabId,
 				ArrayList<DeviceInfo> _devs);
@@ -180,8 +82,9 @@ public class MainActivity extends Activity {
 
 	private void addFragmentToStack(boolean isFav,
 			ArrayList<DeviceInfo> devs) {
+        Log.i(TAG, "addFragmentToStack...createNew:" + createNew + ",isFav:" + isFav);
 		if (isFav) {
-		    Log.i(TAG, "loading FavFragment...");
+		    //Log.i(TAG, "loading FavFragment...isFav is" + isFav);
 		    
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			Fragment newFragment = FavFragment.newInstance();
@@ -189,10 +92,11 @@ public class MainActivity extends Activity {
 			ft.commitAllowingStateLoss();
 			createNew = true;
 		} else {
-			/*if (createNew) {
+		    //Log.i(TAG, "loading FavFragment...isFav is" + isFav + ",createNew is" + createNew);
+			if (createNew) {
 				FragmentTransaction ft = getFragmentManager()
 						.beginTransaction();
-				Fragment newFragment = DeviceFragment.newInstance(tabFavorate,
+				Fragment newFragment = DeviceFragment.newInstance(-1,
 						devs);
 				ft.replace(R.id.tabcontent, newFragment);
 				ft.commitAllowingStateLoss();
@@ -201,36 +105,12 @@ public class MainActivity extends Activity {
 				DataChanged dataChanged = (DataChanged) getFragmentManager()
 						.findFragmentById(R.id.tabcontent);
 				if (dataChanged != null) {
-					dataChanged.onDataChanged(tabFavorate, devs);
+					dataChanged.onDataChanged(-1, devs);
 				}
-			}*/
+			}
 		}
 	}
 
-/*	@Override
-	public void onFocusChange(View v, boolean hasFocus) {
-		// TODO Auto-generated method stub
-		RadioButton radio = (RadioButton) v;
-		if (hasFocus) {
-			lastView = radio;
-			radio.setTextColor(Color.WHITE);
-			radio.setTextSize(34);
-			radio.setSelected(true);
-			switchTab(v.getId());
-		}
-
-	}
-
-	@Override
-	public void onClick(View v) {
-		RadioButton radio = (RadioButton) v;
-		lastView = radio;
-		radio.setTextColor(Color.WHITE);
-		radio.setTextSize(34);
-		radio.setSelected(true);
-		switchTab(v.getId());
-	}
-*/
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -263,7 +143,7 @@ public class MainActivity extends Activity {
 		ToastFactory.getInstance().cancelToast();
 	}
 
-	static final int MESSAGE_FRESH_DEVICE = 10001;
+	public static final int MESSAGE_FRESH_DEVICE = 10001;
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -281,14 +161,11 @@ public class MainActivity extends Activity {
 		}
 	};
 
-	private ArrayList<DeviceInfo> onDataChanged(int remove, String path) {
-		ArrayList<DeviceInfo> dlanList = cover2DLANDevice(AllShareProxy
-				.getInstance(cxt).getDeviceList());
-		ArrayList<DeviceInfo> usbList = UsbScanManager.getInstance()
-				.getDevices(cxt);
+	private ArrayList<DeviceInfo> onDataChanged(int remove, String path) {		
 		ArrayList<DeviceInfo> temp = new ArrayList<DeviceInfo>();
 		SDCardInfo sdInfoLocal = Util.getSDCardInfo();
 		if (sdInfoLocal != null) {
+		    Log.i(TAG, "sdInfoLocal is not null");
 			String localDeviceName = Util.getLocalDeviceName(cxt);
 			if (localDeviceName != null) {
 				localDeviceName = getString(R.string.local_sdcard)
@@ -304,26 +181,30 @@ public class MainActivity extends Activity {
 					R.drawable.cm_sd_remove_tag);
 
 		}
+        ArrayList<DeviceInfo> usbList = UsbScanManager.getInstance().getDevices(cxt);		
 		temp.addAll(usbList);
 		if (!isHasTypeDevice(DeviceInfo.TYPE_USB, temp)) {
 			temp.add(new DeviceInfo(null, getString(R.string.usb_device), null,
 					null, null, DeviceInfo.TYPE_USB, false,
 					R.drawable.cm_usb_remove_tag));
 		}
+		
+        /*ArrayList<DeviceInfo> dlanList = cover2DLANDevice(AllShareProxy.getInstance(cxt).getDeviceList());		
 		temp.addAll(dlanList);
 		if (!isHasTypeDevice(DeviceInfo.TYPE_DLAN, temp)) {
 			temp.add(new DeviceInfo(null, "DLNA", null, null, null,
 					DeviceInfo.TYPE_DLAN, false, R.drawable.cm_dlan_remove_tag));
-		}
+		}*/
 		deviceInfos = temp;
 		DeviceInfo reomoveDevice = null;
 /*		if (tabId != MediacenterConstant.IntentFlags.FAV_ID) {
 		}
-*/			DeviceFragment f = (DeviceFragment) getFragmentManager()
+*/		DeviceFragment f = (DeviceFragment) getFragmentManager()
 					.findFragmentById(R.id.tabcontent);
-			if (f != null) {
-				f.dataChange(deviceInfos);
-			}
+		if (f != null) {
+		    Log.i(TAG, "deviceInfos.size:" + deviceInfos.size());
+		    f.dataChange(deviceInfos);
+		}
 		if (remove == MediacenterConstant.MESSAGE_ADD) {
 			DeviceInfo di = Util.isNewDevice(usbList, oldDeviceInfos);
 			if (di != null) {
@@ -403,7 +284,7 @@ public class MainActivity extends Activity {
 		return isHas;
 	}
 
-	void addBroadCast() {
+	private void addBroadCast() {
 		registerReceiver(mReceiver, new IntentFilter(
 				DeviceUpdateBrocastFactory.ADD_DEVICES));
 		registerReceiver(mReceiver, new IntentFilter(

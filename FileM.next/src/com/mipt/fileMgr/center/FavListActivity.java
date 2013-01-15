@@ -14,9 +14,10 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
-import com.mipt.fileMgr.center.file.FileIconHelper;
-import com.mipt.fileMgr.center.server.FileInfo;
-import com.mipt.fileMgr.utils.Util;
+import com.mipt.mediacenter.center.FavFragment;
+import com.mipt.mediacenter.center.file.FileIconHelper;
+import com.mipt.mediacenter.center.server.FileInfo;
+import com.mipt.mediacenter.utils.Util;
 
 /**
  * 

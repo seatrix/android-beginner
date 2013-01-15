@@ -40,16 +40,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mipt.fileMgr.R;
-import com.mipt.fileMgr.center.file.FileCategoryHelper;
-import com.mipt.fileMgr.center.file.FileCategoryHelper.FileCategory;
-import com.mipt.fileMgr.center.file.FilenameExtFilter;
-import com.mipt.fileMgr.center.server.DeviceInfo;
-import com.mipt.fileMgr.center.server.FileInfo;
-import com.mipt.fileMgr.center.server.FileSortHelper;
-import com.mipt.fileMgr.center.server.FileSortHelper.SortMethod;
-import com.mipt.fileMgr.center.server.MediacenterConstant;
-import com.mipt.fileMgr.utils.ActivitiesManager;
-import com.mipt.fileMgr.utils.Util;
+import com.mipt.mediacenter.center.AllFileViewFragment;
+import com.mipt.mediacenter.center.DLANViewFragment;
+import com.mipt.mediacenter.center.DirViewFragment;
+import com.mipt.mediacenter.center.MediaCenterApp;
+import com.mipt.mediacenter.center.file.FileCategoryHelper;
+import com.mipt.mediacenter.center.file.FileCategoryHelper.FileCategory;
+import com.mipt.mediacenter.center.file.FilenameExtFilter;
+import com.mipt.mediacenter.center.server.DeviceInfo;
+import com.mipt.mediacenter.center.server.FileInfo;
+import com.mipt.mediacenter.center.server.FileSortHelper;
+import com.mipt.mediacenter.center.server.FileSortHelper.SortMethod;
+import com.mipt.mediacenter.center.server.MediacenterConstant;
+import com.mipt.mediacenter.utils.ActivitiesManager;
+import com.mipt.mediacenter.utils.Util;
 
 /**
  * 

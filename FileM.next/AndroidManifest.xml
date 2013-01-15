@@ -58,8 +58,7 @@
                 <action android:name="com.mipt.mediacenter.dlna.service.search_device" />
                 <action android:name="com.mipt.mediacenter.dlna.service.reset_search_device" />
             </intent-filter>
-        </service>
-
+        </service> 
         <receiver android:name=".center.USBReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />

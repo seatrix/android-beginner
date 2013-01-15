@@ -18,9 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
-import com.mipt.fileMgr.center.server.DeviceInfo;
-import com.mipt.fileMgr.center.server.MediacenterConstant;
-import com.mipt.fileMgr.utils.ActivitiesManager;
+import com.mipt.mediacenter.center.ExitDialog;
+import com.mipt.mediacenter.center.server.DeviceInfo;
+import com.mipt.mediacenter.center.server.MediacenterConstant;
+import com.mipt.mediacenter.utils.ActivitiesManager;
 
 /**
  * 
