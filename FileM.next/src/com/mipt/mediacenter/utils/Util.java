@@ -439,7 +439,7 @@ public class Util {
 
 	public static DeviceInfo isNewDevice(
 			final ArrayList<DeviceInfo> newDevices,
-			final ArrayList<DeviceInfo> oldDevices) {
+			final ArrayList<DeviceInfo> oldDevices, String path) {
 		if (newDevices == null || newDevices.isEmpty()) {
 			return null;
 		}

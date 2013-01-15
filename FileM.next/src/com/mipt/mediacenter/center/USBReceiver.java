@@ -33,9 +33,9 @@ public class USBReceiver extends BroadcastReceiver {
 		if (!"A6".equals(android.os.Build.MODEL)) {
 			File f = new File(path);
 			if (f.exists()) {
-				File[] list = f.listFiles();
-				for (int i = 0; i < list.length; i++) {
-					path = list[i].getAbsolutePath();
+				File[] flist = f.listFiles();
+				for (File fn : flist) {
+					path = fn.getAbsolutePath();
 				}
 			}
 		}
@@ -89,7 +89,11 @@ public class USBReceiver extends BroadcastReceiver {
 		UsbScanManager manager = UsbScanManager.getInstance();
 		ArrayList<DeviceInfo> usbList = manager.getDevices(ctx);
 		if (remove == MediacenterConstant.MESSAGE_ADD) {
-			DeviceInfo di = Util.isNewDevice(usbList, manager.getOldList());
+			Log.i("USBReceiver",
+					"---------USBReceiver---usbList-" + usbList.size()
+							+ ",old size:" + manager.getOldList().size());
+			DeviceInfo di = Util.isNewDevice(usbList, manager.getOldList(),
+					path);
 			manager.addOldList(usbList);
 			if (di != null) {
 				Intent intent = new Intent(ctx, FindDeviceActivity.class);
@@ -103,6 +107,9 @@ public class USBReceiver extends BroadcastReceiver {
 			DeviceInfo reomoveDevice = Util.isRemoveDevice(path, usbList,
 					manager.getOldList());
 			manager.addOldList(usbList);
+			if ("A4".equals(android.os.Build.MODEL)) {
+				manager.clearOldList();
+			}
 			if (reomoveDevice != null) {
 				Activity showActivity = ActivitiesManager.getInstance()
 						.getActivity(ActivitiesManager.ACTIVITY_FILE_VIEW);

@@ -198,8 +198,7 @@ public class DirViewFragment extends Fragment implements
 		if (!file.exists() || !file.isDirectory()) {
 			return false;
 		}
-		Util.setText(mRootView.getRootView(), R.id.current_path_tag,
-				getRootName(type) + Util.handlePath(path));
+		mActivity.setCurrentPath(getRootName(type) + Util.handlePath(path));
 		final int pos = computeScrollPosition(path);
 		ArrayList<FileInfo> fileList = mFileNameList;
 		fileList.clear();

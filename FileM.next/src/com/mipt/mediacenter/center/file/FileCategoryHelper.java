@@ -19,9 +19,9 @@ public class FileCategoryHelper {
 	}
 
 	public static String[] VIDEO_EXTS = new String[] { "mp4", "wmv", "mpeg",
-			"m4v", "3gp", "3gpp", "3g2", "3gpp2", "asf", "rmvb", "flv", "swf",
-			"f4v", "avi", "mkv", "mpg", "ts", "m2ts", "mov", "3dm", "divx",
-			"webm", "tp", "m4b" };
+			"m4v", "3gp", "3gpp", "3g2", "3gpp2", "asf", "rm", "rmvb", "flv",
+			"swf", "f4v", "avi", "mkv", "mpg", "ts", "m2ts", "mov", "3dm",
+			"divx", "webm", "tp", "m4b", "ios", "trp" };
 
 	public static String[] PICTURE_EXTS = new String[] { "jpg", "jpeg", "gif",
 			"png", "bmp", "wbmp", "jfif", "tiff" };

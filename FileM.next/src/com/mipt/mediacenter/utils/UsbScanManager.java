@@ -36,10 +36,8 @@ public class UsbScanManager {
 	public final static String MOUNT_NAME = "mountName";
 
 	private UsbScanManager() {
-		oldDeviceInfos = MediaCenterApplication.getInstance()
-				.getOldDeviceInfos();
-		currentScanDevice = MediaCenterApplication.getInstance()
-				.getCurrentScanDevice();
+		oldDeviceInfos = new ArrayList<DeviceInfo>();
+		currentScanDevice = new HashMap<String, Boolean>();
 	}
 
 	public Boolean currentDeviceIsScan(String name) {
@@ -64,6 +62,9 @@ public class UsbScanManager {
 	public void addOldList(final ArrayList<DeviceInfo> _oldDeviceInfos) {
 		oldDeviceInfos.clear();
 		oldDeviceInfos.addAll(_oldDeviceInfos);
+	}
+	public void clearOldList() {
+		oldDeviceInfos.clear();
 	}
 
 	public ArrayList<DeviceInfo> getOldList() {
@@ -107,14 +108,16 @@ public class UsbScanManager {
 							if (!TextUtils.isEmpty(path)) {
 								SDCardInfo sdInfo = Util
 										.getSDCardInfo(new File(path));
+								if (sdInfo != null
+										&& path.indexOf(MediacenterConstant.LOCAL_SDCARD_PATH) != 0) {
 								temp.add(new DeviceInfo(list[i]
 										.getAbsolutePath(), cxt
 										.getString(R.string.usb_device)
-										+ "-"
-										+ getA4Name(path), sdInfo.path,
-										sdInfo.total, sdInfo.used,
-										DeviceInfo.TYPE_USB, true,
-										R.drawable.cm_usb_tag));
+											+ "-" + getA4Name(path),
+											sdInfo.path, sdInfo.total,
+											sdInfo.used, DeviceInfo.TYPE_USB,
+											true, R.drawable.cm_usb_tag));
+								}
 							}
 						}
 					}

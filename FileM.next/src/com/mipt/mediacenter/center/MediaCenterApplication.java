@@ -3,11 +3,11 @@ package com.mipt.mediacenter.center;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.mipt.mediacenter.center.server.FileInfo;
+
 import android.app.Application;
 import android.text.TextUtils;
 
-import com.mipt.mediacenter.center.server.DeviceInfo;
-import com.mipt.mediacenter.center.server.FileInfo;
 
 /**
  * 
@@ -16,8 +16,6 @@ import com.mipt.mediacenter.center.server.FileInfo;
  */
 public class MediaCenterApplication extends Application {
 	private static MediaCenterApplication instance;
-	private ArrayList<DeviceInfo> oldDeviceInfos;
-	private HashMap<String, Boolean> currentScanDevice;
 
 	public static MediaCenterApplication getInstance() {
 		return instance;
@@ -33,17 +31,10 @@ public class MediaCenterApplication extends Application {
 		instance = this;
 		fileInfos = new ArrayList<FileInfo>();
 		albumInfos = new ArrayList<FileInfo>();
-		oldDeviceInfos = new ArrayList<DeviceInfo>();
-		currentScanDevice = new HashMap<String, Boolean>();
 	}
 
-	public HashMap<String, Boolean> getCurrentScanDevice() {
-		return currentScanDevice;
-	}
+	
 
-	public ArrayList<DeviceInfo> getOldDeviceInfos() {
-		return oldDeviceInfos;
-	}
 
 	public ArrayList<FileInfo> getAlbumData() {
 		return albumInfos;
@@ -150,6 +141,14 @@ public class MediaCenterApplication extends Application {
 	public void clearData() {
 		if (fileInfos != null && !fileInfos.isEmpty()) {
 			fileInfos.clear();
+		}
+	}
+	public void clearAllData() {
+		if (fileInfos != null && !fileInfos.isEmpty()) {
+			fileInfos.clear();
+		}
+		if (albumInfos != null && !albumInfos.isEmpty()) {
+			albumInfos.clear();
 		}
 	}
 }

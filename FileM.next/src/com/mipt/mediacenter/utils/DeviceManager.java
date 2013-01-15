@@ -17,23 +17,21 @@ public class DeviceManager {
 
 	private static String TAG = "DeviceManager";
 	private ArrayList<String> totalDevicesList;
-	private ArrayList<String> internalDevicesList;
 	private Context mContext;
 	private StorageManager manager;
+	String[] volumeList;
 
 	public DeviceManager(Context _mContext) {
 		this.mContext = _mContext;
 		totalDevicesList = new ArrayList<String>();
-		String[] volumeList;
+		if (manager == null) {
 		manager = (StorageManager) mContext
 				.getSystemService(Context.STORAGE_SERVICE);
+		}
 		volumeList = manager.getVolumePaths();
 		for (int i = 0; i < volumeList.length; i++) {
 			totalDevicesList.add(volumeList[i]);
 		}
-		internalDevicesList = new ArrayList<String>();
-		internalDevicesList.add(Environment.getExternalStorageDirectory()
-				.getPath());
 
 	}
 

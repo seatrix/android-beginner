@@ -200,7 +200,7 @@ public class MainActivity extends Activity {
 		    f.dataChange(deviceInfos);
 		}
 		if (remove == MediacenterConstant.MESSAGE_ADD) {
-			DeviceInfo di = Util.isNewDevice(usbList, oldDeviceInfos);
+		    DeviceInfo di = Util.isNewDevice(usbList, oldDeviceInfos, path);
 			if (di != null) {
 				Intent intent = new Intent(cxt, FindDeviceActivity.class);
 				intent.putExtra("device", di);
