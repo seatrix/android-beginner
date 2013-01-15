@@ -14,12 +14,12 @@ import com.mipt.mediacenter.center.server.FileInfo;
  * @author fang
  * 
  */
-public class MediaCenterApp extends Application {
-	private static MediaCenterApp instance;
+public class MediaCenterApplication extends Application {
+	private static MediaCenterApplication instance;
 	private ArrayList<DeviceInfo> oldDeviceInfos;
 	private HashMap<String, Boolean> currentScanDevice;
 
-	public static MediaCenterApp getInstance() {
+	public static MediaCenterApplication getInstance() {
 		return instance;
 	}
 

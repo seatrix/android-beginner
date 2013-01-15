@@ -59,6 +59,7 @@ public class FileIconHelper implements IconLoadFinishListener {
 		FileCategory fc = FileCategory.Video;
 		int id = getDlanDaultIcon(fileInfo.fileType);
 		fileImageFrame.setImageResource(R.drawable.cm_img_bg);
+		fileImageFrame.setVisibility(View.VISIBLE);
 		if (fileInfo.fileType == FileInfo.TYPE_PIC) {
 			if (TextUtils.isEmpty(filePath)) {
 				filePath = fileInfo.filePath;
@@ -82,9 +83,7 @@ public class FileIconHelper implements IconLoadFinishListener {
 				set = mIconLoader
 						.loadDlanIcon(fileImage, filePath, devName, fc);
 			}
-			if (set) {
-				fileImageFrame.setVisibility(View.VISIBLE);
-			} else {
+			if (!set) {
 				fileImage.setImageResource(id);
 				imageFrames.put(fileImage, fileImageFrame);
 				musicFrame.setImageResource(id);

@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -32,6 +33,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * 
@@ -120,6 +122,7 @@ public class HttpManager {
 		if (url == null || TextUtils.isEmpty(url)) {
 			return null;
 		}
+		Log.i("HttpManager", "----------HttpManager:" + url);
 		InputStream data = null;
 		// initialize HTTP GET request objects
 		HttpGet httpGet = new HttpGet(url);
@@ -140,12 +143,14 @@ public class HttpManager {
 				wsError.setMessage(e.getLocalizedMessage());
 				throw wsError;
 			}
-
-			// request data
+			if (httpResponse == null) {
+				return null;
+			}
+			if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 			HttpEntity httpEntity = httpResponse.getEntity();
 			if (httpEntity != null) {
-				InputStream inputStream = httpEntity.getContent();
-				data = inputStream;
+					data = httpEntity.getContent();
+				}
 			}
 
 		} catch (ClientProtocolException e) {

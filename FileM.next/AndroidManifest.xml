@@ -52,21 +52,21 @@
         </activity>
 
         <service
-            android:name="com.mipt.fileMgr.dlna.network.DlnaService"
+            android:name="com.mipt.mediacenter.dlna.network.DlnaService"
             android:enabled="true" >
             <intent-filter>
                 <action android:name="com.mipt.mediacenter.dlna.service.search_device" />
                 <action android:name="com.mipt.mediacenter.dlna.service.reset_search_device" />
             </intent-filter>
         </service> 
-        <receiver android:name=".center.USBReceiver" >
+        <receiver android:name="com.mipt.mediacenter.center.USBReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
                 <action android:name="android.intent.action.MEDIA_REMOVED" />
+                <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
                 <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
                 <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
-
                 <data android:scheme="file" />
             </intent-filter>
         </receiver>

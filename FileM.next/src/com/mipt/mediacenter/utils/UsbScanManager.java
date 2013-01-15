@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.mipt.fileMgr.R;
-import com.mipt.mediacenter.center.MediaCenterApp;
+import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.file.GroupInfo;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
@@ -35,9 +36,9 @@ public class UsbScanManager {
 	public final static String MOUNT_NAME = "mountName";
 
 	private UsbScanManager() {
-		oldDeviceInfos = MediaCenterApp.getInstance()
+		oldDeviceInfos = MediaCenterApplication.getInstance()
 				.getOldDeviceInfos();
-		currentScanDevice = MediaCenterApp.getInstance()
+		currentScanDevice = MediaCenterApplication.getInstance()
 				.getCurrentScanDevice();
 	}
 
@@ -71,6 +72,7 @@ public class UsbScanManager {
 
 	public ArrayList<DeviceInfo> getDevices(Context cxt) {
 		ArrayList<DeviceInfo> temp = new ArrayList<DeviceInfo>();
+		if ("A6".equals(android.os.Build.MODEL)) {
 		ArrayList<GroupInfo> groupInfos = getMountEquipmentList(cxt);
 		if (!groupInfos.isEmpty()) {
 			for (GroupInfo ginfo : groupInfos) {
@@ -92,7 +94,42 @@ public class UsbScanManager {
 				}
 			}
 		}
+		} else {
+			DeviceManager dm = new DeviceManager(cxt);
+			ArrayList<String> strs = dm.getMountedDevicesList();
+			for (String s : strs) {
+				if (dm.hasMultiplePartition(s)) {
+					File f = new File(s);
+					if (f.exists()) {
+						File[] list = f.listFiles();
+						for (int i = 0; i < list.length; i++) {
+							String path = list[i].getAbsolutePath();
+							if (!TextUtils.isEmpty(path)) {
+								SDCardInfo sdInfo = Util
+										.getSDCardInfo(new File(path));
+								temp.add(new DeviceInfo(list[i]
+										.getAbsolutePath(), cxt
+										.getString(R.string.usb_device)
+										+ "-"
+										+ getA4Name(path), sdInfo.path,
+										sdInfo.total, sdInfo.used,
+										DeviceInfo.TYPE_USB, true,
+										R.drawable.cm_usb_tag));
+							}
+						}
+					}
+				}
+			}
+		}
 		return temp;
+	}
+	private String getA4Name(String path) {
+		String pathRreturn = path;
+		if (!TextUtils.isEmpty(pathRreturn)) {
+			pathRreturn = pathRreturn
+					.substring(pathRreturn.lastIndexOf("/") + 1);
+		}
+		return pathRreturn;
 	}
 
 	public ArrayList<GroupInfo> getMountEquipmentList(Context cxt) {

@@ -20,13 +20,15 @@ public class FileCategoryHelper {
 
 	public static String[] VIDEO_EXTS = new String[] { "mp4", "wmv", "mpeg",
 			"m4v", "3gp", "3gpp", "3g2", "3gpp2", "asf", "rmvb", "flv", "swf",
-			"f4v", "avi", "mkv", "mpg", "ts", "m2ts","mov" };
+			"f4v", "avi", "mkv", "mpg", "ts", "m2ts", "mov", "3dm", "divx",
+			"webm", "tp", "m4b" };
 
 	public static String[] PICTURE_EXTS = new String[] { "jpg", "jpeg", "gif",
-			"png", "bmp", "wbmp" };
+			"png", "bmp", "wbmp", "jfif", "tiff" };
 
-	public static String[] AUDIO_EXTS = new String[] { "wav", "au", "mp3",
-			"wma", "aac", "ape", "ogg" };
+	public static String[] AUDIO_EXTS = new String[] { "mp3", "ogg", "wav",
+			"wma", "m4a", "ape", "dts", "flac", "mp1", "mp2", "aac", "midi",
+			"mid", "mp5", "mpga", "mpa", "m4p", "amr", "m4r" };
 
 	public static HashMap<FileCategory, FilenameExtFilter> filters = new HashMap<FileCategory, FilenameExtFilter>();
 

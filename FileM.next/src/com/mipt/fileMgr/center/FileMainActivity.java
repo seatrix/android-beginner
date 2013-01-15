@@ -43,7 +43,7 @@ import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.AllFileViewFragment;
 import com.mipt.mediacenter.center.DLANViewFragment;
 import com.mipt.mediacenter.center.DirViewFragment;
-import com.mipt.mediacenter.center.MediaCenterApp;
+import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.file.FileCategoryHelper;
 import com.mipt.mediacenter.center.file.FileCategoryHelper.FileCategory;
 import com.mipt.mediacenter.center.file.FilenameExtFilter;
@@ -80,6 +80,7 @@ public class FileMainActivity extends Activity {
 	private FileSortHelper fsortHelper;
 	private boolean isUserPause;
 	private boolean isCheck;
+	private TextView currentNum;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +92,7 @@ public class FileMainActivity extends Activity {
 		cxt = FileMainActivity.this;
 		currentPath = (TextView) findViewById(R.id.current_path_tag);
 		viewTypeTag = (TextView) findViewById(R.id.view_type_tag);
+		currentNum = (TextView) findViewById(R.id.current_num_tag);
 		dInfo = (DeviceInfo) getIntent().getSerializableExtra(
 				MediacenterConstant.INTENT_EXTRA);
 		tabId = getIntent().getIntExtra(MediacenterConstant.INTENT_TYPE_VIEW,
@@ -102,8 +104,8 @@ public class FileMainActivity extends Activity {
 					MediacenterConstant.INTENT_EXTRA);
 		}
 		fsortHelper = FileSortHelper.getInstance();
-		dataList = MediaCenterApp.getInstance().getData();
-		albumList = MediaCenterApp.getInstance().getAlbumData();
+		dataList = MediaCenterApplication.getInstance().getData();
+		albumList = MediaCenterApplication.getInstance().getAlbumData();
 		progressBar = (LinearLayout) findViewById(R.id.cm_progress_small);
 		ActivitiesManager.getInstance().registerActivity(
 				ActivitiesManager.ACTIVITY_FILE_VIEW, this);
@@ -199,7 +201,8 @@ public class FileMainActivity extends Activity {
 										@Override
 										public void run() {
 											// TODO Auto-generated method stub
-											addFragmentToStack(newViewType, dInfo);
+											addFragmentToStack(newViewType,
+													dInfo);
 
 										}
 									});
@@ -221,8 +224,8 @@ public class FileMainActivity extends Activity {
 
 	private void addFragmentToStack(int _viewTpe, DeviceInfo _dInfo) {
 		Util.putLastType(cxt, tabId + "", _viewTpe);
-		MediaCenterApp.getInstance().resetData();
-		MediaCenterApp.getInstance().resetAlbumData();
+		MediaCenterApplication.getInstance().resetData();
+		MediaCenterApplication.getInstance().resetAlbumData();
 		if (getFileTask != null && !getFileTask.isStop()) {
 			getFileTask.cancel();
 			getFileTask = null;
@@ -264,7 +267,7 @@ public class FileMainActivity extends Activity {
 					viewTypeTag.setText(getString(R.string.all_file_view_type));
 					newFragment = AllFileViewFragment.newInstance(dataList,
 							tabId);
-				}/* else if (viewType == MediacenterConstant.FileViewType.VIEW_MSUIC) {
+				} /*else if (viewType == MediacenterConstant.FileViewType.VIEW_MSUIC) {
 					newFragment = MusicListViewFragment.newInstance(dataList,
 							tabId, true);
 					viewTypeTag.setText(getString(R.string.music_view_type));
@@ -287,7 +290,7 @@ public class FileMainActivity extends Activity {
 					viewTypeTag.setText(getString(R.string.genre_view_type));
 					title = "genre";
 
-				} */else {
+				}*/ else {
 					title = null;
 				}
 
@@ -591,7 +594,7 @@ public class FileMainActivity extends Activity {
 			case MESSAGE_SET_POS:
 				progressBar.setVisibility(View.GONE);
 				final String path = (String) msg.obj;
-				int pos = MediaCenterApp.getInstance().getFilePos(path);
+				int pos = MediaCenterApplication.getInstance().getFilePos(path);
 				DataChangeListener dataChangeListener = (DataChangeListener) getFragmentManager()
 						.findFragmentById(R.id.file_content);
 				dataChangeListener.setBackPos(pos, path);
@@ -1168,7 +1171,7 @@ public class FileMainActivity extends Activity {
 					.replace("]", "");
 			if (Util.isNumeric(gener)) {
 				int pos = Integer.parseInt(gener);
-				if (pos <= ID3_GENRES.length) {
+				if (pos < ID3_GENRES.length) {
 					_fi.genreName = ID3_GENRES[Integer.parseInt(gener)];
 				}
 			} else {
@@ -1286,5 +1289,14 @@ public class FileMainActivity extends Activity {
 		}
 		return fileType;
 
+	}
+	public void resetCurrentNum() {
+		currentNum.setText("0/0");
+	}
+	public void setCurrentNum(String num) {
+		currentNum.setText(num);
+	}
+	public void setCurrentPath(String path) {
+		currentPath.setText(path);
 	}
 }

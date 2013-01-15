@@ -33,12 +33,11 @@ import com.mipt.fileMgr.center.FileMainActivity;
 public class AllFileViewFragment extends Fragment implements
 		FileMainActivity.DataChangeListener {
 	private static final String LOG_TAG = "VideoMusicFragment";
-	private Activity mActivity;
+	private FileMainActivity mActivity;
 	private View mRootView;
 	private FileItemAdapter mAdapter;
 	private FileIconHelper mFileIconHelper;
 	private GridView gridView;
-	private TextView currentNum;
 	private int type;
 	private TextView fileName;
 	private TextView fileType;
@@ -76,7 +75,7 @@ public class AllFileViewFragment extends Fragment implements
 						setFileInfo(pos, cnt, fi);
 					}
 				} else {
-					currentNum.setText("0/0");
+					mActivity.resetCurrentNum();
 				}
 
 			}
@@ -87,11 +86,10 @@ public class AllFileViewFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mActivity = getActivity();
+		mActivity = (FileMainActivity) getActivity();
 		mRootView = inflater.inflate(R.layout.cm_file_gridview_list, container,
 				false);
 		gridView = (GridView) mRootView.findViewById(R.id.file_content);
-		currentNum = (TextView) mActivity.findViewById(R.id.current_num_tag);
 		fileName = (TextView) mRootView.findViewById(R.id.cm_file_name);
 		fileType = (TextView) mRootView.findViewById(R.id.cm_file_type);
 		fileDate = (TextView) mRootView.findViewById(R.id.cm_file_date);
@@ -119,7 +117,7 @@ public class AllFileViewFragment extends Fragment implements
 		});
 		gridView.setOnItemSelectedListener(fileChange);
 		gridView.requestFocus();
-		currentNum.setText("0/0");
+		mActivity.resetCurrentNum();
 		return mRootView;
 	}
 
@@ -181,9 +179,9 @@ public class AllFileViewFragment extends Fragment implements
 
 	void setFileInfo(int pos, int size, FileInfo fi) {
 		if (size == 0) {
-			currentNum.setText("0/0");
+			mActivity.resetCurrentNum();
 		} else {
-			currentNum.setText((pos + 1) + "/" + size);
+			mActivity.setCurrentNum((pos + 1) + "/" + size);
 		}
 		if (fi != null) {
 			fileName.setText(fi.fileName);

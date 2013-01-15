@@ -41,7 +41,7 @@ public class DirViewFragment extends Fragment implements
 		IFileInteractionListener, FileMainActivity.IBackPressedListener,
 		FileMainActivity.DataChangeListener {
 	private static final String LOG_TAG = "DirViewFragment";
-	private Activity mActivity;
+	private FileMainActivity mActivity;
 	private View mRootView;
 	private FileItemAdapter mAdapter;
 	private ArrayList<FileInfo> mFileNameList;
@@ -51,7 +51,6 @@ public class DirViewFragment extends Fragment implements
 	private GridView gridView;
 	private String orginPath;
 	private int type;
-	private TextView currentNum;
 	private TextView fileType;
 	private TextView fileName;
 	private TextView fileDate;
@@ -70,7 +69,7 @@ public class DirViewFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mActivity = getActivity();
+		mActivity = (FileMainActivity) getActivity();
 		type = getArguments() != null ? getArguments().getInt(
 				MediacenterConstant.INTENT_TYPE_VIEW)
 				: MediacenterConstant.IntentFlags.PIC_ID;
@@ -79,9 +78,8 @@ public class DirViewFragment extends Fragment implements
 		// getWindow().setFormat(android.graphics.PixelFormat.RGBA_8888);
 		mRootView = inflater.inflate(R.layout.cm_file_gridview_list, container,
 				false);
-		mFileNameList = MediaCenterApp.getInstance().getData();
-		MediaCenterApp.getInstance().clearData();
-		currentNum = (TextView) mActivity.findViewById(R.id.current_num_tag);
+		mFileNameList = MediaCenterApplication.getInstance().getData();
+		MediaCenterApplication.getInstance().clearData();
 		fileName = (TextView) mRootView.findViewById(R.id.cm_file_name);
 		fileType = (TextView) mRootView.findViewById(R.id.cm_file_type);
 		fileDate = (TextView) mRootView.findViewById(R.id.cm_file_date);
@@ -368,9 +366,9 @@ public class DirViewFragment extends Fragment implements
 
 	void setFileInfo(int pos, int size, FileInfo fi) {
 		if (size == 0) {
-			currentNum.setText("0/0");
+			mActivity.resetCurrentNum();
 		} else {
-			currentNum.setText((pos + 1) + "/" + size);
+			mActivity.setCurrentNum((pos + 1) + "/" + size);
 		}
 		if (fi != null) {
 			fileName.setText(fi.fileName);

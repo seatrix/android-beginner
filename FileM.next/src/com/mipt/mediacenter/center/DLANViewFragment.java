@@ -51,7 +51,7 @@ public class DLANViewFragment extends Fragment implements
 		FileMainActivity.DataChangeListener {
 	private static final String TAG = "DLANViewFragment";
 	public static final int ROOT_UPDATE = 2;
-	private Activity mActivity;
+	private FileMainActivity mActivity;
 	private View mRootView;
 	private Device currentDevice;
 	private int type;
@@ -63,7 +63,6 @@ public class DLANViewFragment extends Fragment implements
 	private TextView fileName;
 	private TextView fileDate;
 	private TextView fileSize;
-	private TextView currentNum;
 	private LinearLayout progressBar;
 	private FileIconHelper mFileIconHelper;
 	private String currentPath;
@@ -81,7 +80,7 @@ public class DLANViewFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mActivity = getActivity();
+		mActivity = (FileMainActivity) getActivity();
 		mRootView = inflater.inflate(R.layout.cm_file_gridview_list, container,
 				false);
 		stack = new LinkedListStack();
@@ -89,7 +88,6 @@ public class DLANViewFragment extends Fragment implements
 		fileDate = (TextView) mRootView.findViewById(R.id.cm_file_date);
 		fileSize = (TextView) mRootView.findViewById(R.id.cm_file_size);
 		mRootView.findViewById(R.id.cm_file_type).setVisibility(View.GONE);
-		currentNum = (TextView) mActivity.findViewById(R.id.current_num_tag);
 		currentTextView = (TextView) mActivity
 				.findViewById(R.id.current_path_tag);
 		currentPath = (String) currentTextView.getText();
@@ -129,6 +127,7 @@ public class DLANViewFragment extends Fragment implements
 		}
 		fileGridView.setOnItemClickListener(itemSelectListenr);
 		fileGridView.setOnItemSelectedListener(fileChange);
+		mActivity.resetCurrentNum();
 		return mRootView;
 	}
 
@@ -214,7 +213,7 @@ public class DLANViewFragment extends Fragment implements
 			mContext = activity;
 			inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			cList = MediaCenterApp.getInstance().getData();
+			cList = MediaCenterApplication.getInstance().getData();
 		}
 
 		public DlanAdapter(Activity activity, FileIconHelper _mFileIconHelper) {
@@ -222,7 +221,7 @@ public class DLANViewFragment extends Fragment implements
 			inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			mHelper = _mFileIconHelper;
-			cList = MediaCenterApp.getInstance().getData();
+			cList = MediaCenterApplication.getInstance().getData();
 		}
 
 		public ArrayList<FileInfo> getCurrentList() {
@@ -498,7 +497,11 @@ public class DLANViewFragment extends Fragment implements
 	};
 
 	void setFileInfo(int pos, int size, FileInfo fi) {
-		currentNum.setText((pos + 1) + "/" + size);
+		if (size == 0) {
+			mActivity.resetCurrentNum();
+		} else {
+			mActivity.setCurrentNum((pos + 1) + "/" + size);
+		}
 		if (fi != null) {
 			fileName.setText(fi.fileName);
 			if (fi.modifiedDate != 0) {

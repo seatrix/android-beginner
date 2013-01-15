@@ -37,6 +37,7 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.MediaStore.Video;
+import android.provider.MediaStore.Audio.AudioColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -485,7 +486,13 @@ public class Util {
 		String pathRe = path;
 		if (!TextUtils.isEmpty(pathRe) && pathRe.contains("/mnt/")
 				&& pathRe.indexOf("/mnt/") == 0) {
-			pathRe = pathRe.substring(8, path.length());
+			pathRe = pathRe.substring(("/mnt/").length());
+			if (pathRe.contains("/") && pathRe.indexOf("sdcard") != 0) {
+				pathRe = pathRe.substring(pathRe.indexOf("/"));
+			}
+		}
+		if (pathRe.indexOf("/") != 0) {
+			pathRe = "/" + pathRe;
 		}
 		return pathRe;
 	}

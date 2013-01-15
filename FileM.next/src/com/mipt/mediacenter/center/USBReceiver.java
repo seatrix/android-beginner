@@ -1,5 +1,6 @@
 package com.mipt.mediacenter.center;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -29,10 +30,20 @@ public class USBReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
 		String path = intent.getData().getPath();
+		if (!"A6".equals(android.os.Build.MODEL)) {
+			File f = new File(path);
+			if (f.exists()) {
+				File[] list = f.listFiles();
+				for (int i = 0; i < list.length; i++) {
+					path = list[i].getAbsolutePath();
+				}
+			}
+		}
 		Handler mHandler = HandlerManager.getInstance().getHandler(
 				HandlerManager.MainHandler);
 		if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
-			Log.i("USBReceiver", "---------ACTION_MEDIA_MOUNTED----");
+			Log.i("USBReceiver", "---------USBReceiver---ACTION_MEDIA_MOUNTED-"
+					+ path);
 			if (mHandler != null) {
 				Message message = mHandler.obtainMessage(
 						MainActivity.MESSAGE_FRESH_DEVICE, this);
@@ -45,7 +56,15 @@ public class USBReceiver extends BroadcastReceiver {
 			}
 
 		} else if (action.equals(Intent.ACTION_MEDIA_UNMOUNTED)
-				|| action.equals(Intent.ACTION_MEDIA_REMOVED)) {
+				|| action.equals(Intent.ACTION_MEDIA_REMOVED)
+				|| action.equals(Intent.ACTION_MEDIA_BAD_REMOVAL)) {
+			try {
+				Thread.currentThread();
+				Thread.sleep(500);
+			} catch (Exception e) {
+			}
+			Log.i("USBReceiver",
+					"---------USBReceiver---ACTION_MEDIA_UNMOUNTED-" + path);
 			if (mHandler != null) {
 				Message message = mHandler.obtainMessage(
 						MainActivity.MESSAGE_FRESH_DEVICE, this);
@@ -58,10 +77,10 @@ public class USBReceiver extends BroadcastReceiver {
 			}
 		} else if (action.equals(Intent.ACTION_MEDIA_SCANNER_STARTED)) {
 
-			Log.i("USBReceiver", "---------ACTION_MEDIA_SCANNER_STARTED----");
+			// "---------ACTION_MEDIA_SCANNER_STARTED----");
 
 		} else if (action.equals(Intent.ACTION_MEDIA_SCANNER_FINISHED)) {
-			Log.i("USBReceiver", "---------ACTION_MEDIA_SCANNER_FINISHED----");
+			// "---------ACTION_MEDIA_SCANNER_FINISHED----");
 		}
 
 	}

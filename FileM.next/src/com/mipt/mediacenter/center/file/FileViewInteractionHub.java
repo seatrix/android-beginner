@@ -92,6 +92,13 @@ public class FileViewInteractionHub {
 		mCurrentPath = path;
 	}
 
+	private void showProgress(String msg) {
+		progressDialog = new ProgressDialog(mContext);
+		progressDialog.setMessage(msg);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+	}
 	public void sortCurrentList() {
 		mFileViewListener.sortCurrentList(mFileSortHelper);
 	}
