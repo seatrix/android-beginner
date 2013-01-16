@@ -2,10 +2,10 @@
 <resources>
 
     <string-array name="mountType">
-        <item>硬盘</item>
+        <item>Hard Disk</item>
         <item>USB</item>
-        <item>SD卡</item>
-        <item>未知</item>
+        <item>SD card</item>
+        <item>Other</item>
     </string-array>
 
 </resources>

@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -229,17 +230,7 @@ public class FileMainActivity extends Activity {
         super.onResume();
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
     
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        
-        return super.onContextItemSelected(item);
-    }
     
     private void addFragmentToStack(int _viewTpe, DeviceInfo _dInfo) {
         //Util.putLastType(cxt, tabId + "", _viewTpe);

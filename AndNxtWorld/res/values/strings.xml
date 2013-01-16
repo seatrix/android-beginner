@@ -6,7 +6,16 @@
     <string name="fragment">Fragment</string>
     <string name="dynamic_Load_list">DynamicLoad</string>
     <string name="dynamic_Load_douban_list">DoubanList</string>
+    <string name="menu">PopupMenu</string>
+    <string name="translucent_menu">TranslucentMenu</string>
     
     <item name="tag_first" type="id"></item>
     <item name="tag_second" type="id"></item>
+    
+    <string name="hello">Hello World, translucentButton!</string>
+    <string name="menu1">menu1</string>
+    <string name="menu2">menu2</string>
+    <string name="menu3">menu3</string>
+    <string name="menu4">menu4</string>
+    <string name="hint">Please press the \"menu\" button to test the menu! 3Q!</string>    
 </resources>

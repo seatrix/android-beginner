@@ -1,4 +1,4 @@
-package com.exam.slieer.activities;
+package com.exam.slieer.activities.list;
 
 import java.util.ArrayList;
 import java.util.List;

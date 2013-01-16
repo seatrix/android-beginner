@@ -34,17 +34,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.LoadListActivity"
+            android:name=".activities.list.LoadListActivity"
             android:label="@string/dynamic_Load_list" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.SAMPLE_CODE" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".activities.DoubanMainActivity"
+            android:name=".activities.list.DoubanMainActivity"
             android:label="@string/dynamic_Load_douban_list" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,6 +51,30 @@
                 <category android:name="android.intent.category.SAMPLE_CODE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.menu.PopupMenuActivity"
+            android:label="@string/menu" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".activities.menu.TranslucentButton"
+            android:label="@string/translucent_menu" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.menu.TranslucentButtonMain">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>        
     </application>
 
 </manifest>

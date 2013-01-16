@@ -201,63 +201,65 @@ public final class R {
         public static final int file_list_page_op_menu=0x7f090001;
     }
     public static final class string {
-        public static final int album_view_type=0x7f07001d;
-        public static final int all_file_view_type=0x7f07001a;
-        public static final int app_name=0x7f070005;
-        public static final int artist_view_type=0x7f07001e;
-        public static final int back_button_desc=0x7f07002a;
-        public static final int cancle=0x7f070027;
-        public static final int category_all=0x7f07000c;
-        public static final int category_music=0x7f07000d;
-        public static final int category_picture=0x7f070011;
-        public static final int category_video=0x7f070010;
-        public static final int change_view=0x7f070018;
-        public static final int choose_desc=0x7f07002b;
-        public static final int cm_back_toast=0x7f070033;
-        public static final int cm_data_loading=0x7f070036;
-        public static final int cm_device_progress=0x7f07002f;
-        public static final int cm_device_unlive_click=0x7f070034;
-        public static final int cm_dlan_desc=0x7f070016;
-        public static final int cm_dlan_title=0x7f070030;
-        public static final int cm_file_cnt=0x7f070035;
-        public static final int cm_genre_unknow=0x7f07002e;
-        public static final int cm_pop_title=0x7f070031;
-        public static final int cm_song_cnt=0x7f070032;
-        public static final int cm_unknow=0x7f070037;
-        public static final int cm_usb_desc=0x7f070015;
-        public static final int confirm=0x7f070026;
-        public static final int current_dlan_remove=0x7f07002d;
-        public static final int current_sd_remove=0x7f070025;
-        public static final int detail_info=0x7f070000;
-        public static final int dialog_select_type=0x7f070023;
-        public static final int dialog_type_audio=0x7f070020;
-        public static final int dialog_type_image=0x7f070022;
-        public static final int dialog_type_video=0x7f070021;
-        public static final int dlan_unconnect=0x7f070017;
-        public static final int enable_sd_card=0x7f07000e;
-        public static final int file_view_type=0x7f070019;
-        public static final int genre_view_type=0x7f07001b;
-        public static final int local_sdcard=0x7f070028;
-        public static final int menu_settings=0x7f070006;
-        public static final int music_view_type=0x7f07001c;
-        public static final int next_page=0x7f070002;
-        public static final int no_file=0x7f07000f;
-        public static final int ok_open_desc=0x7f07002c;
-        public static final int previous_page=0x7f070001;
-        public static final int recent_content=0x7f070014;
-        public static final int recent_date=0x7f070013;
-        public static final int recent_play=0x7f070012;
-        public static final int start_auto_play=0x7f070003;
-        public static final int stop_auto_play=0x7f070004;
-        public static final int tab_audio=0x7f07000b;
-        public static final int tab_favorite=0x7f070008;
-        public static final int tab_pic=0x7f070009;
-        public static final int tab_video=0x7f07000a;
-        public static final int title_activity_main=0x7f070007;
-        public static final int unknow_name=0x7f070024;
-        public static final int up_file=0x7f07001f;
-        public static final int usb_device=0x7f070029;
-        public static final int vp_play_error=0x7f070038;
+        public static final int album_view_type=0x7f07000f;
+        public static final int all_file_view_type=0x7f070009;
+        public static final int app_name=0x7f070000;
+        public static final int artist_view_type=0x7f070010;
+        public static final int back_button_desc=0x7f070023;
+        public static final int cancle=0x7f070029;
+        /**  
+    <string name="title_activity_main">MainActivity</string>
+    <string name="tab_audio">audio</string>
+     <string name="tab_video">video</string>
+     
+         */
+        public static final int category_all=0x7f070013;
+        public static final int category_music=0x7f070014;
+        public static final int category_picture=0x7f070004;
+        public static final int category_video=0x7f070005;
+        public static final int change_view=0x7f070007;
+        public static final int choose_desc=0x7f070024;
+        public static final int cm_data_loading=0x7f07002a;
+        /**  
+    <string name="dialog_type_audio">音频</string>
+    <string name="dialog_type_video">视频</string>
+    <string name="dialog_type_image">图像</string>
+    <string name="cm_song_cnt">首</string>
+    <string name="cm_back_toast">再按返回键将退出应用</string>
+    <string name="vp_play_error">加载媒体失败</string>
+
+ 
+         */
+        public static final int cm_device_progress=0x7f070017;
+        public static final int cm_device_unlive_click=0x7f070019;
+        public static final int cm_dlan_desc=0x7f070011;
+        public static final int cm_dlan_title=0x7f070012;
+        public static final int cm_file_cnt=0x7f070018;
+        public static final int cm_genre_unknow=0x7f07001c;
+        public static final int cm_pop_title=0x7f07001a;
+        public static final int cm_unknow=0x7f07001b;
+        public static final int cm_usb_desc=0x7f07000a;
+        public static final int confirm=0x7f070028;
+        public static final int current_dlan_remove=0x7f070026;
+        public static final int current_sd_remove=0x7f070020;
+        public static final int dialog_select_type=0x7f07001e;
+        public static final int dlan_unconnect=0x7f070006;
+        public static final int enable_sd_card=0x7f070015;
+        public static final int file_view_type=0x7f070008;
+        public static final int genre_view_type=0x7f07000d;
+        public static final int local_sdcard=0x7f070021;
+        public static final int menu_settings=0x7f070001;
+        public static final int music_view_type=0x7f07000e;
+        public static final int no_file=0x7f070016;
+        public static final int ok_open_desc=0x7f070025;
+        public static final int recent_content=0x7f07000c;
+        public static final int recent_date=0x7f07001d;
+        public static final int recent_play=0x7f07000b;
+        public static final int tab_favorite=0x7f070002;
+        public static final int tab_pic=0x7f070003;
+        public static final int unknow_name=0x7f07001f;
+        public static final int up_file=0x7f070027;
+        public static final int usb_device=0x7f070022;
     }
     public static final class style {
         public static final int AppTheme=0x7f080000;
