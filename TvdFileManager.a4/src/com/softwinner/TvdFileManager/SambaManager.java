@@ -56,20 +56,20 @@ public class SambaManager
 		mountRoot = mContext.getDir("share", 0);
 	}
 	
-	/* ËÑË÷ÍøÂçÁÚ¾Ó,½á¹ûÒÔ»Øµ÷·½Ê½·µ»Ø */
+	/* æœç´¢ç½‘ç»œé‚»å±…,ç»“æœä»¥å›è°ƒæ–¹å¼è¿”å› */
 	public void startSearch(final String smbUrl, final OnSearchListenner ls)
 	{
 		Log.d("chen", "search smb:" + smbUrl);
 		manuallyCancel = false;
 		
-		/* µ¯³öËÑË÷¶Ô»°¿ò */
+		/* å¼¹å‡ºæœç´¢å¯¹è¯æ¡† */
 		pr_dialog = showProgressDialog(R.drawable.icon, mContext.getResources().getString(R.string.search), 
 				null, ProgressDialog.STYLE_SPINNER, true);
 		pr_dialog.setOnCancelListener(new OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				ls.onFinish(true);
-				/* Èç¹ûÊÇÓÉÓÚ»ñÈ¡²»µ½ĞÅÏ¢¶ø×Ô¶¯È¡Ïû,ÔòÔÙµ¯³öµÇÂ½¿òÒªÇóÊäÈëÕıÈ·ÃÜÂë */
+				/* å¦‚æœæ˜¯ç”±äºè·å–ä¸åˆ°ä¿¡æ¯è€Œè‡ªåŠ¨å–æ¶ˆ,åˆ™å†å¼¹å‡ºç™»é™†æ¡†è¦æ±‚è¾“å…¥æ­£ç¡®å¯†ç  */
 				if(mSmbList == null && !manuallyCancel)
 				{
 					
@@ -82,22 +82,22 @@ public class SambaManager
 				SmbFile smbFile = new SmbFile("smb://");
 				if(smbUrl.equals("smb://"))
 				{
-					/* ËÑË÷ÏÂÃæËùÓĞµÄworkgroup*/
+					/* æœç´¢ä¸‹é¢æ‰€æœ‰çš„workgroup*/
 					smbFile = new SmbFile(smbUrl);
 				}
 				else if(isSambaWorkgroup(smbUrl))
 				{
-					/* ËÑË÷ÏÂÃæËùÓĞµÄservice */
+					/* æœç´¢ä¸‹é¢æ‰€æœ‰çš„service */
 					smbFile = getSambaWorkgroup(smbUrl);
 				}
 				else if(isSambaServices(smbUrl))
 				{
-					/* ËÑË÷ÏÂÃæËùÓĞµÄsharedÎÄ¼ş¼Ğ */
+					/* æœç´¢ä¸‹é¢æ‰€æœ‰çš„sharedæ–‡ä»¶å¤¹ */
 					smbFile = getSambaService(smbUrl);
 				}
 				else if(isSambaShare(smbUrl))
 				{
-					/* ¹ÒÔØsharedÎÄ¼ş¼Ğ */
+					/* æŒ‚è½½sharedæ–‡ä»¶å¤¹ */
 					smbFile = getSambaShare(smbUrl);
 				}
 				boolean ret = startLogin(smbFile, ls);
@@ -215,7 +215,7 @@ public class SambaManager
 	 * 
 	 * @param samba
 	 * @param ls
-	 * @return ·µ»ØÕæ±íÊ¾µÇÂ½³É¹¦
+	 * @return è¿”å›çœŸè¡¨ç¤ºç™»é™†æˆåŠŸ
 	 */
 	public boolean startLogin(SmbFile samba,final OnSearchListenner ls)
 	{
@@ -230,16 +230,16 @@ public class SambaManager
 			mShareList.clear();
 			return login(samba, mShareList, ls);
 		case SmbFile.TYPE_FILE_SHARE:
-			/* Èç¹ûÖ®Ç°ÒÑ¾­³É¹¦µÇÂ½¹ı,ÔòÌø×ªµ½¹ÒÔØµã */
+			/* å¦‚æœä¹‹å‰å·²ç»æˆåŠŸç™»é™†è¿‡,åˆ™è·³è½¬åˆ°æŒ‚è½½ç‚¹ */
 			String mountPoint = getSambaMountedPoint(samba.getPath());
 			if(mountPoint != null)
 			{
 				ls.onReceiver(mountPoint);
 				return true;
 			}
-			/* ·ñÔò³¢ÊÔÎŞÊäÈëÕËºÅÃÜÂëµÇÂ½,Èç¹û³É¹¦Ôò·µ»ØÏÂÃæËùÓĞµÄÎÄ¼ş */
+			/* å¦åˆ™å°è¯•æ— è¾“å…¥è´¦å·å¯†ç ç™»é™†,å¦‚æœæˆåŠŸåˆ™è¿”å›ä¸‹é¢æ‰€æœ‰çš„æ–‡ä»¶ */
 			mountPoint = createNewMountedPoint(samba.getPath());
-			SmbFile.umount(mountPoint);		//È·±£¸ÃÂ·¾¶²»ÊôÓÚ¹ÒÔØ×´Ì¬,·ÀÖ¹ÓÉÓÚ³ÌĞòÒÔÍâÖĞ¶Ï,µ¼ÖÂÄ³¸ö·şÎñÆ÷Ã»±»Ğ¶ÔØ,ÏÂ´Î³¢ÊÔ¹ÒÔØÊ±»áÊ§°Ü
+			SmbFile.umount(mountPoint);		//ç¡®ä¿è¯¥è·¯å¾„ä¸å±äºæŒ‚è½½çŠ¶æ€,é˜²æ­¢ç”±äºç¨‹åºä»¥å¤–ä¸­æ–­,å¯¼è‡´æŸä¸ªæœåŠ¡å™¨æ²¡è¢«å¸è½½,ä¸‹æ¬¡å°è¯•æŒ‚è½½æ—¶ä¼šå¤±è´¥
 			int ret = SmbFile.mount(samba.getPath(), mountPoint, "", "");
 			if(ret == 0)
 			{
@@ -263,7 +263,7 @@ public class SambaManager
 					ls.onReceiver(mountPoint);
 					return true;
 				}
-				/* Ê§°ÜÔòµ¯³öµÇÂ½¿ò½øĞĞµÇÂ½ */
+				/* å¤±è´¥åˆ™å¼¹å‡ºç™»é™†æ¡†è¿›è¡Œç™»é™† */
 				else
 				{
 					mLoginDB.delete(samba.getPath());
@@ -337,7 +337,7 @@ public class SambaManager
 			@Override
 			public void onClick(View arg0) {
 				dg.dismiss();
-				/* ¿ªÊ¼µÇÂ½ */
+				/* å¼€å§‹ç™»é™† */
 				final ProgressDialog pdg = showProgressDialog(R.drawable.icon, mContext.getResources().getString(R.string.login), 
 						null, ProgressDialog.STYLE_SPINNER, true);
 				NtlmPasswordAuthentication ntlm = new NtlmPasswordAuthentication(samba.getNtlm().mDomain, 
@@ -345,7 +345,7 @@ public class SambaManager
 				samba.setNtlm(ntlm);
 				switch (samba.getType()) 
 				{
-				/* Èç¹ûsambaÀàĞÍÎªserver,ÔòÁĞ³öËùÓĞµÄshare */
+				/* å¦‚æœsambaç±»å‹ä¸ºserver,åˆ™åˆ—å‡ºæ‰€æœ‰çš„share */
 				case SmbFile.TYPE_SERVER:
 					SmbFile[] shareList = samba.list();
 					if(shareList == null)
@@ -366,11 +366,11 @@ public class SambaManager
 						ls.onFinish(true);
 					}
 					break;
-				/* Èç¹ûsambaÀàĞÍÎªshare,¹ÒÔØ¸Ãshare,²¢ÁĞ³öËùÓĞµÄ×ÓÎÄ¼ş */
+				/* å¦‚æœsambaç±»å‹ä¸ºshare,æŒ‚è½½è¯¥share,å¹¶åˆ—å‡ºæ‰€æœ‰çš„å­æ–‡ä»¶ */
 				case SmbFile.TYPE_FILE_SHARE:
 					String mountedPoint = createNewMountedPoint(samba.getPath());
 					int success = SmbFile.mount(samba.getPath(), mountedPoint, samba.getNtlm().mUsername, samba.getNtlm().mPassword);
-					/* ¹ÒÔØ³É¹¦,ÁĞ³ö×ÓÄ¿Â¼ÎÄ¼ş */
+					/* æŒ‚è½½æˆåŠŸ,åˆ—å‡ºå­ç›®å½•æ–‡ä»¶ */
 					if(success == 0)
 					{
 						addLoginMessage(samba);
@@ -403,7 +403,7 @@ public class SambaManager
 		dg.show();
 	}
 	
-	/* Ìí¼ÓµÇÂ¼ĞÅÏ¢µ½Êı¾İ¿âÖĞ */
+	/* æ·»åŠ ç™»å½•ä¿¡æ¯åˆ°æ•°æ®åº“ä¸­ */
 	public void addLoginMessage(SmbFile file)
 	{
 		Log.d("chen", "-------------add login message------------");
@@ -416,7 +416,7 @@ public class SambaManager
 				file.getNtlm().mUsername, file.getNtlm().mPassword);
 	}
 	
-	/* Çå³ıËùÓĞµÇÂ½µã */
+	/* æ¸…é™¤æ‰€æœ‰ç™»é™†ç‚¹ */
 	public void clear()
 	{
 		for(String mountPoint:mMountedPointList)

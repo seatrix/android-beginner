@@ -94,7 +94,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	private TextView index;
 	private IEventHandlerCallbacks mCallbacks;
 	
-	/* ÎÄ¼şÄ¿Â¼É¨Ãè½ø¶È */
+	/* æ–‡ä»¶ç›®å½•æ‰«æè¿›åº¦ */
 	private ProgressDialog scanDialog;
 	private int num = 0;
 	private static final int SCANFILES = 0x03;
@@ -102,26 +102,26 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	private static final String BACK_TO_PRE = "backToPreDir";
 	private static final String NONE        = "NONE";
 	
-	/* ¶¨Òå¹ıÂËÀàĞÍ */
+	/* å®šä¹‰è¿‡æ»¤ç±»å‹ */
 	private Comparator sort = MediaProvider.alph;
 	
-	/* ÓÃÓÚÇĞ»»²»Í¬°´¼ü½¹µã  */
+	/* ç”¨äºåˆ‡æ¢ä¸åŒæŒ‰é”®ç„¦ç‚¹  */
 	private View pre = null;
 	private View now = null;
 	
-	/* ÓÃÓÚÅĞ¶ÏÊÇ·ñ¸Ã²¥·ÅÊÓÆµ£¨ÓÃ»§ÉÏÏÂÑ¡ÔñÌ«¿ìÊ±²»±Ø²¥·Å£© */
+	/* ç”¨äºåˆ¤æ–­æ˜¯å¦è¯¥æ’­æ”¾è§†é¢‘ï¼ˆç”¨æˆ·ä¸Šä¸‹é€‰æ‹©å¤ªå¿«æ—¶ä¸å¿…æ’­æ”¾ï¼‰ */
 	private String videoPath   = null;
 	private Timer  mTimer      = null;
 	private TimerTask mTask	   = null;
 	private Handler mHandler   = null;
 	private static int VIDEO_DELAY   = 1500;
-	/* ÉèÖÃËõÂÔÍ¼ÑÓ»ºÏÔÊ¾µÄÊ±¼ä */
+	/* è®¾ç½®ç¼©ç•¥å›¾å»¶ç¼“æ˜¾ç¤ºçš„æ—¶é—´ */
 	private static int PIC_DELAY = 500;
 	
-	/* Ä¬ÈÏ¹ıÂËÀàĞÍ£ºËùÓĞÎÄ¼ş */
+	/* é»˜è®¤è¿‡æ»¤ç±»å‹ï¼šæ‰€æœ‰æ–‡ä»¶ */
 	private FileFilter mFilter;
 	
-	/* Ã¿´Î½øÈëÒ»¸öÎÄ¼ş¼ĞÊ±£¬±£´æ¸ÃÎÄ¼ş¼ĞµÄÎ»ÖÃ£¬·½±ã·µ»ØÊ±½¹µãÄÜÂäÔÚ¸ÃÎÄ¼ş¼ĞÉÏ */
+	/* æ¯æ¬¡è¿›å…¥ä¸€ä¸ªæ–‡ä»¶å¤¹æ—¶ï¼Œä¿å­˜è¯¥æ–‡ä»¶å¤¹çš„ä½ç½®ï¼Œæ–¹ä¾¿è¿”å›æ—¶ç„¦ç‚¹èƒ½è½åœ¨è¯¥æ–‡ä»¶å¤¹ä¸Š */
 	private Stack<Integer> mPathStack;
 	
 	private SharedPreferences pf;
@@ -176,10 +176,10 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 			}
 		};
 		
-		/* ÉèÖÃÄ¬ÈÏµÄ¹ıÂË*/
+		/* è®¾ç½®é»˜è®¤çš„è¿‡æ»¤*/
 		mFilter = mMedia.ALLTYPE_FILTER;
 		
-		/* ±£´æÉè±¸·ÖÇøÃû×ÖµÄÓ³Éä */
+		/* ä¿å­˜è®¾å¤‡åˆ†åŒºåå­—çš„æ˜ å°„ */
 		pf = mContext.getSharedPreferences("partition", 0);
 		editor = pf.edit();
 	}
@@ -281,7 +281,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		}
 		if(mDataSource.size() > 0)
 		{
-			/* ÅĞ¶ÏÄÄĞ©Éè±¸ÓĞ¶à·ÖÇø */
+			/* åˆ¤æ–­å“ªäº›è®¾å¤‡æœ‰å¤šåˆ†åŒº */
 			for(int i = 0; i < mDataSource.size(); i++)
 			{
 				if(mDevices.hasMultiplePartition(mDataSource.get(i)))
@@ -298,7 +298,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	
 	private void MapPartitionName(String devices)
 	{
-		/* Ó³ÉäÆä·ÖÇøÃû,ÒªÇø·Ö²å°ÎÊ±Ğ¶ÔØÊ§°Üµ¼ÖÂµÄ¼Ù·ÖÇø */
+		/* æ˜ å°„å…¶åˆ†åŒºå,è¦åŒºåˆ†æ’æ‹”æ—¶å¸è½½å¤±è´¥å¯¼è‡´çš„å‡åˆ†åŒº */
 		File f = new File(devices);
 		String partition;
 		File[] list = f.listFiles();
@@ -416,7 +416,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		{
 			backToPreDir();
 		}
-		/* Èç¹ûµãÖĞµÄÊÇ"ÍøÂçÁÚ¾Ó",»òÕßµã»÷µÄÊÇsamba·şÎñÆ÷,»òÕßµã»÷µÄÊÇsambaµÄShareÎÄ¼ş¼Ğ,Ôò¿ªÊ¼ËÑË÷ */
+		/* å¦‚æœç‚¹ä¸­çš„æ˜¯"ç½‘ç»œé‚»å±…",æˆ–è€…ç‚¹å‡»çš„æ˜¯sambaæœåŠ¡å™¨,æˆ–è€…ç‚¹å‡»çš„æ˜¯sambaçš„Shareæ–‡ä»¶å¤¹,åˆ™å¼€å§‹æœç´¢ */
 		else if(filePath.equals(mContext.getResources().getString(R.string.samba)))
 		{			
 			if(!checkNet(mContext)){
@@ -522,7 +522,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 			});
 		}
 		
-		/* Èç¹ûÊÇÎÄ¼ş¼Ğ£¬ÔòÏÔÊ¾ÆäÀïÃæµÚÒ»¼¶×ÓÄ¿Â¼µÄÎÄ¼ş */
+		/* å¦‚æœæ˜¯æ–‡ä»¶å¤¹ï¼Œåˆ™æ˜¾ç¤ºå…¶é‡Œé¢ç¬¬ä¸€çº§å­ç›®å½•çš„æ–‡ä»¶ */
 		else if(file.isDirectory())
 		{
 			if(!playBlurayFolder(filePath)){
@@ -555,14 +555,14 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	}
 	
 	private String findBlurayVideo(String path){
-		/* ÊÇ·ñÔÚÉèÖÃÖĞ´ò¿ªÁËÀ¶¹âÎÄ¼ş¼Ğ²¥·Å¹¦ÄÜ */
+		/* æ˜¯å¦åœ¨è®¾ç½®ä¸­æ‰“å¼€äº†è“å…‰æ–‡ä»¶å¤¹æ’­æ”¾åŠŸèƒ½ */
 		boolean enable = Settings.System.getInt(mContext.getContentResolver(), 
 				Settings.System.BD_FOLDER_PLAY_MODE, 0) != 0?true:false;
 		if(!enable){
 			Log.d(TAG,"the BD_FOLDER_PLAY_MODE is unable in setting");
 			return null;
 		}
-		/* ÊÇ·ñ·ûºÏÀ¶¹âÎÄ¼ş¼ĞµÄÄ¿Â¼½á¹¹ */
+		/* æ˜¯å¦ç¬¦åˆè“å…‰æ–‡ä»¶å¤¹çš„ç›®å½•ç»“æ„ */
 		String subDir = "BDMV/STREAM";
 		String p = path + "/" + subDir;
 		File f = new File(p);
@@ -887,7 +887,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		
 	}
 	
-	/* »ñÈ¡È«²¿¿Õ¼ä,..GB */
+	/* è·å–å…¨éƒ¨ç©ºé—´,..GB */
 	private long getTotalSize(String path)
 	{
 		StatFs statfs = new StatFs(path);
@@ -898,7 +898,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	}
 	
 	
-	/* »ñÈ¡¿ÉÓÃ¿Õ¼ä */
+	/* è·å–å¯ç”¨ç©ºé—´ */
 	private long getAvailableSize(String path)
 	{
 		StatFs statfs = new StatFs(path);
@@ -957,7 +957,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		preview.setBackgroundResource(R.drawable.preview);
 		if(Singer == null || Title == null || Duration == null || Size == null)
 		{
-			/* ²»ÄÜ»ñÈ¡¸ÃĞÅÏ¢,·µ»Ø */
+			/* ä¸èƒ½è·å–è¯¥ä¿¡æ¯,è¿”å› */
 			return;
 		}
 		String Display  = Singer + Title + Duration + Size;
@@ -980,7 +980,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 
 			@Override
 			public void run() {
-				//ÑÓÊ±²¥·Å
+				//å»¶æ—¶æ’­æ”¾
 				Message msg = new Message(); 
 				msg.what = VIDEO;
 				mHandler.sendMessage(msg);
@@ -991,7 +991,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	
 	private void showPictureMessage(String path)
 	{
-		/* »ñÈ¡Í¼Æ¬ËõÂÔÍ¼ */
+		/* è·å–å›¾ç‰‡ç¼©ç•¥å›¾ */
 		Bitmap thumb = mMedia.getImageThumbFromDB(path);
 		if(thumb != null)
 		{
@@ -1000,9 +1000,9 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		}
 		else
 		{
-			/* ÏÈÉèÖÃÒ»¸öÄ¬ÈÏÍ¼Æ¬ */
+			/* å…ˆè®¾ç½®ä¸€ä¸ªé»˜è®¤å›¾ç‰‡ */
 			imageThumb.setImageResource(R.drawable.thumbnail_picture);
-			/* Èç¹û²»ÄÜÖ±½Ó´ÓÊı¾İ¿âÖĞ»ñµÃÆäËõÂÔÍ¼ÎÄ¼ş,ÔòĞèÒªÑÓ»ºÊ±¼äÔÙ½âÂëÉú³É */
+			/* å¦‚æœä¸èƒ½ç›´æ¥ä»æ•°æ®åº“ä¸­è·å¾—å…¶ç¼©ç•¥å›¾æ–‡ä»¶,åˆ™éœ€è¦å»¶ç¼“æ—¶é—´å†è§£ç ç”Ÿæˆ */
 			picPath = path;
 			if(mTimer != null)
 			{
@@ -1015,7 +1015,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 
 				@Override
 				public void run() {
-					//ÑÓÊ±²¥·Å
+					//å»¶æ—¶æ’­æ”¾
 					Message msg = new Message();
 					msg.what = PICTURE;
 					mHandler.sendMessage(msg);
@@ -1028,12 +1028,12 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	
 	private void getPicDetail(String path)
 	{
-		//»ñÈ¡Í¼Æ¬´óĞ¡
+		//è·å–å›¾ç‰‡å¤§å°
 		String s = toSize(new File(path).length());
 		String Size	= mContext.getResources().getString(R.string.size)
 				+ s + "\n";
 		
-		//»ñÈ¡Í¼Æ¬·Ö±æÂÊ
+		//è·å–å›¾ç‰‡åˆ†è¾¨ç‡
 		BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options); 
@@ -1053,7 +1053,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	
 	private void showPath(String path)
 	{
-		//ÏÔÊ¾ÎÄ¼şÂ·¾¶
+		//æ˜¾ç¤ºæ–‡ä»¶è·¯å¾„
 		String dir  = mContext.getResources().getString(R.string.directory);
 		String type = getTypeName(path);
 		String dev  = getDeviceName(path);
@@ -1085,7 +1085,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	
 	private void showIndex(int position)
 	{
-		//ÏÔÊ¾itemÔÚÁĞ±íÖĞµÄË÷Òı
+		//æ˜¾ç¤ºitemåœ¨åˆ—è¡¨ä¸­çš„ç´¢å¼•
 		String index = String.valueOf(position + 1) + "/" + String.valueOf(mDataSource.size());
 		this.index.setText(index);
 	}
@@ -1200,13 +1200,13 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 			public void onFocusChange(View v, boolean hasFocus) {
 				if(hasFocus)
 				{
-					/* »ñÈ¡½¹µãÊ±£¬ÏÔÊ¾ÌõÄ¿ÖĞµÚÒ»¸öÎÄ¼şµÄĞÅÏ¢  */
+					/* è·å–ç„¦ç‚¹æ—¶ï¼Œæ˜¾ç¤ºæ¡ç›®ä¸­ç¬¬ä¸€ä¸ªæ–‡ä»¶çš„ä¿¡æ¯  */
 					currentPosition = 0;
 					getDetailForPosition(0);
 				}
 				else
 				{
-					/* ÎÄ¼şÁĞ±íÀ¸¶ªÊ§½¹µãÊ±£¬Çå³ıÔ¤ÀÀĞÅÏ¢ */
+					/* æ–‡ä»¶åˆ—è¡¨æ ä¸¢å¤±ç„¦ç‚¹æ—¶ï¼Œæ¸…é™¤é¢„è§ˆä¿¡æ¯ */
 					mCallbacks.releaseMediaPlayerAsync();
 					currentPosition = -1;
 					showNothing();
@@ -1216,7 +1216,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	}
 	
 	/**
-	 * ·µ»ØÉÏÒ»²ã£¬Èç¹û³É¹¦·µ»ØÕæ
+	 * è¿”å›ä¸Šä¸€å±‚ï¼Œå¦‚æœæˆåŠŸè¿”å›çœŸ
 	 */
 	public boolean backToPreDir()
 	{
@@ -1229,7 +1229,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		}
 		mCallbacks.releaseMediaPlayerAsync();
 		showNothing();
-		/* Èç¹ûËùÔÚÄ¿Â¼ÊÇÄ³¸öÉè±¸µÄ¸ùÄ¿Â¼£¬Ôò·µ»ØÉè±¸×ÜÁĞ±í ¸ùÄ¿Â¼*/
+		/* å¦‚æœæ‰€åœ¨ç›®å½•æ˜¯æŸä¸ªè®¾å¤‡çš„æ ¹ç›®å½•ï¼Œåˆ™è¿”å›è®¾å¤‡æ€»åˆ—è¡¨ æ ¹ç›®å½•*/
 		int i;
 		int j;
 		ArrayList<String> devicesList;
@@ -1253,7 +1253,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 				return true;
 			}
 		}
-		/* Èç¹ûµ±Ç°Ä¿Â¼ÊÇsambaµÄshareÎÄ¼ş¼ĞµÄ¹ÒÔØµã,Ôò·µ»ØsambaµÄshareÎÄ¼ş¼Ğ×ÜÁĞ±í */
+		/* å¦‚æœå½“å‰ç›®å½•æ˜¯sambaçš„shareæ–‡ä»¶å¤¹çš„æŒ‚è½½ç‚¹,åˆ™è¿”å›sambaçš„shareæ–‡ä»¶å¤¹æ€»åˆ—è¡¨ */
 		if(mSamba.isSambaMountedPoint(currentDir))
 		{
 			try{
@@ -1328,7 +1328,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 			backToPreDir();
 			return true;
 		}
-		/* Èç¹ûµ±Ç°ËùÔÚÄ¿Â¼²»ÊÇÄ³¸öÉè±¸µÄ¸ùÄ¿Â¼£¬Ôò·µ»ØÉÏÒ»²ãÄ¿Â¼*/
+		/* å¦‚æœå½“å‰æ‰€åœ¨ç›®å½•ä¸æ˜¯æŸä¸ªè®¾å¤‡çš„æ ¹ç›®å½•ï¼Œåˆ™è¿”å›ä¸Šä¸€å±‚ç›®å½•*/
 		else if(!currentDir.equals(rootPath))
 		{
 			Log.d("chen","--------back to pre ");
@@ -1341,7 +1341,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	}
 	
 	/**
-	 * ½øÈëÏÂÒ»²ã¡£³É¹¦·µ»ØÕæ 
+	 * è¿›å…¥ä¸‹ä¸€å±‚ã€‚æˆåŠŸè¿”å›çœŸ 
 	 */
 	public boolean goIntoDir(String path)
 	{
@@ -1370,16 +1370,16 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	}
 	
 	/**
-	 * »ñÈ¡positionÎ»ÖÃÉÏµÄÎÄ¼şµÄĞÅÏ¢,
+	 * è·å–positionä½ç½®ä¸Šçš„æ–‡ä»¶çš„ä¿¡æ¯,
 	 */
 	public void getDetailForPosition(int position)
 	{
 		try
 		{
 			String path = mDataSource.get(position);
-			/* ÏÔÊ¾Ë÷ÒıÌõ */
+			/* æ˜¾ç¤ºç´¢å¼•æ¡ */
 			showFileIndex(path, position);
-			/* ÏÔÊ¾Ô¤ÀÀĞÅÏ¢  */
+			/* æ˜¾ç¤ºé¢„è§ˆä¿¡æ¯  */
 			File file   = new File(path);
 			int i;
 			ArrayList<String> devicesList = mDevices.getTotalDevicesList();
@@ -1397,7 +1397,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 			}
 			else if(!file.exists())
 			{
-				/* ÓĞ¿ÉÄÜÏÔÊ¾µÄÖ»ÊÇÒ»¸ö×Ö·û´®,Èç"ÍøÂçÁÚ¾Ó",»òÕßÆäËû·ÇÎÄ¼ş,ÕâÊ±Ê²Ã´¶¼²»×ö */
+				/* æœ‰å¯èƒ½æ˜¾ç¤ºçš„åªæ˜¯ä¸€ä¸ªå­—ç¬¦ä¸²,å¦‚"ç½‘ç»œé‚»å±…",æˆ–è€…å…¶ä»–éæ–‡ä»¶,è¿™æ—¶ä»€ä¹ˆéƒ½ä¸åš */
 			}
 			else
 			{
@@ -1430,7 +1430,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	}
 	
 	/**
-	 * É¨ÃèÎÄ¼ş
+	 * æ‰«ææ–‡ä»¶
 	 */
 	public void scanDir(String path, String extraFlag)
 	{
@@ -1441,7 +1441,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	}
 	
 	/**
-	 * Çå³ıÔİ´æÇøÄÚÈİ
+	 * æ¸…é™¤æš‚å­˜åŒºå†…å®¹
 	 */
 	public void clear()
 	{
@@ -1452,7 +1452,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	}
 	
 	/** 
-	 * ÉèÖÃ¹ıÂËÀàĞÍ
+	 * è®¾ç½®è¿‡æ»¤ç±»å‹
 	 */
 	public void setFilterType(FileFilter filter)
 	{
@@ -1514,7 +1514,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		}
 	}
 	
-	/* ÅĞ¶ÏÊÇ·ñ¿ÉÒÔ²Ù×÷ÎÄ¼ş:¸´ÖÆ/Õ³Ìù... */
+	/* åˆ¤æ–­æ˜¯å¦å¯ä»¥æ“ä½œæ–‡ä»¶:å¤åˆ¶/ç²˜è´´... */
 	public boolean hasFileOperate()
 	{
 		if(fileToOperate != null)
@@ -1522,7 +1522,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		else return false;
 	}
 	
-	/* ¶¨ÒåÎÄ¼ş²Ù×÷  */
+	/* å®šä¹‰æ–‡ä»¶æ“ä½œ  */
 	public void searchForFile(String name)
 	{
 		new BackgroundWork(SEARCH_TYPE).execute(name);
@@ -1530,18 +1530,18 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	
 	public void deleteFile(String name)
 	{
-		/* ·ûºÏÒÔÏÂ¹æÔòÖ®Ò»Ê±£¬²Ù×÷ÎŞĞ§£¬Ö±½Ó·µ»Ø
-		 * 1.É¾³ıÏîÎª¡°·µ»Ø¡±
-		 * 2.ÎªÄ³Éè±¸µÄ¸ùÂ·¾¶
-		 * 3.ÎªÄ³Éè±¸·ÖÇøÂ·¾¶
+		/* ç¬¦åˆä»¥ä¸‹è§„åˆ™ä¹‹ä¸€æ—¶ï¼Œæ“ä½œæ— æ•ˆï¼Œç›´æ¥è¿”å›
+		 * 1.åˆ é™¤é¡¹ä¸ºâ€œè¿”å›â€
+		 * 2.ä¸ºæŸè®¾å¤‡çš„æ ¹è·¯å¾„
+		 * 3.ä¸ºæŸè®¾å¤‡åˆ†åŒºè·¯å¾„
 		 */
 		if(name.equals(MediaProvider.RETURN) || mDevices.isDevicesRootPath(name) ||
 				mDevices.hasMultiplePartition(name.substring(0, name.lastIndexOf("/"))))
 		{
 			return;
 		}
-		/* ·ûºÏÒÔÏÂ¹æÔòÖ®Ò»Ê±£¬È¨ÏŞ²»×ã£¬²Ù×÷ÎŞĞ§
-		 * 1.¸ÃÎÄ¼ş²»¿ÉĞ´
+		/* ç¬¦åˆä»¥ä¸‹è§„åˆ™ä¹‹ä¸€æ—¶ï¼Œæƒé™ä¸è¶³ï¼Œæ“ä½œæ— æ•ˆ
+		 * 1.è¯¥æ–‡ä»¶ä¸å¯å†™
 		 */
 		File f = new File(name);
 		if(!f.canWrite())
@@ -1560,11 +1560,11 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		File newDir = new File(newLocation);
 		final String[] data = {oldLocation, newLocation};
 		
-		/* ·ûºÏÒÔÏÂ¹æÔòÖ®Ò»Ê±£¬²Ù×÷ÎŞĞ§£¬Ö±½Ó·µ»Ø  
-		 * 1.¸´ÖÆÏîÎª¡°·µ»Ø¡±
-		 * 2.¸´ÖÆÏîÎªÄ³Éè±¸Â·¾¶£¬»òÎªÄ³Éè±¸·ÖÇøµÄÂ·¾¶
-		 * 3.Õ³ÌùÊ±´¦ÓÚÉè±¸ÁĞ±í×´Ì¬£¬»òÊôÓÚÉè±¸·ÖÇøÁĞ±í×´Ì¬
-		 * 4.¸´ÖÆ»ò¼ôÇĞÏîµÄÕ³ÌùÂ·¾¶Îª×Ô¼ºËùÔÚÂ·¾¶
+		/* ç¬¦åˆä»¥ä¸‹è§„åˆ™ä¹‹ä¸€æ—¶ï¼Œæ“ä½œæ— æ•ˆï¼Œç›´æ¥è¿”å›  
+		 * 1.å¤åˆ¶é¡¹ä¸ºâ€œè¿”å›â€
+		 * 2.å¤åˆ¶é¡¹ä¸ºæŸè®¾å¤‡è·¯å¾„ï¼Œæˆ–ä¸ºæŸè®¾å¤‡åˆ†åŒºçš„è·¯å¾„
+		 * 3.ç²˜è´´æ—¶å¤„äºè®¾å¤‡åˆ—è¡¨çŠ¶æ€ï¼Œæˆ–å±äºè®¾å¤‡åˆ†åŒºåˆ—è¡¨çŠ¶æ€
+		 * 4.å¤åˆ¶æˆ–å‰ªåˆ‡é¡¹çš„ç²˜è´´è·¯å¾„ä¸ºè‡ªå·±æ‰€åœ¨è·¯å¾„
 		 */
 		if(oldLocation.equals(MediaProvider.RETURN) || mDevices.isDevicesRootPath(oldLocation) ||
 				 newLocation.equals(rootPath) || mDevices.hasMultiplePartition(newLocation) ||
@@ -1575,7 +1575,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		}
 		
 		/*
-		 * ²»ÄÜÕ³Ìùµ½×Ô¼º»ò×Ô¼ºµÄ×ÓÄ¿Â¼ÖĞ
+		 * ä¸èƒ½ç²˜è´´åˆ°è‡ªå·±æˆ–è‡ªå·±çš„å­ç›®å½•ä¸­
 		 */
 		if(newLocation.contains(oldLocation))
 		{
@@ -1593,7 +1593,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 			return;
 		}
 		
-		/* µ±¸´ÖÆ/¼ôÇĞµÄµØ·½ÓĞÒ»¸öÍ¬Ãû×ÖµÄÎÄ¼şÊ±,ÌáÊ¾ÊÇ·ñ¸²¸Ç */
+		/* å½“å¤åˆ¶/å‰ªåˆ‡çš„åœ°æ–¹æœ‰ä¸€ä¸ªåŒåå­—çš„æ–‡ä»¶æ—¶,æç¤ºæ˜¯å¦è¦†ç›– */
 		File newFile = new File(newDir, name);
 		if(newFile.exists() &&
 				!newFile.getAbsolutePath().equals(oldLocation) &&
@@ -1625,10 +1625,10 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 			return;
 		} 
 		
-		/* ·ûºÏÒÔÏÂ¹æÔòÖ®Ò»Ê±£¬È¨ÏŞ²»×ã£¬²Ù×÷Ê§°Ü
-		 * 1.¸´ÖÆÏî²»¿É¶Á£¬
-		 * 2.Èç¹ûÎª¼ôÇĞ£¬»¹ĞèÒª¿ÉĞ´È¨ÏŞ
-		 * 2.Õ³ÌùÂ·¾¶²»¿ÉĞ´
+		/* ç¬¦åˆä»¥ä¸‹è§„åˆ™ä¹‹ä¸€æ—¶ï¼Œæƒé™ä¸è¶³ï¼Œæ“ä½œå¤±è´¥
+		 * 1.å¤åˆ¶é¡¹ä¸å¯è¯»ï¼Œ
+		 * 2.å¦‚æœä¸ºå‰ªåˆ‡ï¼Œè¿˜éœ€è¦å¯å†™æƒé™
+		 * 2.ç²˜è´´è·¯å¾„ä¸å¯å†™
 		 */
 		if(!old.exists())
 		{
@@ -1681,7 +1681,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
     		}
     		
     		/*
-    		 * ¸ù¾İÀàĞÍÀ´Ñ¡Ôñicon
+    		 * æ ¹æ®ç±»å‹æ¥é€‰æ‹©icon
     		 */
     		String path = mDataSource.get(position);
     		File file = new File(path);
@@ -1800,13 +1800,13 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 			// TODO Auto-generated method stub
 			if( currentPosition == -1 )
 			{
-				/* Èç¹ûÁĞ±íÊ§È¥ÁË½¹µã£¬ÎŞ²Ù×÷ */
+				/* å¦‚æœåˆ—è¡¨å¤±å»äº†ç„¦ç‚¹ï¼Œæ— æ“ä½œ */
 				menu.dismiss();
 				return;
 			}
 			switch(v.getId())
 			{
-				/* ÒÔÏÂÏìÓ¦µÄÊÇmenu²Ù×÷À¸µÄÄÚÈİ  */
+				/* ä»¥ä¸‹å“åº”çš„æ˜¯menuæ“ä½œæ çš„å†…å®¹  */
 			case R.id.sort_button:
 				selectFileType_dialog();
 				break;
@@ -1854,8 +1854,8 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		
 		private void saveCopyFilePath(String filePath)
 		{
-			/* ÓÃÓÚ²âÊÔ
-			 * °ÑÃ¿´ÎÑ¡ÖĞµÄÎÄ¼şÂ·¾¶Ìí¼Óµ½Ò»¸öÎÄ¼şÖĞ
+			/* ç”¨äºæµ‹è¯•
+			 * æŠŠæ¯æ¬¡é€‰ä¸­çš„æ–‡ä»¶è·¯å¾„æ·»åŠ åˆ°ä¸€ä¸ªæ–‡ä»¶ä¸­
 			 */
 			File appDir = mContext.getFilesDir();
 			File f = new File(appDir.getAbsolutePath() + "/copy.txt");
@@ -1929,15 +1929,15 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	
 	private void rename(final String path)
 	{
-		/* ÒÔÏÂÇé¿ö²Ù×÷ÎŞĞ§£¬Ö±½Ó·µ»Ø
-		 * 1.Ñ¡ÖĞµÄÎª¡°·µ»Ø¡±£¬
-		 * 2.Ñ¡ÖĞµÄÎªÄ³Éè±¸Â·¾¶
+		/* ä»¥ä¸‹æƒ…å†µæ“ä½œæ— æ•ˆï¼Œç›´æ¥è¿”å›
+		 * 1.é€‰ä¸­çš„ä¸ºâ€œè¿”å›â€ï¼Œ
+		 * 2.é€‰ä¸­çš„ä¸ºæŸè®¾å¤‡è·¯å¾„
 		 */
 		if(path.equals(MediaProvider.RETURN) || mDevices.isDevicesRootPath(path) )
 		{
 			return;
 		}
-		/* ÎÄ¼şÈ¨ÏŞ²»×ãÊ±£¬Ò²²»ÄÜ¸ÄÃû */
+		/* æ–‡ä»¶æƒé™ä¸è¶³æ—¶ï¼Œä¹Ÿä¸èƒ½æ”¹å */
 		File f = new File(path);
 		if(!f.canWrite())
 		{
@@ -2009,7 +2009,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	}
 	
 	private void mkdir(final String path){
-		/* ¸ÃÄ¿Â¼ÎÄ¼şÈ¨ÏŞ²»×ãÊ±ÎŞ·¨ĞÂ½¨ÎÄ¼ş¼Ğ */
+		/* è¯¥ç›®å½•æ–‡ä»¶æƒé™ä¸è¶³æ—¶æ— æ³•æ–°å»ºæ–‡ä»¶å¤¹ */
 		File file = new File(path);
 		if(!file.canWrite()){
 			DisplayToast(mContext.getResources().getString(R.string.operate_fail_dueto_permission));
@@ -2094,7 +2094,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		private FileOperate fp;
 		
 		private static final int DELETE_OLD_FILES = -1;
-		/* ÑÓÊ±µ¯³öÉ¨Ãè¶Ô»°¿ò */
+		/* å»¶æ—¶å¼¹å‡ºæ‰«æå¯¹è¯æ¡† */
 		private static final int DELAY_SCAN = -2;
 		private boolean isScanning = true;
     	
@@ -2166,7 +2166,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 					newFile  = params[1] + copyFile.substring(copyFile.lastIndexOf("/"));
 					
 
-					/* Èç¹ûÔÚÍ¬¸öÅÌÉÏ¼ôÇĞ,Ïàµ±ÓÚÖØÃüÃû */
+					/* å¦‚æœåœ¨åŒä¸ªç›˜ä¸Šå‰ªåˆ‡,ç›¸å½“äºé‡å‘½å */
 					if(delete_after_copy)
 					{
 						File old = new File(copyFile);
@@ -2184,7 +2184,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 					totalSize = fp.getScanSize();
 					totalNum = fp.getScanNum();
 					
-					/* ÅĞ¶Ï´ÅÅÌ¿Õ¼äÊÇ·ñ×ã¹» */
+					/* åˆ¤æ–­ç£ç›˜ç©ºé—´æ˜¯å¦è¶³å¤Ÿ */
 					long available = getAvailableSize(params[1]);
 					if(available < totalSize){
 						copy_rtn = -2;
@@ -2202,7 +2202,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 							}
 							else
 							{
-								/* µ±¸´ÖÆµÄ¶¼ÊÇÎÄ¼ş¼ĞÊ±,×Ü´óĞ¡Îª0£¬ÕâÊ±Òª°´¸´ÖÆµÄÎÄ¼şÊıÁ¿Ëã */
+								/* å½“å¤åˆ¶çš„éƒ½æ˜¯æ–‡ä»¶å¤¹æ—¶,æ€»å¤§å°ä¸º0ï¼Œè¿™æ—¶è¦æŒ‰å¤åˆ¶çš„æ–‡ä»¶æ•°é‡ç®— */
 								t = (int) (fp.getCopyNum() * 100 / totalNum);
 							}
 							if(t != persent)
@@ -2322,7 +2322,7 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 						return;
 					}
 					
-					/* Èç¹ûÖ»ÊÇ¸²¸Çµ±Ç°Ä¿Â¼ÏÂµÄÎÄ¼ş£¬Ôò²»ĞèÒª¸üĞÂÎÄ¼şÁĞ±í  */
+					/* å¦‚æœåªæ˜¯è¦†ç›–å½“å‰ç›®å½•ä¸‹çš„æ–‡ä»¶ï¼Œåˆ™ä¸éœ€è¦æ›´æ–°æ–‡ä»¶åˆ—è¡¨  */
 					if(!mDataSource.contains(newFile))
 					{
 						mDataSource.add(newFile);
@@ -2382,12 +2382,12 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 						mPathStack.push(Integer.valueOf(currentPosition));
 						if(currentPosition == 0)
 						{
-							/* µ±Ç°Î»ÖÃ²»ÊÇµÚÒ»¸ö£¬½øÈëÄ¿Â¼Ê±½¹µã²»±ä£¨µÚ0¸ö±£³ÖÁÁ¸ß£©£¬Ö»ĞèÒª¸üĞÂÔ¤ÀÀĞÅÏ¢µÄÄÚÈİ  */
+							/* å½“å‰ä½ç½®ä¸æ˜¯ç¬¬ä¸€ä¸ªï¼Œè¿›å…¥ç›®å½•æ—¶ç„¦ç‚¹ä¸å˜ï¼ˆç¬¬0ä¸ªä¿æŒäº®é«˜ï¼‰ï¼Œåªéœ€è¦æ›´æ–°é¢„è§ˆä¿¡æ¯çš„å†…å®¹  */
 							getDetailForPosition(currentPosition);
 						}
 						else
 						{
-							/* ÕâÊ±½¹µã»á¸Ä±ä£¬ĞèÒª´¥·¢onItemSelected()£¬Ê¹µÚ0¸öÁÁ¸ß²¢ÇÒ¸üĞÂÔ¤ÀÀĞÅÏ¢ÄÚÈİ  */
+							/* è¿™æ—¶ç„¦ç‚¹ä¼šæ”¹å˜ï¼Œéœ€è¦è§¦å‘onItemSelected()ï¼Œä½¿ç¬¬0ä¸ªäº®é«˜å¹¶ä¸”æ›´æ–°é¢„è§ˆä¿¡æ¯å†…å®¹  */
 							list.setSelection(0);
 						}
 					}

@@ -31,11 +31,11 @@ public class ISOManager{
 		}
 		cdromPath = createVirtualCDRomPathIfNeed(isoFile);
 		int ret;
-		//Ğ¶ÔØ¸Ã¹ÒÔØµã,ÎªÁËÈ·±£ÄÜ³É¹¦¹ÒÔØ
+		//å¸è½½è¯¥æŒ‚è½½ç‚¹,ä¸ºäº†ç¡®ä¿èƒ½æˆåŠŸæŒ‚è½½
 		ret = ISOMountManager.umount(cdromPath);
-		//¹ÒÔØ¸Ã¹ÒÔØµã
+		//æŒ‚è½½è¯¥æŒ‚è½½ç‚¹
 		ret = ISOMountManager.mount(cdromPath, isoFile);
-		//¸ù¾İ¹ÒÔØ·µ»ØÖµ,²»ÎªnullÊ±±£´æ¸ÃisoÎÄ¼şÓëĞéÄâ¹âÇıµÄÓ³Éä¹ØÏµ
+		//æ ¹æ®æŒ‚è½½è¿”å›å€¼,ä¸ä¸ºnullæ—¶ä¿å­˜è¯¥isoæ–‡ä»¶ä¸è™šæ‹Ÿå…‰é©±çš„æ˜ å°„å…³ç³»
 		switch(ret){
 		case 0:
 			MountInfo isoInfo = new MountInfo(cdromPath, isoFile);

@@ -36,7 +36,7 @@ public class DeviceManager{
 	public DeviceManager(Context mContext)
 	{
 		this.mContext = mContext;
-		/* »ñÈ¡×ÜÉè±¸ÁĞ±í */
+		/* è·å–æ€»è®¾å¤‡åˆ—è¡¨ */
 		totalDevicesList = new ArrayList<String>();
 		String[] volumeList;
 		manager = (StorageManager)mContext.getSystemService(Context.STORAGE_SERVICE);
@@ -46,7 +46,7 @@ public class DeviceManager{
 			totalDevicesList.add(volumeList[i]);
 		}
         
-        /* »ñÈ¡ÄÚ²¿´æ´¢Éè±¸Â·¾¶ÁĞ±í */
+        /* è·å–å†…éƒ¨å­˜å‚¨è®¾å¤‡è·¯å¾„åˆ—è¡¨ */
         internalDevicesList = new ArrayList<String>();
         internalDevicesList.add(Environment.getExternalStorageDirectory().getPath());
         
@@ -61,17 +61,17 @@ public class DeviceManager{
         	{
         		if(path.contains("sd"))
         		{
-        			/* »ñÈ¡SD¿¨Éè±¸Â·¾¶ÁĞ±í */
+        			/* è·å–SDå¡è®¾å¤‡è·¯å¾„åˆ—è¡¨ */
         			sdDevicesList.add(path);
         		}
         		else if(path.contains("usb"))
         		{
-        			/* »ñÈ¡USBÉè±¸Â·¾¶ÁĞ±í */
+        			/* è·å–USBè®¾å¤‡è·¯å¾„åˆ—è¡¨ */
         			usbDevicesList.add(path);
         		}
         		else if(path.contains("sata"))
         		{
-        			/* »ñÈ¡sataÉè±¸Â·¾¶ÁĞ±í */
+        			/* è·å–sataè®¾å¤‡è·¯å¾„åˆ—è¡¨ */
         			sataDevicesList.add(path);
         		}
         	}
@@ -88,7 +88,7 @@ public class DeviceManager{
 	}
 	
 	/**
-	 * »ñÈ¡×ÜÉè±¸µÄÁĞ±í
+	 * è·å–æ€»è®¾å¤‡çš„åˆ—è¡¨
 	 * @return
 	 */
 	public ArrayList<String> getTotalDevicesList()
@@ -97,7 +97,7 @@ public class DeviceManager{
 	}
 	
 	/**
-	 * »ñÈ¡µ±Ç°±»¹ÒÔØµÄÉè±¸ÁĞ±í
+	 * è·å–å½“å‰è¢«æŒ‚è½½çš„è®¾å¤‡åˆ—è¡¨
 	 */
 	public ArrayList<String> getMountedDevicesList()
 	{
@@ -189,7 +189,7 @@ public class DeviceManager{
 					String[] list = file.list();
 					for(int j = 0; j < list.length; j++)
 					{
-						/* Èç¹ûÄ¿Â¼ÃüÃû¹æÔò²»Âú×ã"Ö÷Éè±¸ºÅ:´ÎÉè±¸ºÅ"(µ±Ç°·ÖÇøµÄÃüÃû¹æÔò),Ôò·µ»Øfalse */
+						/* å¦‚æœç›®å½•å‘½åè§„åˆ™ä¸æ»¡è¶³"ä¸»è®¾å¤‡å·:æ¬¡è®¾å¤‡å·"(å½“å‰åˆ†åŒºçš„å‘½åè§„åˆ™),åˆ™è¿”å›false */
 						int lst = list[j].lastIndexOf("_");
 						if(lst != -1 && lst != (list[j].length() -1))
 						{
@@ -203,7 +203,7 @@ public class DeviceManager{
 							}
 							catch(NumberFormatException e)
 							{
-								/* Èç¹û¸Ã×Ö·û´®²»ÄÜ±»½âÎöÎªÊı×Ö,ÔòÍË³ö */
+								/* å¦‚æœè¯¥å­—ç¬¦ä¸²ä¸èƒ½è¢«è§£æä¸ºæ•°å­—,åˆ™é€€å‡º */
 								return false;
 							}
 						}

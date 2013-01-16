@@ -21,13 +21,13 @@ import android.util.Log;
  * 
  * @author chenjd 
  * @help
- * <br>1.ÓÃÓÚËõÂÔÍ¼µÄ¹ÜÀí 
- *   <br>getImageThumbFromDB(String path) ´ÓÊı¾İ¿âÖĞ»ñÈ¡ËõÂÔÍ¼,·µ»Ønull±íÊ¾Êı¾İ¿âÖĞÃ»±£´æ¸ÃÍ¼Æ¬µÄËõÂÔÍ¼Êı¾İ
- *   <br>getImageThumbFromMK(String path) Ö±½ÓÉú³ÉËõÂÔÍ¼£¬½¨ÒéÏÈµ÷ÓÃµÚÒ»¸ö´ÓÊı¾İ¿âÖĞÈ¡£¬Èç¹ûÃ»ÕÒµ½ÔÙµ÷ÓÃÕâ¸ö·½·¨
- *   <br>clearThumbnailData()Çå³ıÊı¾İ¿âÖĞ±£´æµÄËõÂÔÍ¼Êı¾İ£¬µ÷ÓÃÕâ·½·¨ºó£¬Êı¾İ¿âÖĞ½«Ö»±£Áô×îĞÂµÄMaxThumbnailNum¸öËõÂÔÍ¼Êı¾İ
- * <br>2.ÓÃÓÚÎÄ¼ş¼ĞÄ¿Â¼ÏÂµÄÎÄ¼şÁĞ±íÉú³É
- *   <br>¶¨ÒåÁË¼¸ÖÖµÄÎÄ¼ş¹ıÂËÀà
- *   <br>getList(String, FileFilter) ¸ù¾İÎÄ¼şµÄ¹ıÂËÀàĞÍÂË³öÎÄ¼ş¼ĞÄÚµÄÎÄ¼şÁĞ±í
+ * <br>1.ç”¨äºç¼©ç•¥å›¾çš„ç®¡ç† 
+ *   <br>getImageThumbFromDB(String path) ä»æ•°æ®åº“ä¸­è·å–ç¼©ç•¥å›¾,è¿”å›nullè¡¨ç¤ºæ•°æ®åº“ä¸­æ²¡ä¿å­˜è¯¥å›¾ç‰‡çš„ç¼©ç•¥å›¾æ•°æ®
+ *   <br>getImageThumbFromMK(String path) ç›´æ¥ç”Ÿæˆç¼©ç•¥å›¾ï¼Œå»ºè®®å…ˆè°ƒç”¨ç¬¬ä¸€ä¸ªä»æ•°æ®åº“ä¸­å–ï¼Œå¦‚æœæ²¡æ‰¾åˆ°å†è°ƒç”¨è¿™ä¸ªæ–¹æ³•
+ *   <br>clearThumbnailData()æ¸…é™¤æ•°æ®åº“ä¸­ä¿å­˜çš„ç¼©ç•¥å›¾æ•°æ®ï¼Œè°ƒç”¨è¿™æ–¹æ³•åï¼Œæ•°æ®åº“ä¸­å°†åªä¿ç•™æœ€æ–°çš„MaxThumbnailNumä¸ªç¼©ç•¥å›¾æ•°æ®
+ * <br>2.ç”¨äºæ–‡ä»¶å¤¹ç›®å½•ä¸‹çš„æ–‡ä»¶åˆ—è¡¨ç”Ÿæˆ
+ *   <br>å®šä¹‰äº†å‡ ç§çš„æ–‡ä»¶è¿‡æ»¤ç±»
+ *   <br>getList(String, FileFilter) æ ¹æ®æ–‡ä»¶çš„è¿‡æ»¤ç±»å‹æ»¤å‡ºæ–‡ä»¶å¤¹å†…çš„æ–‡ä»¶åˆ—è¡¨
  */
 public class MediaProvider 
 {
@@ -54,7 +54,7 @@ public class MediaProvider
 		mlist = new ArrayList<String>();
 	}
 	
-	/* ¶¨ÒåÅÅĞò·½Ê½ */
+	/* å®šä¹‰æ’åºæ–¹å¼ */
 	public static final Comparator alph = new Comparator<String>()
 	{
 		@Override
@@ -63,7 +63,7 @@ public class MediaProvider
 			File f0 = new File(arg0);
 			File f1 = new File(arg1);
 			
-			/* "·µ»Ø"Ö¸Ê¾ÓÀÔ¶ÅÅÔÚµÚÒ»¸ö  */
+			/* "è¿”å›"æŒ‡ç¤ºæ°¸è¿œæ’åœ¨ç¬¬ä¸€ä¸ª  */
 			if(arg0.equals(RETURN))
 			{
 				return -1;
@@ -73,7 +73,7 @@ public class MediaProvider
 				return 1;
 			}
 			
-			/* ÎÄ¼ş¼ĞÓÀÔ¶ÅÅÔÚÇ°Ãæ */
+			/* æ–‡ä»¶å¤¹æ°¸è¿œæ’åœ¨å‰é¢ */
 			try
 			{
 				if(f0.isDirectory() && !f1.isDirectory())
@@ -92,7 +92,7 @@ public class MediaProvider
 			
 			try
 			{
-				/* ·ñÔò¸ù¾İÃû×ÖÅÅĞò */
+				/* å¦åˆ™æ ¹æ®åå­—æ’åº */
 				String str0 = arg0.substring(arg0.lastIndexOf("/") + 1);
 				String str1 = arg1.substring(arg1.lastIndexOf("/") + 1);
 				return str0.compareToIgnoreCase(str1);
@@ -112,7 +112,7 @@ public class MediaProvider
 			File f0 = new File(arg0);
 			File f1 = new File(arg1);
 			
-			/* "·µ»Ø"Ö¸Ê¾ÓÀÔ¶ÅÅÔÚµÚÒ»¸ö  */
+			/* "è¿”å›"æŒ‡ç¤ºæ°¸è¿œæ’åœ¨ç¬¬ä¸€ä¸ª  */
 			if(arg0.equals(RETURN))
 			{
 				return -1;
@@ -124,7 +124,7 @@ public class MediaProvider
 			
 			try
 			{
-				/* ÎÄ¼ş¼ĞÓÀÔ¶ÅÅÔÚÇ°Ãæ */
+				/* æ–‡ä»¶å¤¹æ°¸è¿œæ’åœ¨å‰é¢ */
 				if(f0.isDirectory() && !f1.isDirectory())
 				{
 					return -1;
@@ -134,7 +134,7 @@ public class MediaProvider
 					return 1;
 				}
 
-				/* ·ñÔò¸ù¾İÃû×ÖÅÅĞò */
+				/* å¦åˆ™æ ¹æ®åå­—æ’åº */
 				if(f0.lastModified() > f1.lastModified())
 					return -1;
 				else if(f0.lastModified() == f1.lastModified())
@@ -186,7 +186,7 @@ public class MediaProvider
 		}
 	};
 	
-	/* ¶¨ÒåÎÄ¼ş¹ıÂËÆ÷ */
+	/* å®šä¹‰æ–‡ä»¶è¿‡æ»¤å™¨ */
 	public FileFilter MUSIC_FILTER = new FileFilter() {
 
 		@Override
@@ -307,7 +307,7 @@ public class MediaProvider
 		int i = 0;
 		if(fileList != null)
 		{
-			/* ´¦Àí¶à·ÖÇøµÄÇé¿ö */
+			/* å¤„ç†å¤šåˆ†åŒºçš„æƒ…å†µ */
 			if(devMng.getTotalDevicesList().contains(path) && devMng.hasMultiplePartition(path)){
 				for(i = 0; i < fileList.length; i++){
 					try{
@@ -349,9 +349,9 @@ public class MediaProvider
 
 	
 	/**
-	 * ´ÓÊı¾İ¿âÖĞ²éÑ¯·µ»ØËõÂÔÍ¼
+	 * ä»æ•°æ®åº“ä¸­æŸ¥è¯¢è¿”å›ç¼©ç•¥å›¾
 	 * @param origPath
-	 * @return nullÈç¹û²éÑ¯²»µ½¸ÃËõÂÔÍ¼ÎÄ¼ş
+	 * @return nullå¦‚æœæŸ¥è¯¢ä¸åˆ°è¯¥ç¼©ç•¥å›¾æ–‡ä»¶
 	 */
 	public Bitmap getImageThumbFromDB(String origPath)
 	{
@@ -363,7 +363,7 @@ public class MediaProvider
 		Bitmap thumbnail = null;
 		
 		Cursor c = imageDB.query(columns, selection, Args, null);
-		//Èç¹û´ÓÊı¾İ¿âÖĞÕÒµ½¸ÃÔ­Í¼µÄËõÁ¿Í¼£¬ÔòÖ±½ÓÊ¹ÓÃ
+		//å¦‚æœä»æ•°æ®åº“ä¸­æ‰¾åˆ°è¯¥åŸå›¾çš„ç¼©é‡å›¾ï¼Œåˆ™ç›´æ¥ä½¿ç”¨
 		if(c != null)
 		{
 			try
@@ -386,15 +386,15 @@ public class MediaProvider
 	}
 	/**
 	 * 
-	 * @param origPath Ô´Í¼Æ¬ÎÄ¼şÂ·¾¶
-	 * @param width ËõÂÔÍ¼Éè¶¨¿í¶È
-	 * @param height ËõÂÔÍ¼Éè¶¨¸ß¶È
-	 * @return ·µ»ØËõÂÔÍ¼,Ê§°Ü·µ»Ønull
+	 * @param origPath æºå›¾ç‰‡æ–‡ä»¶è·¯å¾„
+	 * @param width ç¼©ç•¥å›¾è®¾å®šå®½åº¦
+	 * @param height ç¼©ç•¥å›¾è®¾å®šé«˜åº¦
+	 * @return è¿”å›ç¼©ç•¥å›¾,å¤±è´¥è¿”å›null
 	 */
 	public Bitmap getImageThumbFromMK(String origPath, int width, int height)
 	{
 		
-		//²úÉúËõÂÔÍ¼£¬²¢°Ñ¸ÃÎÄ¼ş´æµ½Ö¸¶¨Ä¿Â¼ÏÂ£¬¸üĞÂÊı¾İ¿âÖĞÍ¼Æ¬ĞÅÏ¢
+		//äº§ç”Ÿç¼©ç•¥å›¾ï¼Œå¹¶æŠŠè¯¥æ–‡ä»¶å­˜åˆ°æŒ‡å®šç›®å½•ä¸‹ï¼Œæ›´æ–°æ•°æ®åº“ä¸­å›¾ç‰‡ä¿¡æ¯
 		Bitmap thumbnail = null;
 		Log.d(TAG, origPath + ":make thumbnail and insert message in database");
 		ThumbnailCreator mCreator = new ThumbnailCreator(width, height);
@@ -429,8 +429,8 @@ public class MediaProvider
 	}
 	
 	/**
-	 * Çå³ıÊı¾İ¿âÖĞÔİ´æµÄËõÂÔÍ¼ĞÅÏ¢¼°¶ÔÓ¦µÄËõÂÔÍ¼ÎÄ¼ş£¬ĞèÒªÔÚÃ¿´ÎÍË³ö³ÌĞòÇ°Çå³ı¹ıÊ±µÄĞÅÏ¢£¬Ö»±£ÁôMaxThumbnailNum¸öËõÂÔÍ¼ĞÅÏ¢£¬
-	 * ·ÀÖ¹Ôİ´æÇø²»¶ÏÀ©´ó
+	 * æ¸…é™¤æ•°æ®åº“ä¸­æš‚å­˜çš„ç¼©ç•¥å›¾ä¿¡æ¯åŠå¯¹åº”çš„ç¼©ç•¥å›¾æ–‡ä»¶ï¼Œéœ€è¦åœ¨æ¯æ¬¡é€€å‡ºç¨‹åºå‰æ¸…é™¤è¿‡æ—¶çš„ä¿¡æ¯ï¼Œåªä¿ç•™MaxThumbnailNumä¸ªç¼©ç•¥å›¾ä¿¡æ¯ï¼Œ
+	 * é˜²æ­¢æš‚å­˜åŒºä¸æ–­æ‰©å¤§
 	 */
 	public void clearThumbnailData()
 	{
@@ -440,7 +440,7 @@ public class MediaProvider
 		
 		String[] columns = {ImageDatabase.ORIG_PATH, ImageDatabase.THUMB_PATH, ImageDatabase.CREATE_TIME};
 		String sort = ImageDatabase.CREATE_TIME + " DESC";
-		//°´½µĞòÕûÀí²éÑ¯µÄ½á¹û
+		//æŒ‰é™åºæ•´ç†æŸ¥è¯¢çš„ç»“æœ
 		Cursor c = imageDB.query(columns, null, null, sort);
 		int i = 0;
 		if(c != null)
@@ -450,7 +450,7 @@ public class MediaProvider
 				while(c.moveToNext())
 				{
 					i ++;
-					//É¾³ıµÚMaxThumbnailNumÒÔºó¸öÍ¼Æ¬¼°ÆäĞÅÏ¢
+					//åˆ é™¤ç¬¬MaxThumbnailNumä»¥åä¸ªå›¾ç‰‡åŠå…¶ä¿¡æ¯
 					if(i > MaxThumbnailNum)
 					{
 						String thumbPath  = c.getString(THUMB_PATH_COLUMN);

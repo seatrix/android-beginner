@@ -39,7 +39,7 @@ public class ImageDatabase
 		return APP_DIR;
 	}
 	
-	/* ÎªÁË·ÀÖ¹ÔÚÎÄ¼şä¯ÀÀÊ±£¬ÓĞÈËÎŞÒâÉ¾³ıµô¸ÃÎÄ¼ş¼ĞÄÚÄÚÈİ£¬µ¼ÖÂÊı¾İ¿â·ÃÎÊ´íÎó£¬Ã¿´Î²Ù×÷Ç°¶¼Òª½øĞĞ³õÊ¼»¯  */
+	/* ä¸ºäº†é˜²æ­¢åœ¨æ–‡ä»¶æµè§ˆæ—¶ï¼Œæœ‰äººæ— æ„åˆ é™¤æ‰è¯¥æ–‡ä»¶å¤¹å†…å†…å®¹ï¼Œå¯¼è‡´æ•°æ®åº“è®¿é—®é”™è¯¯ï¼Œæ¯æ¬¡æ“ä½œå‰éƒ½è¦è¿›è¡Œåˆå§‹åŒ–  */
 	private void init()
 	{
 		File dir = mContext.getDir(APP_DIR_NAME, 0);
@@ -61,7 +61,7 @@ public class ImageDatabase
 	
 	private void createDB(String path)
 	{
-		//´ò¿ª»ò´´½¨Ö¸¶¨µÄÍ¼Æ¬Êı¾İ¿â
+		//æ‰“å¼€æˆ–åˆ›å»ºæŒ‡å®šçš„å›¾ç‰‡æ•°æ®åº“
 		
 		imageDatabase = SQLiteDatabase.openOrCreateDatabase(path, null);
 		imageDatabase.execSQL(TABLE_CREATE);
@@ -69,9 +69,9 @@ public class ImageDatabase
 	}
 	
 	/**
-	 * ²åÈëÒ»ÏîÊı¾İ
-	 * @param origPath     :Ô´Í¼Æ¬ÎÄ¼şÂ·¾¶
-	 * @param thumbPath    :ËõÂÔÍ¼ÎÄ¼şÂ·¾¶
+	 * æ’å…¥ä¸€é¡¹æ•°æ®
+	 * @param origPath     :æºå›¾ç‰‡æ–‡ä»¶è·¯å¾„
+	 * @param thumbPath    :ç¼©ç•¥å›¾æ–‡ä»¶è·¯å¾„
 	 */
 	public void insert(String origPath, String thumbPath)
 	{
@@ -86,7 +86,7 @@ public class ImageDatabase
 	}
 	
 	/**
-	 * É¾³ıÊı¾İ¿âÖĞÔ´ÎÄ¼şÂ·¾¶ËùÔÚµÄÊı¾İ
+	 * åˆ é™¤æ•°æ®åº“ä¸­æºæ–‡ä»¶è·¯å¾„æ‰€åœ¨çš„æ•°æ®
 	 * @param origPath
 	 */
 	public void delete(String origPath)
@@ -98,11 +98,11 @@ public class ImageDatabase
 	}
 	
 	/**
-	 * ²éÑ¯Êı¾İ¿âÖĞµÄÍ¼Æ¬ĞÅÏ¢
-	 * @param columns :²éÑ¯µÄÁĞ
-	 * @param selection :Ìõ¼ş
+	 * æŸ¥è¯¢æ•°æ®åº“ä¸­çš„å›¾ç‰‡ä¿¡æ¯
+	 * @param columns :æŸ¥è¯¢çš„åˆ—
+	 * @param selection :æ¡ä»¶
 	 * @param selctionArgs
-	 * @param orderBy :ÕûÀíÀàĞÍ
+	 * @param orderBy :æ•´ç†ç±»å‹
 	 * @return
 	 */
 	public Cursor query(String[] columns, String selection, 

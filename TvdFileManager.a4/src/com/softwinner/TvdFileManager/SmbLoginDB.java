@@ -49,7 +49,7 @@ public class SmbLoginDB
 	
 	private void createDB(String path)
 	{
-		//´ò¿ª»ò´´½¨Ö¸¶¨µÄÍ¼Æ¬Êı¾İ¿â
+		//æ‰“å¼€æˆ–åˆ›å»ºæŒ‡å®šçš„å›¾ç‰‡æ•°æ®åº“
 		
 		mLoginDB = SQLiteDatabase.openOrCreateDatabase(path, null);
 		mLoginDB.execSQL(TABLE_CREATE);

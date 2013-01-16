@@ -67,14 +67,14 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
 	private TextView mIndex;
 	private ListView list;
 	
-	//option À¸Ïà¹Ø
+	//option æ ç›¸å…³
 	private Dialog menuDialog;
 	private GridView menuGrid;
 	private View menuView;
 	
 	private BroadcastReceiver mReceiver;
 	
-	/* ÓÃÓÚ×óÓÒÇĞ»»Ê±ÑÓÊ±Ë¢ĞÂ */
+	/* ç”¨äºå·¦å³åˆ‡æ¢æ—¶å»¶æ—¶åˆ·æ–° */
 	private Timer time = null;
 	private TimerTask task;
 	
@@ -92,7 +92,7 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        /* Çå³ı¹²ÏíÇøÄÚµÄĞÅÏ¢ */
+        /* æ¸…é™¤å…±äº«åŒºå†…çš„ä¿¡æ¯ */
         SharedPreferences pf = getSharedPreferences("partition", 0);
         SharedPreferences.Editor editor = pf.edit();
         editor.clear();
@@ -104,7 +104,7 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
         mTable = mHandler.new TableRow();
         mMenuListener = mHandler.new MenuItemListener();
 		
-        /* ÉèÖÃĞÅÏ¢Ô¤ÀÀÀ¸ÄÚÈİ */
+        /* è®¾ç½®ä¿¡æ¯é¢„è§ˆæ å†…å®¹ */
         mThumb  = (LinearLayout) findViewById(R.id.thumb);
         mVideo 	= (SurfaceView) findViewById(R.id.thumb_movie);
         mImage 	= (ImageView) findViewById(R.id.thumbnail);
@@ -117,7 +117,7 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
         mIndex	= (TextView) findViewById(R.id.index);
         mHandler.setViewResource(mVideo, mImage, mPreview, mPath, mIndex);
         
-        /* °ÑListView Óë TableRow °ó¶¨,²¢¼àÌıitemsµÄ±»Ñ¡ÖĞÊÂ¼ş */
+        /* æŠŠListView ä¸ TableRow ç»‘å®š,å¹¶ç›‘å¬itemsçš„è¢«é€‰ä¸­äº‹ä»¶ */
         list = getListView();
         mHandler.setListAdapter(mTable, list);
         list.setAdapter(mTable);
@@ -125,7 +125,7 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
         list.setOnItemClickListener(mHandler);    
         list.setOnItemLongClickListener(mHandler);
   
-        /* ÉèÖÃ¼àÌıµ¼º½À¸µÄ²Ëµ¥item */
+        /* è®¾ç½®ç›‘å¬å¯¼èˆªæ çš„èœå•item */
         Button devices = (Button) findViewById(R.id.device_button);
         Button video = (Button) findViewById(R.id.video_button);
         Button picture = (Button) findViewById(R.id.picture_button);
@@ -137,7 +137,7 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
         music.setOnClickListener(mHandler);
         file.setOnClickListener(mHandler);
          
-        /* ¶ÁÈ¡´«½øÀ´µÄ²ÎÊı¾ö¶¨¹ıÂËÀàĞÍ  */
+        /* è¯»å–ä¼ è¿›æ¥çš„å‚æ•°å†³å®šè¿‡æ»¤ç±»å‹  */
         Bundle b = getIntent().getExtras();
         if(b != null)
         {
@@ -180,10 +180,10 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
         	devices.performClick();
         }
           
-        /* ÉèÖÃoption²Ëµ¥À¸ĞÅÏ¢ */
+        /* è®¾ç½®optionèœå•æ ä¿¡æ¯ */
         createMenu();     
         
-        /* Ôö¼ÓÈÈ²å°Î¹¦ÄÜ */
+        /* å¢åŠ çƒ­æ’æ‹”åŠŸèƒ½ */
         mReceiver = new BroadcastReceiver() {   
         	@Override  
         	public void onReceive(Context context, Intent intent) {   
@@ -192,7 +192,7 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
         		if(intent.getAction().equals(intent.ACTION_MEDIA_REMOVED) ||
         				intent.getAction().equals(intent.ACTION_MEDIA_BAD_REMOVAL))
         		{
-        			/* µÈ´ı1ÃëÖÓÔÙË¢ĞÂ½çÃæ,ÕâÊÇÒòÎªµ×²ã·¢³öĞ¶ÔØĞÅºÅÊ±£¬ÓĞÊ±Êµ¼ÊÉÏ»¹Ã»Ğ¶ÔØµôÉè±¸ */
+        			/* ç­‰å¾…1ç§’é’Ÿå†åˆ·æ–°ç•Œé¢,è¿™æ˜¯å› ä¸ºåº•å±‚å‘å‡ºå¸è½½ä¿¡å·æ—¶ï¼Œæœ‰æ—¶å®é™…ä¸Šè¿˜æ²¡å¸è½½æ‰è®¾å¤‡ */
         			try
 					{
 						Thread.currentThread().sleep(500);
@@ -521,7 +521,7 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
 	}
 
 	/*
-	 * ÊµÏÖ»Øµ÷½Ó¿Ú
+	 * å®ç°å›è°ƒæ¥å£
 	 */
 	@Override
 	public void playThumbVideo(String path) {
@@ -580,18 +580,18 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
 		if(player == null) 
 			return;
 		MediaPlayer mediaData = player;
-		//»ñÈ¡ÊÓÆµÊ±¼ä
+		//è·å–è§†é¢‘æ—¶é—´
 		long   ms 	= mediaData.getDuration();
 		String Duration = getResources().getString(R.string.duration)
 			+ mHandler.toDuration((long)ms) + "\n";
 		
-		//»ñÈ¡ÊÓÆµ·Ö±æÂÊ
+		//è·å–è§†é¢‘åˆ†è¾¨ç‡
 		String wVideo = String.valueOf(mediaData.getVideoWidth());
 		String hVideo = String.valueOf(mediaData.getVideoHeight());
 		String Resolution = getResources().getString(R.string.resolution)
 			+ wVideo + "*" + hVideo + "\n";
 		
-		//»ñÈ¡ÊÓÆµ´óĞ¡
+		//è·å–è§†é¢‘å¤§å°
 		String Size	  = getResources().getString(R.string.size)
 		+ mHandler.toSize(new File(path).length()) + "\n";
 		
@@ -600,7 +600,7 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
 	}
 	
 	/*
-	 * ÊÍ·Å×ÊÔ´
+	 * é‡Šæ”¾èµ„æº
 	 */
 	@Override
     protected void onPause() {
@@ -739,7 +739,7 @@ OnBufferingUpdateListener, OnCompletionListener, OnVideoSizeChangedListener, IEv
     	time.schedule(task, 500);
     }
     
-    /* ÒÔÔ­±¾ÊÓÆµ·Ö±æÂÊµÄ±ÈÀıÀ´µ÷ÕûÔ¤ÀÀ²¥·Å´°¿Ú´óĞ¡ */
+    /* ä»¥åŸæœ¬è§†é¢‘åˆ†è¾¨ç‡çš„æ¯”ä¾‹æ¥è°ƒæ•´é¢„è§ˆæ’­æ”¾çª—å£å¤§å° */
     private void setVideoRatio(String path)
     {
     	int vh = 0;

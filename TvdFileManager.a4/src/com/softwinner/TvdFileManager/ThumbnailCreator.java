@@ -18,9 +18,9 @@ public class ThumbnailCreator
 	}
 	
 	/**
-	 * ´´½¨ËõÂÔÍ¼
+	 * åˆ›å»ºç¼©ç•¥å›¾
 	 * @param imageSrc
-	 * @return ·µ»Ønull,Èç¹ûÕâÊ±ÎŞ·¨»ñµÃËõÂÔÍ¼
+	 * @return è¿”å›null,å¦‚æœè¿™æ—¶æ— æ³•è·å¾—ç¼©ç•¥å›¾
 	 */
 	public Bitmap createThumbnail(String imageSrc) 
 	{
@@ -87,7 +87,7 @@ public class ThumbnailCreator
 		thumb = BitmapFactory.decodeFile(imageSrc, options);
 		if(thumb == null)
 		{
-			/* µ±²»¿ÉdecodeÊ±·µ»Ønull */
+			/* å½“ä¸å¯decodeæ—¶è¿”å›null */
 			return null;
 		}
 		thumb = Bitmap.createScaledBitmap(thumb, width, height, false);
