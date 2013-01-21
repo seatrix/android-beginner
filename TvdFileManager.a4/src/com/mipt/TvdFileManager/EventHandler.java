@@ -59,6 +59,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mipt.TvdFileManager.SambaManager.OnSearchListenner;
+import com.softwinner.ISOMountManager.MountInfo;
 import com.softwinner.netshare.SmbFile;
 
 public class EventHandler implements OnClickListener,OnItemSelectedListener,OnItemClickListener, OnItemLongClickListener
@@ -605,6 +606,8 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 		File file = new File(videoPath);
 		Intent bdIntent = new Intent();
 		bdIntent.putExtra(MediaStore.EXTRA_BD_FOLDER_PLAY_MODE , true);
+	    
+		//ComponentName cm = new ComponentName("com.softwinner.TvdVideo", "com.softwinner.TvdVideo.TvdVideoActivity");
 		ComponentName cm = new ComponentName("com.mipt.mediacenter", "com.mipt.mediacenter.video.activity.VideoActivity");
     	bdIntent.setComponent(cm); 
     	bdIntent.setDataAndType(Uri.fromFile(file), "video/*");
@@ -748,11 +751,22 @@ public class EventHandler implements OnClickListener,OnItemSelectedListener,OnIt
 	
 	private void playIso(String path){
 		String cdromPath = mIso.getVirtualCDRomPath(path);
+		Log.i(TAG, "iso file mount." + cdromPath);
 		if(cdromPath != null){
 			Log.d(TAG,"playIso()  browser iso file");
 			if(!playBlurayFolder(cdromPath)){
 				goIntoDir(cdromPath);
 			}
+		}else{
+		    Log.i(TAG, "mount fail...");
+	        File file = new File(path); 
+	        Intent picIntent = new Intent();
+	        picIntent.setAction(android.content.Intent.ACTION_VIEW);
+	        
+	        //ComponentName cm = new ComponentName("com.mipt.mediacenter", "com.mipt.mediacenter.music.ui.MusicPlayerActivity");
+	        //picIntent.setComponent(cm);         
+	        picIntent.setDataAndType(Uri.fromFile(file), "video/bd");
+	        mContext.startActivity(picIntent);
 		}
 	}
 	

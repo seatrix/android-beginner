@@ -36,6 +36,7 @@ public class ISOManager{
 		//挂载该挂载点
 		ret = ISOMountManager.mount(cdromPath, isoFile);
 		//根据挂载返回值,不为null时保存该iso文件与虚拟光驱的映射关系
+		Log.i(TAG, "getVirtualCDRomPath, mount result:" + ret);
 		switch(ret){
 		case 0:
 			MountInfo isoInfo = new MountInfo(cdromPath, isoFile);

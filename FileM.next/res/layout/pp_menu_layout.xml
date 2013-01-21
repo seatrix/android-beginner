@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/vp_tool_bg"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/vp_split_line"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/more_tool"
+                android:textColor="#91abee"
+                android:textSize="28dip" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/menuList"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@null"
+            android:listSelector="@drawable/vp_selected_bg_short" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/gray_bg"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/vp_two_level_tool_bg2"
+        android:visibility="invisible" >
+    </LinearLayout>
+
+</FrameLayout>

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -447,9 +448,18 @@ public class Util {
 			return newDevices.get(newDevices.size() - 1);
 		}
 		DeviceInfo newDevice = null;
+		if (TextUtils.isEmpty(path)) {
 		for (DeviceInfo di : newDevices) {
 			for (DeviceInfo odi : oldDevices) {
 				if (!di.devPath.equals(odi.devPath)) {
+						newDevice = di;
+					}
+				}
+			}
+		} else {
+			for (DeviceInfo di : newDevices) {
+				if (di.type == DeviceInfo.TYPE_USB
+						&& path.indexOf(di.devPath) == 0) {
 					newDevice = di;
 				}
 			}
@@ -488,7 +498,14 @@ public class Util {
 				&& pathRe.indexOf("/mnt/") == 0) {
 			pathRe = pathRe.substring(("/mnt/").length());
 			if (pathRe.contains("/") && pathRe.indexOf("sdcard") != 0) {
+				String[] str = pathRe.split("/");
+				if ("A6".equals(android.os.Build.MODEL)) {
 				pathRe = pathRe.substring(pathRe.indexOf("/"));
+				} else {
+					if (str.length > 1 && str[1].contains("_")) {
+						pathRe = pathRe.substring(pathRe.indexOf("/"));
+					}
+				}
 			}
 		}
 		if (pathRe.indexOf("/") != 0) {
@@ -839,6 +856,15 @@ public class Util {
 		return file;
 	}
 
+	public static File getDlnaTempFile(String path, String devId) {
+		String picPath = Util.getDLANTempPath() + devId;
+		File file = new File(picPath, getLastName(path) + "temp");
+		if (file.exists() && file.length() > 0) {
+			file.delete();
+			return file;
+		}
+		return file;
+	}
 	public static String getLastName(final String path) {
 		String temp = path;
 		int pos = temp.lastIndexOf("/");
@@ -875,10 +901,22 @@ public class Util {
 			// TODO Auto-generated catch block
 			return null;
 		}
-
+		if (is == null) {
+			return null;
+		}
+		File isFile = Util.getDlnaTempFile(path, devName);
+		try {
+			isFile = mkFilePath(isFile);
+			saveInputStream2File(isFile, is);
+		} catch (IOException e1) {
+			return null;
+		}
+		if (!isFile.exists()) {
+			return null;
+		}
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
-		BitmapFactory.decodeStream(is, null, opts);
+		BitmapFactory.decodeFile(isFile.getAbsolutePath(), opts);
 
 		opts.inSampleSize = computeSampleSize(opts, -1, 128 * 128);
 		opts.inJustDecodeBounds = false;
@@ -887,21 +925,23 @@ public class Util {
 			File newFile = mkFilePath(file);
 			if (newFile.exists()) {
 				try {
-					Bitmap b = BitmapFactory.decodeStream(
-							HttpManager.doGetReturnInputStream(path, null),
-							null, opts);
+					Bitmap b = BitmapFactory.decodeFile(
+							isFile.getAbsolutePath(), opts);
 					if (b != null) {
 						final Bitmap newBitmap = Util.extractMiniThumb(b, true,
 								w, y);
 						b.recycle();
 						// final Bitmap savaBitmap = newBitmap;
 						saveImage2File(file, newBitmap);
+						if (isFile.exists()) {
+							isFile.delete();
+						}
 						return newBitmap;
 					} else {
 						return b;
 					}
 
-				} catch (ErrorThrowable e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 				}
 			}
@@ -942,13 +982,33 @@ public class Util {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(coverFile);
-			bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 		} catch (FileNotFoundException e) {
 			return false;
 		} finally {
 			Util.closeStream(out);
 		}
 		return true;
+	}
+	
+	private static File saveInputStream2File(File file, InputStream inStream) {
+		int byteread = 0;
+		FileOutputStream fs = null;
+		try {
+			fs = new FileOutputStream(file);
+			byte[] buffer = new byte[3000];
+			while ((byteread = inStream.read(buffer)) != -1) {
+				fs.write(buffer, 0, byteread);
+			}
+			inStream.close();
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if (fs != null) {
+				Util.closeStream(fs);
+			}
+		}
+		return file;
 	}
 
 	public static final int TARGET_SIZE_MICRO_THUMBNAIL = 96;
@@ -994,4 +1054,162 @@ public class Util {
 			return upperBound;
 		}
 	}
+	public static String converString(String str) {
+		if (!TextUtils.isEmpty(str)) {
+			try {
+				String charset = getEncoding(str);
+				str = new String(str.getBytes(charset), "GBK");
+				return str;
+			} catch (UnsupportedEncodingException e) {
+			}
+		}
+		return null;
+	}
+	public static String getEncoding(String str) {
+		if (TextUtils.isEmpty(str)) {
+			return "UTF-8";
+		}
+		String encode = "GB2312";
+		try {
+			if (str.equals(new String(str.getBytes(encode), encode))) {
+				String s = encode;
+				return s;
+			}
+		} catch (Exception exception) {
+		}
+		encode = "ISO-8859-1";
+		try {
+			if (str.equals(new String(str.getBytes(encode), encode))) {
+				String s1 = encode;
+				return s1;
+			}
+		} catch (Exception exception1) {
+		}
+		encode = "UTF-8";
+		try {
+			if (str.equals(new String(str.getBytes(encode), encode))) {
+				String s2 = encode;
+				return s2;
+			}
+		} catch (Exception exception2) {
+		}
+		encode = "GBK";
+		try {
+			if (str.equals(new String(str.getBytes(encode), encode))) {
+				String s3 = encode;
+				return s3;
+			}
+		} catch (Exception exception3) {
+		}
+		return "UTF-8";
+	}
+	public static FileInfo getMusicInfo(FileInfo _fi) {
+		if (_fi.filePath == null) {
+			return null;
+		}
+		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+		try {
+			mmr.setDataSource(_fi.filePath);
+		} catch (Exception e) {
+			mmr.release();
+			return null;
+		}
+		_fi.mediaName = mmr
+				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+		String str = mmr
+				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+		if (!TextUtils.isEmpty(str)) {
+			_fi.duration = Integer.valueOf(str);
+		}
+		_fi.albumName = mmr
+				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+		_fi.artist = mmr
+				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+		_fi.mediaName = Util.converString(_fi.mediaName);
+		_fi.albumName = Util.converString(_fi.albumName);
+		_fi.artist = Util.converString(_fi.artist);
+		String gener = mmr
+				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
+		if (!TextUtils.isEmpty(gener)) {
+			gener = gener.replace("(", "").replace(")", "").replace("[", "")
+					.replace("]", "");
+			if (Util.isNumeric(gener)) {
+				int pos = Integer.parseInt(gener);
+				if (pos < ID3_GENRES.length) {
+					_fi.genreName = ID3_GENRES[Integer.parseInt(gener)];
+				}
+			} else {
+				_fi.genreName = gener;
+			}
+		}
+		mmr.release();
+		return _fi;
+	}
+	public static FileInfo getVideoInfo(FileInfo _fi) {
+		if (_fi.filePath == null) {
+			return null;
+		}
+		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+		try {
+			mmr.setDataSource(_fi.filePath);
+			_fi.mediaName = mmr
+					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+			_fi.mediaName = Util.converString(_fi.mediaName);
+			String str = mmr
+					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+			if (!TextUtils.isEmpty(str)) {
+				_fi.duration = Integer.valueOf(str);
+			}
+		} catch (Exception e) {
+			return _fi;
+		} finally {
+			mmr.release();
+		}
+		return _fi;
+	}
+	private static final String[] ID3_GENRES = {
+			"Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk",
+			"Grunge", "Hip-Hop", "Jazz", "Metal", "New Age", "Oldies", "Other",
+			"Pop", "R&B", "Rap", "Reggae", "Rock", "Techno", "Industrial",
+			"Alternative", "Ska", "Death Metal", "Pranks", "Soundtrack",
+			"Euro-Techno", "Ambient", "Trip-Hop", "Vocal", "Jazz+Funk",
+			"Fusion", "Trance", "Classical", "Instrumental", "Acid", "House",
+			"Game", "Sound Clip", "Gospel", "Noise", "AlternRock", "Bass",
+			"Soul", "Punk", "Space", "Meditative", "Instrumental Pop",
+			"Instrumental Rock", "Ethnic", "Gothic", "Darkwave",
+			"Techno-Industrial", "Electronic", "Pop-Folk", "Eurodance",
+			"Dream", "Southern Rock", "Comedy", "Cult", "Gangsta", "Top 40",
+			"Christian Rap", "Pop/Funk", "Jungle",
+			"Native American",
+			"Cabaret",
+			"New Wave",
+			"Psychadelic",
+			"Rave",
+			"Showtunes",
+			"Trailer",
+			"Lo-Fi",
+			"Tribal",
+			"Acid Punk",
+			"Acid Jazz",
+			"Polka",
+			"Retro",
+			"Musical",
+			"Rock & Roll",
+			"Hard Rock",
+			"Folk", "Folk-Rock", "National Folk", "Swing", "Fast Fusion",
+			"Bebob", "Latin", "Revival", "Celtic", "Bluegrass", "Avantgarde",
+			"Gothic Rock", "Progressive Rock", "Psychedelic Rock",
+			"Symphonic Rock", "Slow Rock", "Big Band", "Chorus",
+			"Easy Listening", "Acoustic", "Humour", "Speech", "Chanson",
+			"Opera", "Chamber Music", "Sonata", "Symphony", "Booty Bass",
+			"Primus", "Porn Groove", "Satire", "Slow Jam", "Club", "Tango",
+			"Samba", "Folklore", "Ballad", "Power Ballad", "Rhythmic Soul",
+			"Freestyle", "Duet", "Punk Rock", "Drum Solo", "A capella",
+			"Euro-House", "Dance Hall", "Goa", "Drum & Bass", "Club-House",
+			"Hardcore", "Terror", "Indie", "Britpop", "Negerpunk",
+			"Polsk Punk", "Beat", "Christian Gangsta", "Heavy Metal",
+			"Black Metal", "Crossover", "Contemporary Christian",
+			"Christian Rock", "Merengue", "Salsa", "Thrash Metal", "Anime",
+			"JPop", "Synthpop"
+	};
 }

@@ -105,26 +105,41 @@ public class UsbScanManager {
 						File[] list = f.listFiles();
 						for (int i = 0; i < list.length; i++) {
 							String path = list[i].getAbsolutePath();
-							if (!TextUtils.isEmpty(path)) {
-								SDCardInfo sdInfo = Util
-										.getSDCardInfo(new File(path));
-								if (sdInfo != null
-										&& path.indexOf(MediacenterConstant.LOCAL_SDCARD_PATH) != 0) {
-								temp.add(new DeviceInfo(list[i]
-										.getAbsolutePath(), cxt
-										.getString(R.string.usb_device)
-											+ "-" + getA4Name(path),
-											sdInfo.path, sdInfo.total,
-											sdInfo.used, DeviceInfo.TYPE_USB,
-											true, R.drawable.cm_usb_tag));
-								}
-							}
+							addA4usbDevice(temp, cxt, path);
 						}
 					}
+				} else {
+					addA4usbDevice(temp, cxt, s);
 				}
 			}
 		}
 		return temp;
+	}
+	private void addA4usbDevice(ArrayList<DeviceInfo> temp, final Context cxt,
+			String path) {
+		if (!TextUtils.isEmpty(path) && !isHasDevice(temp, path)) {
+			SDCardInfo sdInfo = Util.getSDCardInfo(new File(path));
+								if (sdInfo != null
+										&& path.indexOf(MediacenterConstant.LOCAL_SDCARD_PATH) != 0) {
+				temp.add(new DeviceInfo(path,
+						cxt.getString(R.string.usb_device) + "-"
+								+ getA4Name(path), sdInfo.path, sdInfo.total,
+						sdInfo.used, DeviceInfo.TYPE_USB, true,
+						R.drawable.cm_usb_tag));
+								}
+							}
+						}
+
+	private boolean isHasDevice(ArrayList<DeviceInfo> temp, String path) {
+		if (temp == null || temp.isEmpty()) {
+			return false;
+				}
+		for (DeviceInfo di : temp) {
+			if (!TextUtils.isEmpty(di.devPath) && di.devPath.equals(path)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	private String getA4Name(String path) {
 		String pathRreturn = path;

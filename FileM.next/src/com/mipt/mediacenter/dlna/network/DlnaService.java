@@ -93,12 +93,27 @@ public class DlnaService extends Service implements DeviceChangeListener, Contro
 	
 	private void unInit(){
 		mControlCenterRunnable.setSearchListener(null);
-		mControlCenterRunnable.exit();
+		exitThread();
 		mControlPoint.stop();
+	}
+	private void exitThread(){
+		if (mSearchDeviceThread != null){
+			mControlCenterRunnable.exit();
+			long time1 = System.currentTimeMillis();
+			while(mSearchDeviceThread.isAlive()){
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			long time2 = System.currentTimeMillis();
+			log.e("exitThread cost time:" + (time2 - time1));
+		}
 	}
 
 	private void search(){
-		
+		log.e("search");
 		if (mSearchDeviceThread == null){
 			mSearchDeviceThread = new Thread(mControlCenterRunnable);
 			mSearchDeviceThread.start();

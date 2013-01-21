@@ -34,8 +34,12 @@ public class USBReceiver extends BroadcastReceiver {
 			File f = new File(path);
 			if (f.exists()) {
 				File[] flist = f.listFiles();
+				if (flist != null && flist.length > 0) {
 				for (File fn : flist) {
+						if (fn != null) {
 					path = fn.getAbsolutePath();
+						}
+					}
 				}
 			}
 		}
@@ -89,9 +93,7 @@ public class USBReceiver extends BroadcastReceiver {
 		UsbScanManager manager = UsbScanManager.getInstance();
 		ArrayList<DeviceInfo> usbList = manager.getDevices(ctx);
 		if (remove == MediacenterConstant.MESSAGE_ADD) {
-			Log.i("USBReceiver",
-					"---------USBReceiver---usbList-" + usbList.size()
-							+ ",old size:" + manager.getOldList().size());
+
 			DeviceInfo di = Util.isNewDevice(usbList, manager.getOldList(),
 					path);
 			manager.addOldList(usbList);
@@ -107,7 +109,7 @@ public class USBReceiver extends BroadcastReceiver {
 			DeviceInfo reomoveDevice = Util.isRemoveDevice(path, usbList,
 					manager.getOldList());
 			manager.addOldList(usbList);
-			if ("A4".equals(android.os.Build.MODEL)) {
+			if (!"A6".equals(android.os.Build.MODEL)) {
 				manager.clearOldList();
 			}
 			if (reomoveDevice != null) {
@@ -117,7 +119,7 @@ public class USBReceiver extends BroadcastReceiver {
 					FileMainActivity fm = (FileMainActivity) showActivity;
 					DeviceInfo di = fm.getCurrentDeviceInfo();
 					if (di != null && reomoveDevice != null
-							&& di.devId.equals(reomoveDevice.devId)) {
+							&& di.devPath.equals(reomoveDevice.devPath)) {
 						Intent intent = new Intent(ctx,
 								FindDeviceActivity.class);
 						intent.putExtra("removedevice", reomoveDevice);
@@ -138,8 +140,8 @@ public class USBReceiver extends BroadcastReceiver {
 							.getActivity(ActivitiesManager.ACTIVITY_POP_VIEW);
 					if (findActivity != null) {
 						FindDeviceActivity fa = (FindDeviceActivity) findActivity;
-						if (fa.geCurrentInfo().devId
-								.equals(reomoveDevice.devId)) {
+						if (fa.geCurrentInfo().devPath
+								.equals(reomoveDevice.devPath)) {
 							findActivity.finish();
 						}
 					}

@@ -28,16 +28,17 @@ import android.provider.MediaStore.MediaColumns;
 import android.provider.MediaStore.Video.VideoColumns;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,10 +47,8 @@ import android.widget.Toast;
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.AllFileViewFragment;
 import com.mipt.mediacenter.center.DLANViewFragment;
-import com.mipt.mediacenter.center.DirViewFragment;
 import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.file.FileCategoryHelper;
-import com.mipt.mediacenter.center.file.FileCategoryHelper.FileCategory;
 import com.mipt.mediacenter.center.file.FilenameExtFilter;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.FileInfo;
@@ -60,12 +59,11 @@ import com.mipt.mediacenter.utils.ActivitiesManager;
 import com.mipt.mediacenter.utils.Util;
 
 /**
- * 
  * @author fang
- * 
+ * @version $Id: 2013-01-21 09:26:01Z slieer $ 
  */
 public class FileMainActivity extends Activity {
-    private static final String LOG_TAG = "FileActivity";
+    private static final String TAG = "FileActivity";
     private static final String DATA_BUNDEL = "data_bundel";
     private int viewType;
     //private int tabId;
@@ -85,7 +83,12 @@ public class FileMainActivity extends Activity {
     private boolean isUserPause;
     private boolean isCheck;
     private TextView currentNum;
-
+    
+    private LinearLayout menuLayout;
+    private FrameLayout mmLayout;
+    private String[] menuListItem;
+    private boolean menuShow = false;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,9 +129,19 @@ public class FileMainActivity extends Activity {
         posPath = null;
         isUserPause = false;
         isCheck = false;
-        Log.i(LOG_TAG, "viewType:" + viewType + ",dInfo:" + dInfo);
+        Log.i(TAG, "viewType:" + viewType + ",dInfo:" + dInfo);
         addFragmentToStack(-1, dInfo);
 
+        LayoutInflater mInflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        mmLayout = (FrameLayout) mInflater.inflate(R.layout.pp_menu_layout,
+                menuLayout);
+        menuListItem = getResources().getStringArray(R.array.items_fm);
+        
+        ListView menuList = (ListView) mmLayout.findViewById(R.id.menuList);
+        menuList.setAdapter(new ToolAdapter(this, R.id.tool_name, menuListItem));
+        //menuLayout = (LinearLayout) findViewById(R.id.menuLayout);
+        //grayBg = (LinearLayout) mmLayout.findViewById(R.id.gray_bg);
+        
     }
 
     @Override
@@ -270,7 +283,7 @@ public class FileMainActivity extends Activity {
                 task = false;
                 progressBar.setVisibility(View.GONE);
             }*/ 
-            Log.i(LOG_TAG, "view all files ....");
+            Log.i(TAG, "view all files ....");
             task = true;
             title = null;
             viewTypeTag.setText(getString(R.string.all_file_view_type));
@@ -296,6 +309,9 @@ public class FileMainActivity extends Activity {
         boolean onBack();
     }
 
+	public interface FileInfoCallback {
+		public void fileInfoLoaded(String reallyName, String filePath);
+	}
     public interface DataChangeListener {
         void dataChange();
 
@@ -319,7 +335,25 @@ public class FileMainActivity extends Activity {
             super.onBackPressed();
         }
     }
-
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+                break;
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+                break;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                break;
+            case KeyEvent.KEYCODE_MENU:
+                showMenu();
+                break;
+            case KeyEvent.KEYCODE_BACK:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }        
+    
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
@@ -335,24 +369,63 @@ public class FileMainActivity extends Activity {
             scanFileTask = null;
         }
     }
+    
+    private void showMenu() {        
+        Log.i(TAG, "showMenu");
+        if (menuShow) {
+            hideMenu(true);
+            return;
+        }
+        mmLayout.setAnimation(AnimationUtils.loadAnimation(this,
+                R.anim.vp_menu_in));
+        
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT);
+        menuLayout.addView(mmLayout, layoutParams);
+        menuLayout.requestFocus();
+        menuShow = true;
+    }
+    
+    private void hideMenu(boolean isAnimation) {
+        Log.i(TAG, "hideMenu");
+        if (!menuShow) {
+            return;
+        }
+        if (isAnimation) {
+            mmLayout.setAnimation(AnimationUtils.loadAnimation(this,
+                    R.anim.vp_menu_out));
+        }
+        menuLayout.removeView(mmLayout);
+        menuShow = false;
+    }
+    
+    private class ToolAdapter extends ArrayAdapter<String>{
 
+        public ToolAdapter(Context context, int textViewResourceId, String[] objects) {
+            super(context, textViewResourceId, objects);
+        }
+        
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) FileMainActivity.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater
+                        .inflate(R.layout.vp_tool_list_item, null);
+            }
+            TextView name = (TextView) convertView.findViewById(R.id.tool_name);
+            TextView value = (TextView) convertView
+                    .findViewById(R.id.tool_value);
+            name.setText(menuListItem[position]);
+            name.setTextColor(getContext().getResources().getColor(R.color.white));
+            
+            return convertView;
+        }
+    }
     public DeviceInfo getCurrentDeviceInfo() {
         return dInfo;
     }
 
-/*    private String getRootName(int type) {
-        String str = "/";
-        if (type == MediacenterConstant.IntentFlags.PIC_ID) {
-            str += getString(R.string.tab_pic);
-        } else if (type == MediacenterConstant.IntentFlags.MUSIC_ID) {
-            str += getString(R.string.category_music);
-        } else if (type == MediacenterConstant.IntentFlags.VIDEO_ID) {
-            str += getString(R.string.category_video);
-        }
-        return str;
-
-    }
-*/
     private int getTypeByName(String name) {
         int type = MediacenterConstant.FileViewType.VIEW_DIR;
         if (name.equals(getString(R.string.file_view_type))) {
@@ -387,25 +460,6 @@ public class FileMainActivity extends Activity {
         }
 
         return str;
-
-    }
-
-    @Override
-    public boolean onKeyDown(int arg0, KeyEvent arg1) {
-        // TODO Auto-generated method stub
-        if (arg1.getKeyCode() == KeyEvent.KEYCODE_MENU
-                && dInfo.type != DeviceInfo.TYPE_DLAN) {
-            int cnt = getFragmentManager().getBackStackEntryCount();
-            if (cnt < 1) {
-                if (showChoose.isShowing()) {
-                    showChoose.dismiss();
-                } else {
-                    showChoose.show();
-                }
-            }
-
-        }
-        return super.onKeyDown(arg0, arg1);
 
     }
 
@@ -596,7 +650,7 @@ public class FileMainActivity extends Activity {
     }
 
     public ArrayList<FileInfo> handleTreeList(ArrayList<FileInfo> _orginList,
-            Comparator comparator) {
+            Comparator<FileInfo> comparator) {
         ArrayList<FileInfo> orginList = new ArrayList<FileInfo>();
         orginList.addAll(_orginList);
         ArrayList<FileInfo> returnList = new ArrayList<FileInfo>();
@@ -1084,10 +1138,10 @@ public class FileMainActivity extends Activity {
                             if (!isCancel) {
                                 posPath = null;
                                 if (tabIdS == MediacenterConstant.IntentFlags.MUSIC_ID) {
-                                    if (getMusicInfo(lFileInfo) == null) {
+/*                                    if (getMusicInfo(lFileInfo) == null) {
                                         return;
                                     }
-                                    if (TextUtils.isEmpty(lFileInfo.albumName)) {
+*/                                    if (TextUtils.isEmpty(lFileInfo.albumName)) {
                                         lFileInfo.albumName = getString(R.string.cm_unknow);
                                     }
                                     if (TextUtils.isEmpty(lFileInfo.artist)) {
@@ -1119,45 +1173,6 @@ public class FileMainActivity extends Activity {
         }
     }
 
-    private FileInfo getMusicInfo(FileInfo _fi) {
-        if (_fi.filePath == null) {
-            return null;
-        }
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        try {
-            mmr.setDataSource(_fi.filePath);
-        } catch (Exception e) {
-            mmr.release();
-            return null;
-        }
-        String str = mmr
-                .extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        if (!TextUtils.isEmpty(str)) {
-            _fi.duration = Integer.valueOf(str);
-        }
-        _fi.albumName = mmr
-                .extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-        _fi.artist = mmr
-                .extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-        String gener = mmr
-                .extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
-        if (!TextUtils.isEmpty(gener)) {
-            gener = gener.replace("(", "").replace(")", "").replace("[", "")
-                    .replace("]", "");
-            if (Util.isNumeric(gener)) {
-                int pos = Integer.parseInt(gener);
-                if (pos < ID3_GENRES.length) {
-                    _fi.genreName = ID3_GENRES[Integer.parseInt(gener)];
-                }
-            } else {
-                _fi.genreName = gener;
-            }
-        }
-        mmr.release();
-        return _fi;
-    }
-
-    private RandomAccessFile ran = null;
 
     @Override
     public void onLowMemory() {
@@ -1173,59 +1188,10 @@ public class FileMainActivity extends Activity {
 
     }
 
-    private static final String[] ID3_GENRES = {
-            // ID3v1 Genres
-            "Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk",
-            "Grunge", "Hip-Hop", "Jazz", "Metal", "New Age", "Oldies", "Other",
-            "Pop", "R&B", "Rap", "Reggae", "Rock", "Techno", "Industrial",
-            "Alternative", "Ska", "Death Metal", "Pranks", "Soundtrack",
-            "Euro-Techno", "Ambient", "Trip-Hop", "Vocal", "Jazz+Funk",
-            "Fusion", "Trance", "Classical", "Instrumental", "Acid", "House",
-            "Game", "Sound Clip", "Gospel", "Noise", "AlternRock", "Bass",
-            "Soul", "Punk", "Space", "Meditative", "Instrumental Pop",
-            "Instrumental Rock", "Ethnic", "Gothic", "Darkwave",
-            "Techno-Industrial", "Electronic", "Pop-Folk", "Eurodance",
-            "Dream", "Southern Rock", "Comedy", "Cult", "Gangsta", "Top 40",
-            "Christian Rap", "Pop/Funk", "Jungle",
-            "Native American",
-            "Cabaret",
-            "New Wave",
-            "Psychadelic",
-            "Rave",
-            "Showtunes",
-            "Trailer",
-            "Lo-Fi",
-            "Tribal",
-            "Acid Punk",
-            "Acid Jazz",
-            "Polka",
-            "Retro",
-            "Musical",
-            "Rock & Roll",
-            "Hard Rock",
-            // The following genres are Winamp extensions
-            "Folk", "Folk-Rock", "National Folk", "Swing", "Fast Fusion",
-            "Bebob", "Latin", "Revival", "Celtic", "Bluegrass", "Avantgarde",
-            "Gothic Rock", "Progressive Rock", "Psychedelic Rock",
-            "Symphonic Rock", "Slow Rock", "Big Band", "Chorus",
-            "Easy Listening", "Acoustic", "Humour", "Speech", "Chanson",
-            "Opera", "Chamber Music", "Sonata", "Symphony", "Booty Bass",
-            "Primus", "Porn Groove", "Satire", "Slow Jam", "Club", "Tango",
-            "Samba", "Folklore", "Ballad", "Power Ballad", "Rhythmic Soul",
-            "Freestyle", "Duet", "Punk Rock", "Drum Solo", "A capella",
-            "Euro-House", "Dance Hall", "Goa", "Drum & Bass", "Club-House",
-            "Hardcore", "Terror", "Indie", "Britpop", "Negerpunk",
-            "Polsk Punk", "Beat", "Christian Gangsta", "Heavy Metal",
-            "Black Metal", "Crossover", "Contemporary Christian",
-            "Christian Rock", "Merengue", "Salsa", "Thrash Metal", "Anime",
-            "JPop", "Synthpop",
-    // 148 and up don't seem to have been defined yet.
-    };
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
-        Log.i(LOG_TAG,
+        Log.i(TAG,
                 "0000onActivityResult00000000000000000000000000requestCode:"
                         + requestCode + ",resultCode:" + resultCode);
         if (requestCode == MediacenterConstant.ACTIVITYR_RESULT_CODE) {

@@ -46,6 +46,7 @@ public class FileInfo implements Serializable {
 
 	public String albumName; // for music
 
+	public String mediaName;
 	public String artist;// for music
 
 	public int duration;// for music video

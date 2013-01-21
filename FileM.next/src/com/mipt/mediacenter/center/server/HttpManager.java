@@ -122,7 +122,7 @@ public class HttpManager {
 		if (url == null || TextUtils.isEmpty(url)) {
 			return null;
 		}
-		Log.i("HttpManager", "----------HttpManager:" + url);
+		//Log.i("HttpManager", "------HttpManager:" + url);
 		InputStream data = null;
 		// initialize HTTP GET request objects
 		HttpGet httpGet = new HttpGet(url);
@@ -132,30 +132,29 @@ public class HttpManager {
 		HttpResponse httpResponse;
 		try {
 			// execute request
-			try {
 				httpResponse = sClient.execute(httpGet);
 			} catch (UnknownHostException e) {
 				ErrorThrowable wsError = new ErrorThrowable();
 				wsError.setMessage(e.getLocalizedMessage());
 				throw wsError;
-			} catch (SocketException e) {
+		} catch (Exception e) {
 				ErrorThrowable wsError = new ErrorThrowable();
 				wsError.setMessage(e.getLocalizedMessage());
 				throw wsError;
 			}
-			if (httpResponse == null) {
-				return null;
-			}
-			if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+		if (httpResponse != null) {
 			HttpEntity httpEntity = httpResponse.getEntity();
 			if (httpEntity != null) {
+				try {
 					data = httpEntity.getContent();
+				} catch (Exception e) {
+					ErrorThrowable wsError = new ErrorThrowable();
+					wsError.setMessage(e.getLocalizedMessage());
+					throw wsError;
 				}
 			}
 
-		} catch (ClientProtocolException e) {
 
-		} catch (IOException e) {
 		}
 
 		return data;

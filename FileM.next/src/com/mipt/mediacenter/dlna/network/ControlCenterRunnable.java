@@ -11,10 +11,10 @@ import org.cybergarage.upnp.ControlPoint;
 import org.cybergarage.util.CommonLog;
 import org.cybergarage.util.LogFactory;
 
+import com.mipt.mediacenter.dlna.util.CommonUtil;
 import android.content.Context;
 import android.os.Process;
 
-import com.mipt.mediacenter.dlna.util.CommonUtil;
 
 
 
@@ -47,8 +47,11 @@ public class ControlCenterRunnable implements Runnable{
 		mSearchDeviceListener = listener;
 	}
 	
+	public void emptyMethod(){
+	}
 	public void notifyThread(){
 		synchronized (this) {
+			emptyMethod();
 			notifyAll();
 		}
 	}
@@ -70,25 +73,22 @@ public class ControlCenterRunnable implements Runnable{
 		
 		while(true)
 		{
-			synchronized(this)
-			{
+			refreshDevices();			
 				if (mIsExit){
 					break;
 				}
 				
-				refreshDevices();
-				try
+			synchronized(this)
 				{
+				try{
 					wait(REFRESH_DEVICES_INTERVAL);
 				}
-				catch(Exception e)
-				{
+				catch(Exception e){
 					e.printStackTrace();
 				}	
-				
+			}
 				if (mIsExit){
 					break;
-				}
 			}
 		}
 		
@@ -98,11 +98,13 @@ public class ControlCenterRunnable implements Runnable{
 	private void refreshDevices(){
 		log.e("refreshDevices...");
 		if (!CommonUtil.checkNetState(mContext)){
+			log.e("checkNetState = false...");
 			return ;
 		}
 		
 		try {
 			if (mStartComplete){
+				multiSearchMessage();
 				boolean searchRet = mCP.search();
 				log.e("mCP.search() ret = "  + searchRet);
 				if (mSearchDeviceListener != null){
@@ -113,6 +115,7 @@ public class ControlCenterRunnable implements Runnable{
 				log.e("mCP.start() ret = "  + startRet);
 				if (startRet){
 					mStartComplete = true;
+					multiSearchMessage();
 				}
 			}
 		} catch (Exception e) {
@@ -121,5 +124,18 @@ public class ControlCenterRunnable implements Runnable{
 		
 	}
 	
-	
+	private void multiSearchMessage(){
+		log.e("multiSearchMessage");
+		for(int i = 0; i < 3;i++){
+			if (mIsExit){
+				return ;
+			}
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			mCP.search();
+		}
+	}
 }

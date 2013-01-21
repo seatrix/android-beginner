@@ -11,6 +11,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,8 +57,9 @@ public class DirViewFragment extends Fragment implements
 	private TextView fileDate;
 	private TextView fileSize;
 	private int fileInfoType;
+	private String currentFilePath;
 
-	public static DirViewFragment newInstance(String path, int type) {
+	static DirViewFragment newInstance(String path, int type) {
 		DirViewFragment f = new DirViewFragment();
 		Bundle args = new Bundle();
 		args.putInt(MediacenterConstant.INTENT_TYPE_VIEW, type);
@@ -370,7 +372,24 @@ public class DirViewFragment extends Fragment implements
 			mActivity.setCurrentNum((pos + 1) + "/" + size);
 		}
 		if (fi != null) {
+			currentFilePath = fi.filePath;
+			if (fi.mediaName == null) {
 			fileName.setText(fi.fileName);
+				if (fi.fileType == FileInfo.TYPE_MUSIC) {
+					getFileInfo(fi, new FileMainActivity.FileInfoCallback() {
+						@Override
+						public void fileInfoLoaded(String reallyName,
+								String filePath) {
+							if (!TextUtils.isEmpty(currentFilePath)
+									&& filePath.equals(currentFilePath)) {
+								fileName.setText(reallyName);
+							}
+						}
+					});
+				}
+			} else {
+				fileName.setText(fi.mediaName);
+			}
 			if (!fi.isDir) {
 				fileType.setVisibility(View.VISIBLE);
 				fileType.setText(Util.getTypeUpperCase(fi.filePath));
@@ -382,6 +401,7 @@ public class DirViewFragment extends Fragment implements
 				fileSize.setText(Util.convertStorage(fi.fileSize) + "");
 			}
 		} else {
+			currentFilePath = null;
 			fileName.setText("");
 			fileDate.setText("");
 			fileType.setVisibility(View.GONE);
@@ -438,4 +458,30 @@ public class DirViewFragment extends Fragment implements
 		mFileIconHelper.stopLoad();
 	}
 
+	String getFileInfo(final FileInfo fi,
+			final FileMainActivity.FileInfoCallback fileInfoCallback) {
+		final Handler handler = new Handler() {
+			@Override
+			public void handleMessage(Message message) {
+				fileInfoCallback.fileInfoLoaded((String) message.obj,
+						fi.filePath);
+			}
+		};
+		new Thread() {
+			@Override
+			public void run() {
+				if (fi.fileType == FileInfo.TYPE_MUSIC) {
+					Util.getMusicInfo(fi);
+				} else if (fi.fileType == FileInfo.TYPE_VIDEO) {
+					Util.getVideoInfo(fi);
+				}
+				if (TextUtils.isEmpty(fi.mediaName)) {
+					fi.mediaName = fi.fileName;
+				}
+				Message message = handler.obtainMessage(0, fi.mediaName);
+				handler.sendMessage(message);
+			}
+		}.start();
+		return fi.mediaName;
+	}
 }
