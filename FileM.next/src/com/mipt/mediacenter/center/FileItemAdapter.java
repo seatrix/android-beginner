@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -92,25 +93,26 @@ public class FileItemAdapter extends BaseAdapter {
 
 		if (mList.get(position) != null) {
 			FileInfo file = mList.get(position);
-			holder.name.setText(replaceNameType(file.fileName));
+			holder.name.setText(file.fileName);
 			String cntTag = mContext.getString(R.string.cm_file_cnt);
 			if (file.extra) {
+			    Log.i(TAG, "file.extra:" + file.extra);
 				// holder.fileImage.setImageResource(R.drawable.empty_icon);
 			} else {
 				if (file.isDir) {
 					holder.videoTag.setVisibility(View.GONE);
 					holder.musicImage.setVisibility(View.GONE);
 					holder.fileImage.setVisibility(View.GONE);
+					holder.fileImageFrame.setVisibility(View.GONE);
+
 					holder.childCnt.setText(file.count + cntTag);
 					holder.childCnt.setVisibility(View.VISIBLE);
-					holder.fileImageFrame.setVisibility(View.GONE);
 					holder.dirImage.setImageResource(R.drawable.cm_folder);
 					holder.dirImage.setVisibility(View.VISIBLE);
-					
 				} else {
 					holder.dirImage.setVisibility(View.GONE);
-					holder.fileImageFrame.setVisibility(View.VISIBLE);
 					holder.childCnt.setVisibility(View.GONE);
+					holder.fileImageFrame.setVisibility(View.VISIBLE);
 					mHelper.setIcon(file, holder.fileImage,
 							holder.fileImageFrame, holder.videoTag,
 							holder.musicImage);

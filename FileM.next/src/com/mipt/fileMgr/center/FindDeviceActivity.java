@@ -89,7 +89,7 @@ public class FindDeviceActivity extends Activity {
 					}
 				}
 			}
-			if (fDialog == null) {
+			/*if (fDialog == null) {
 				fDialog = new FindDeviceDialog(this,
 						R.style.show_choose_type_dialog,
 						new OnItemClickListener() {
@@ -124,7 +124,7 @@ public class FindDeviceActivity extends Activity {
 			} else {
 				fDialog.setName(currentInfo.devName);
 			}
-			fDialog.show();
+			fDialog.show();*/
 		} else if (type == MediacenterConstant.MESSAGE_REMOVE) {
 			Activity showActivity = ActivitiesManager.getInstance()
 					.getActivity(ActivitiesManager.ACTIVITY_FILE_VIEW);
@@ -146,7 +146,7 @@ public class FindDeviceActivity extends Activity {
 						fDialog = null;
 						FindDeviceActivity.this.finish();
 					}
-					pullDevice = new ExitDialog(cxt, R.style.exit_dialog,
+					/*pullDevice = new ExitDialog(cxt, R.style.exit_dialog,
 							false, cxt.getString(R.string.current_sd_remove),
 							new View.OnClickListener() {
 								@Override
@@ -167,7 +167,7 @@ public class FindDeviceActivity extends Activity {
 					});
 					if (!pullDevice.isShowing()) {
 						pullDevice.show();
-					}
+					}*/
 				}
 			}
 

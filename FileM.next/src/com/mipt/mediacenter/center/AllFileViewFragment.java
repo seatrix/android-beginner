@@ -2,7 +2,6 @@ package com.mipt.mediacenter.center;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,20 +18,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
+import com.mipt.fileMgr.center.FileMainActivity;
 import com.mipt.mediacenter.center.file.FileIconHelper;
 import com.mipt.mediacenter.center.file.IntentBuilder;
 import com.mipt.mediacenter.center.server.FileInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.Util;
-import com.mipt.fileMgr.center.FileMainActivity;
 /**
  * 
  * @author fang
  * 
  */
 public class AllFileViewFragment extends Fragment implements
-		FileMainActivity.DataChangeListener {
-	private static final String LOG_TAG = "VideoMusicFragment";
+		FileMainActivity.DataChangeListener{
+	private static final String TAG = "AllFileViewFragment";
 	private FileMainActivity mActivity;
 	private View mRootView;
 	private FileItemAdapter mAdapter;
@@ -43,14 +42,14 @@ public class AllFileViewFragment extends Fragment implements
 	private TextView fileType;
 	private TextView fileDate;
 	private TextView fileSize;
-
+	
 	public static AllFileViewFragment newInstance(ArrayList<FileInfo> _dateList,
 			int type) {
 		AllFileViewFragment f = new AllFileViewFragment();
 		Bundle args = new Bundle();
 		args.putInt(MediacenterConstant.INTENT_TYPE_VIEW, type);
 		args.putSerializable(MediacenterConstant.INTENT_EXTRA, _dateList);
-		f.setArguments(args);
+		f.setArguments(args);		
 		return f;
 	}
 
@@ -93,7 +92,7 @@ public class AllFileViewFragment extends Fragment implements
 		fileName = (TextView) mRootView.findViewById(R.id.cm_file_name);
 		fileType = (TextView) mRootView.findViewById(R.id.cm_file_type);
 		fileDate = (TextView) mRootView.findViewById(R.id.cm_file_date);
-		fileSize = (TextView) mRootView.findViewById(R.id.cm_file_size);
+		fileSize = (TextView) mRootView.findViewById(R.id.cm_file_size);		
 		type = getArguments() != null ? getArguments().getInt(
 				MediacenterConstant.INTENT_TYPE_VIEW)
 				: MediacenterConstant.IntentFlags.PIC_ID;
@@ -120,7 +119,7 @@ public class AllFileViewFragment extends Fragment implements
 		mActivity.resetCurrentNum();
 		return mRootView;
 	}
-
+    
 	private String getRootName(int type) {
 		String str = "/";
 		if (type == MediacenterConstant.IntentFlags.PIC_ID) {

@@ -46,7 +46,7 @@ public class FileSortHelper {
 
 	private boolean mFileFirst;
 
-	private HashMap<SortMethod, Comparator> mComparatorList = new HashMap<SortMethod, Comparator>();
+	private HashMap<SortMethod, Comparator<FileInfo>> mComparatorList = new HashMap<SortMethod, Comparator<FileInfo>>();
 
 	private FileSortHelper() {
 		sMethod = SortMethod.name;
@@ -68,11 +68,11 @@ public class FileSortHelper {
 		mFileFirst = f;
 	}
 
-	public Comparator getComparator() {
+	public Comparator<FileInfo> getComparator() {
 		return mComparatorList.get(sMethod);
 	}
 
-	public Comparator getComparator(SortMethod _sMethod) {
+	public Comparator<FileInfo> getComparator(SortMethod _sMethod) {
 		return mComparatorList.get(_sMethod);
 	}
 
@@ -96,21 +96,21 @@ public class FileSortHelper {
 		protected abstract int doCompare(FileInfo object1, FileInfo object2);
 	}
 
-	private Comparator cmpName = new FileComparator() {
+	private Comparator<FileInfo> cmpName = new FileComparator() {
 		@Override
 		public int doCompare(FileInfo object1, FileInfo object2) {
 			return object1.fileName.compareToIgnoreCase(object2.fileName);
 		}
 	};
 
-	private Comparator cmpSize = new FileComparator() {
+	private Comparator<FileInfo> cmpSize = new FileComparator() {
 		@Override
 		public int doCompare(FileInfo object1, FileInfo object2) {
 			return longToCompareInt(object1.fileSize - object2.fileSize);
 		}
 	};
 
-	private Comparator cmpDate = new FileComparator() {
+	private Comparator<FileInfo> cmpDate = new FileComparator() {
 		@Override
 		public int doCompare(FileInfo object1, FileInfo object2) {
 			return longToCompareInt(object2.modifiedDate - object1.modifiedDate);
@@ -121,7 +121,7 @@ public class FileSortHelper {
 		return result > 0 ? 1 : (result < 0 ? -1 : 0);
 	}
 
-	private Comparator cmpType = new FileComparator() {
+	private Comparator<FileInfo> cmpType = new FileComparator() {
 		@Override
 		public int doCompare(FileInfo object1, FileInfo object2) {
 			int result = Util.getExtFromFilename(object1.fileName)

@@ -18,7 +18,12 @@
         android:layout_height="match_parent"
         android:layout_above="@id/tail_tag"
         android:layout_below="@id/title_tag" />
-
+    <LinearLayout
+        android:id="@+id/menu_layout"
+        android:layout_width="416dip"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true" />
+    
     <include layout="@layout/cm_data_loading" />
 
 </RelativeLayout>

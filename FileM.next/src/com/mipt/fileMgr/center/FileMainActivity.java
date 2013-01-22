@@ -47,6 +47,7 @@ import android.widget.Toast;
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.AllFileViewFragment;
 import com.mipt.mediacenter.center.DLANViewFragment;
+import com.mipt.mediacenter.center.DirViewFragment;
 import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.file.FileCategoryHelper;
 import com.mipt.mediacenter.center.file.FilenameExtFilter;
@@ -132,16 +133,14 @@ public class FileMainActivity extends Activity {
         Log.i(TAG, "viewType:" + viewType + ",dInfo:" + dInfo);
         addFragmentToStack(-1, dInfo);
 
+        menuListItem = getResources().getStringArray(R.array.items_fm);
         LayoutInflater mInflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
         mmLayout = (FrameLayout) mInflater.inflate(R.layout.pp_menu_layout,
-                menuLayout);
-        menuListItem = getResources().getStringArray(R.array.items_fm);
-        
+                menuLayout);        
         ListView menuList = (ListView) mmLayout.findViewById(R.id.menuList);
         menuList.setAdapter(new ToolAdapter(this, R.id.tool_name, menuListItem));
-        //menuLayout = (LinearLayout) findViewById(R.id.menuLayout);
+        menuLayout = (LinearLayout)findViewById(R.id.menu_layout);
         //grayBg = (LinearLayout) mmLayout.findViewById(R.id.gray_bg);
-        
     }
 
     @Override
@@ -283,11 +282,14 @@ public class FileMainActivity extends Activity {
                 task = false;
                 progressBar.setVisibility(View.GONE);
             }*/ 
-            Log.i(TAG, "view all files ....");
+            Log.i(TAG, "view local  file info....");
             task = true;
             title = null;
             viewTypeTag.setText(getString(R.string.all_file_view_type));
-            newFragment = AllFileViewFragment.newInstance(dataList, -1);
+            newFragment = DirViewFragment.newInstance(_dInfo.devPath, _dInfo.type);
+        }else{
+            //smb
+            //......
         }
         ft.replace(R.id.file_content, newFragment);
         ft.commit();
@@ -320,12 +322,12 @@ public class FileMainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        IBackPressedListener backPressedListener = (IBackPressedListener) getFragmentManager()
+/*        IBackPressedListener backPressedListener = (IBackPressedListener) getFragmentManager()
                 .findFragmentById(R.id.file_content);
         if (backPressedListener != null && !backPressedListener.onBack()) {
             super.onBackPressed();
         }
-
+*/
         if (scanFileTask != null && !scanFileTask.isStop()) {
             scanFileTask.cancel();
             posPath = null;
@@ -414,14 +416,34 @@ public class FileMainActivity extends Activity {
                         .inflate(R.layout.vp_tool_list_item, null);
             }
             TextView name = (TextView) convertView.findViewById(R.id.tool_name);
-            TextView value = (TextView) convertView
-                    .findViewById(R.id.tool_value);
+            //TextView value = (TextView) convertView.findViewById(R.id.tool_value);
             name.setText(menuListItem[position]);
             name.setTextColor(getContext().getResources().getColor(R.color.white));
             
             return convertView;
         }
     }
+    
+    class MenuOnItemClickListener implements OnItemClickListener{
+        @Override
+        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            Toast.makeText(FileMainActivity.this, "onitemclick...", Toast.LENGTH_SHORT).show();
+            switch (arg2) {
+                case 0:
+                    //排序方式
+                    
+                    break;
+                case 1:
+                    //文件操作,进入文件选择模式
+                    
+                    break;
+                default:
+                    break;
+            }
+        }        
+    }
+    
+    
     public DeviceInfo getCurrentDeviceInfo() {
         return dInfo;
     }

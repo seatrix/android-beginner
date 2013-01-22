@@ -47,7 +47,7 @@ public class DeviceInfo implements Serializable {
 		}
 		this.devName = devName;
 		this.devPath = devPath;
-		Log.i("DeviceInfo", "000000devPath0000" + this.devPath);
+		Log.i("DeviceInfo", "000000devPath0000:" + this.devPath);
 		if (size != null && devUsedSize != null) {
 			this.devSize = size;
 			this.devUsedSize = devUsedSize;

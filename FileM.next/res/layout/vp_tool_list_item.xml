@@ -32,17 +32,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:gravity="right" >
-
-        <com.mipt.mediacenter.music.ui.FocusTextView
-            android:id="@+id/tool_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dip"
-            android:gravity="center_horizontal"
-            android:singleLine="true"
-            android:text="16:9"
-            android:textSize="24dip" />
     </LinearLayout>
 
 </RelativeLayout>

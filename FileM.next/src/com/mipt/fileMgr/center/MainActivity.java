@@ -89,8 +89,8 @@ public class MainActivity extends Activity {
 			ft.commitAllowingStateLoss();
 			createNew = true;
 		} else {
-		    //Log.i(TAG, "loading FavFragment...isFav is" + isFav + ",createNew is" + createNew);
 			if (createNew) {
+			    Log.i(TAG, "loading DeviceFragment......");
 				FragmentTransaction ft = getFragmentManager()
 						.beginTransaction();
 				Fragment newFragment = DeviceFragment.newInstance(-1,
@@ -99,6 +99,7 @@ public class MainActivity extends Activity {
 				ft.commitAllowingStateLoss();
 				createNew = false;
 			} else {
+			    Log.i(TAG, "loading DataChanged......");
 				DataChanged dataChanged = (DataChanged) getFragmentManager()
 						.findFragmentById(R.id.tabcontent);
 				if (dataChanged != null) {
@@ -179,26 +180,36 @@ public class MainActivity extends Activity {
 
 		}
         ArrayList<DeviceInfo> usbList = UsbScanManager.getInstance().getDevices(cxt);		
+        Log.i(TAG, "usb list.size:" + usbList.size());
 		temp.addAll(usbList);
 		if (!isHasTypeDevice(DeviceInfo.TYPE_USB, temp)) {
 			temp.add(new DeviceInfo(null, getString(R.string.usb_device), null,
 					null, null, DeviceInfo.TYPE_USB, false,
 					R.drawable.cm_usb_remove_tag));
 		}
+		DeviceFragment f = (DeviceFragment) getFragmentManager()
+		        .findFragmentById(R.id.tabcontent);
+		//show usb devices.
+		Log.i(TAG, "DeviceFragment:" + (f != null ? f.toString() : null));
+		if (f != null) {
+	        Log.i(TAG, "first deviceInfos.size:" + deviceInfos.size());
+	        f.dataChange(deviceInfos);
+	    }
 		
-        ArrayList<DeviceInfo> dlanList = cover2DLANDevice(AllShareProxy.getInstance(cxt).getDeviceList());		
-		temp.addAll(dlanList);
+        ArrayList<DeviceInfo> dlnaList = cover2DLANDevice(AllShareProxy.getInstance(cxt).getDeviceList());
+        Log.i(TAG, "dlnaList.size:" + dlnaList.size());
+		temp.addAll(dlnaList);
 		if (!isHasTypeDevice(DeviceInfo.TYPE_DLAN, temp)) {
 			temp.add(new DeviceInfo(null, "DLNA", null, null, null,
 					DeviceInfo.TYPE_DLAN, false, R.drawable.cm_dlan_remove_tag));
 		}
 		deviceInfos = temp;
 		DeviceInfo reomoveDevice = null;		
-		DeviceFragment f = (DeviceFragment) getFragmentManager()
-					.findFragmentById(R.id.tabcontent);
 		if (f != null) {
-		    Log.i(TAG, "deviceInfos.size:" + deviceInfos.size());
+		    Log.i(TAG, "next deviceInfos.size:" + deviceInfos.size());
 		    f.dataChange(deviceInfos);
+		}else{
+		    Log.i(TAG, "next DeviceFragment:" + (f != null ? f.toString() : null));
 		}
 		if (remove == MediacenterConstant.MESSAGE_ADD) {
 		    DeviceInfo di = Util.isNewDevice(usbList, oldDeviceInfos, path);

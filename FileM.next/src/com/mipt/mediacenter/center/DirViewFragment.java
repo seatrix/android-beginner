@@ -41,7 +41,7 @@ import com.mipt.fileMgr.center.FileMainActivity;
 public class DirViewFragment extends Fragment implements
 		IFileInteractionListener, FileMainActivity.IBackPressedListener,
 		FileMainActivity.DataChangeListener {
-	private static final String LOG_TAG = "DirViewFragment";
+	private static final String TAG = "DirViewFragment";
 	private FileMainActivity mActivity;
 	private View mRootView;
 	private FileItemAdapter mAdapter;
@@ -59,7 +59,7 @@ public class DirViewFragment extends Fragment implements
 	private int fileInfoType;
 	private String currentFilePath;
 
-	static DirViewFragment newInstance(String path, int type) {
+	public static DirViewFragment newInstance(String path, int type) {
 		DirViewFragment f = new DirViewFragment();
 		Bundle args = new Bundle();
 		args.putInt(MediacenterConstant.INTENT_TYPE_VIEW, type);
@@ -200,7 +200,7 @@ public class DirViewFragment extends Fragment implements
 		if (!file.exists() || !file.isDirectory()) {
 			return false;
 		}
-		mActivity.setCurrentPath(getRootName(type) + Util.handlePath(path));
+		mActivity.setCurrentPath(Util.handlePath(path));
 		final int pos = computeScrollPosition(path);
 		ArrayList<FileInfo> fileList = mFileNameList;
 		fileList.clear();
@@ -311,7 +311,7 @@ public class DirViewFragment extends Fragment implements
 
 	}
 
-	private String getRootName(int type) {
+/*	private String getRootName(int type) {
 		String str = "/";
 		if (type == MediacenterConstant.IntentFlags.PIC_ID) {
 			str += getString(R.string.tab_pic);
@@ -323,7 +323,7 @@ public class DirViewFragment extends Fragment implements
 		return str;
 
 	}
-
+*/
 	private void showEmptyView(boolean show) {
 		RelativeLayout emptyView = (RelativeLayout) mRootView
 				.findViewById(R.id.empty_view);
