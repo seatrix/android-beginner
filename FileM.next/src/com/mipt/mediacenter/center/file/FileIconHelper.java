@@ -30,13 +30,23 @@ public class FileIconHelper implements IconLoadFinishListener {
 		mIconLoader = new FileIconLoader(context, this);
 	}
 
-	public static int getDlanDaultIcon(int type) {
+	private static int getDlanDaultIcon(int type) {
+	    switch (type) {
+            case FileInfo.TYPE_MUSIC:
+                
+                break;
+
+            default:
+                break;
+        }
 		int res = R.drawable.cm_default_pic;
+		
 		if (type == FileInfo.TYPE_MUSIC) {
 			res = R.drawable.cm_default_music_in;
 		} else if (type == FileInfo.TYPE_VIDEO) {
 			res = R.drawable.cm_default_video;
 		}
+		
 		return res;
 	}
 
@@ -46,7 +56,9 @@ public class FileIconHelper implements IconLoadFinishListener {
 			res = R.drawable.cm_default_music_in;
 		} else if (fc == FileCategory.Video) {
 			res = R.drawable.cm_default_video;
-		}
+		}/*else{
+            res = R.drawable.cm_default_unknown;
+        }*/
 		return res;
 	}
 
@@ -116,7 +128,6 @@ public class FileIconHelper implements IconLoadFinishListener {
 			imageFrames.put(fileImage, fileImageFrame);
 			set = true;
 		}
-
 	}
 
 	public void setIcon(FileInfo fileInfo, ImageView fileImage,

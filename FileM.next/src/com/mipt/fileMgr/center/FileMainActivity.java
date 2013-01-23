@@ -2,7 +2,6 @@ package com.mipt.fileMgr.center;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,7 +14,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,8 +43,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mipt.fileMgr.R;
-import com.mipt.mediacenter.center.AllFileViewFragment;
-import com.mipt.mediacenter.center.DLANViewFragment;
 import com.mipt.mediacenter.center.DirViewFragment;
 import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.file.FileCategoryHelper;
@@ -270,10 +266,7 @@ public class FileMainActivity extends Activity {
         boolean task = false;
         String title = null;
         if (_dInfo.type == DeviceInfo.TYPE_DLAN) {
-            newFragment = DLANViewFragment.newInstance(dInfo, -1);
-            currentPath.setText("/" + dInfo.devName);
-            viewTypeTag.setText(getString(R.string.file_view_type));
-            task = false;
+
         } else if(_dInfo.type == DeviceInfo.TYPE_LOCAL || _dInfo.type == DeviceInfo.TYPE_USB) {
             currentPath.setText(Util.handlePath(dInfo.devPath));
             /*if (viewType == MediacenterConstant.FileViewType.VIEW_DIR) {
@@ -932,19 +925,8 @@ public class FileMainActivity extends Activity {
 
                     }
                     file.fileType = fileTypt;
-                    File lFile = new File(file.filePath);
-                    if (!isHasByPath(file.filePath, dataListTask)
-                            && FileCategoryHelper.matchExts(
-                                    Util.getExtFromFilename(file.filePath),
-                                    exts) && lFile.exists()
-                            && !Util.isHidden(file.filePath)) {
-                        file.modifiedDate = lFile.lastModified();
-                        dataListTask.add(file);
-                        if (artisGet == null) {
-                            this.publishProgress(file);
-                        }
+                    dataListTask.add(file);
 
-                    }
                     if (!isCancelled() && !isCancel) {
                         cursor.moveToNext();
                     } else {

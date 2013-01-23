@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,8 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
-import com.mipt.mediacenter.center.file.FileCategoryHelper;
-import com.mipt.mediacenter.center.file.FileCategoryHelper.FileCategory;
+import com.mipt.fileMgr.center.FileMainActivity;
 import com.mipt.mediacenter.center.file.FileIconHelper;
 import com.mipt.mediacenter.center.file.FileViewInteractionHub;
 import com.mipt.mediacenter.center.server.FileInfo;
@@ -32,9 +32,7 @@ import com.mipt.mediacenter.center.server.FileSortHelper;
 import com.mipt.mediacenter.center.server.IFileInteractionListener;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.Util;
-import com.mipt.fileMgr.center.FileMainActivity;
 /**
- * 
  * @author fang
  * 
  */
@@ -47,11 +45,11 @@ public class DirViewFragment extends Fragment implements
 	private FileItemAdapter mAdapter;
 	private ArrayList<FileInfo> mFileNameList;
 	private FileViewInteractionHub mFileViewInteractionHub;
-	private FileCategoryHelper mFileCagetoryHelper;
+	//private FileCategoryHelper mFileCagetoryHelper;
 	private FileIconHelper mFileIconHelper;
 	private GridView gridView;
 	private String orginPath;
-	private int type;
+	//private int type;
 	private TextView fileType;
 	private TextView fileName;
 	private TextView fileDate;
@@ -72,9 +70,6 @@ public class DirViewFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mActivity = (FileMainActivity) getActivity();
-		type = getArguments() != null ? getArguments().getInt(
-				MediacenterConstant.INTENT_TYPE_VIEW)
-				: MediacenterConstant.IntentFlags.PIC_ID;
 		orginPath = getArguments() != null ? getArguments().getString(
 				MediacenterConstant.INTENT_EXTRA) : Util.getSdDirectory();
 		// getWindow().setFormat(android.graphics.PixelFormat.RGBA_8888);
@@ -86,11 +81,11 @@ public class DirViewFragment extends Fragment implements
 		fileType = (TextView) mRootView.findViewById(R.id.cm_file_type);
 		fileDate = (TextView) mRootView.findViewById(R.id.cm_file_date);
 		fileSize = (TextView) mRootView.findViewById(R.id.cm_file_size);
-		mFileCagetoryHelper = new FileCategoryHelper(mActivity);
 		mFileViewInteractionHub = new FileViewInteractionHub(this);
-		mFileCagetoryHelper.setCurCategory(getFc(type));
 		gridView = (GridView) mRootView.findViewById(R.id.file_content);
 		mFileIconHelper = new FileIconHelper(mActivity);
+		
+		Log.i(TAG, "mFileNameList:" +  mFileNameList);
 		mAdapter = new FileItemAdapter(mActivity, mFileIconHelper,
 				mFileNameList, mHandler, MESSAGE_SETINFO);
 		gridView.setAdapter(mAdapter);
@@ -204,7 +199,7 @@ public class DirViewFragment extends Fragment implements
 		final int pos = computeScrollPosition(path);
 		ArrayList<FileInfo> fileList = mFileNameList;
 		fileList.clear();
-		File[] listFiles = file.listFiles(mFileCagetoryHelper.getFilter());
+		File[] listFiles = file.listFiles();
 		if (listFiles == null) {
 			return true;
 		}
@@ -214,7 +209,7 @@ public class DirViewFragment extends Fragment implements
 			String absolutePath = child.getAbsolutePath();
 			if (Util.shouldShowFile(absolutePath)) {
 				FileInfo lFileInfo = Util.GetFileInfo(child,
-						mFileCagetoryHelper.getFilter(), false);
+						null, false);
 				if (lFileInfo != null) {
 					if (!lFileInfo.isDir) {
 						lFileInfo.fileType = fileInfoType;
@@ -294,36 +289,6 @@ public class DirViewFragment extends Fragment implements
 		return pos;
 	}
 
-	private FileCategory getFc(int type) {
-		FileCategory reFc = FileCategory.All;
-		fileInfoType = FileInfo.TYPE_MUSIC;
-		if (type == MediacenterConstant.IntentFlags.PIC_ID) {
-			reFc = FileCategory.Picture;
-			fileInfoType = FileInfo.TYPE_PIC;
-		} else if (type == MediacenterConstant.IntentFlags.MUSIC_ID) {
-			fileInfoType = FileInfo.TYPE_MUSIC;
-			reFc = FileCategory.Music;
-		} else if (type == MediacenterConstant.IntentFlags.VIDEO_ID) {
-			fileInfoType = FileInfo.TYPE_VIDEO;
-			reFc = FileCategory.Video;
-		}
-		return reFc;
-
-	}
-
-/*	private String getRootName(int type) {
-		String str = "/";
-		if (type == MediacenterConstant.IntentFlags.PIC_ID) {
-			str += getString(R.string.tab_pic);
-		} else if (type == MediacenterConstant.IntentFlags.MUSIC_ID) {
-			str += getString(R.string.category_music);
-		} else if (type == MediacenterConstant.IntentFlags.VIDEO_ID) {
-			str += getString(R.string.category_video);
-		}
-		return str;
-
-	}
-*/
 	private void showEmptyView(boolean show) {
 		RelativeLayout emptyView = (RelativeLayout) mRootView
 				.findViewById(R.id.empty_view);
@@ -346,8 +311,7 @@ public class DirViewFragment extends Fragment implements
 
 		@Override
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {
-			// TODO Auto-generated method stub
+				long arg3) {		    
 			if (mAdapter == null) {
 				return;
 			}

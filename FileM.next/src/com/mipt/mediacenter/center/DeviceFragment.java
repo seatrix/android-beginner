@@ -1,6 +1,7 @@
 package com.mipt.mediacenter.center;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -38,38 +39,38 @@ public class DeviceFragment extends Fragment implements
 	//private int tabId;
 	private Activity mActivity;
 	private DeviceAdapter adapter;
-	private ArrayList<DeviceInfo> deviceList = new ArrayList<DeviceInfo>();
+	private List<DeviceInfo> deviceList = new ArrayList<DeviceInfo>();
 	private DeviceInfo currentDevice;
 	private View rootView;
 	private ListView listView;
-	private int backButtonId;
+	//private int backButtonId;
+	private static final DeviceFragment f = new DeviceFragment();
 
 	public static DeviceFragment newInstance(final int tabId,
-			ArrayList<DeviceInfo> devs) {
-		DeviceFragment f = new DeviceFragment();
+			List<DeviceInfo> devs) {
 		Bundle args = new Bundle();
-		//args.putInt(MediacenterConstant.IntentFlags.TAG_ID, tabId);
-		//args.putInt(MediacenterConstant.IntentFlags.BACK_BUTTON_ID, backButton);
-		args.putSerializable(MediacenterConstant.INTENT_EXTRA, devs);
+		args.putSerializable(MediacenterConstant.INTENT_EXTRA, (ArrayList<DeviceInfo>)devs);
 		f.setArguments(args);
 		return f;
 	}
 
 	@Override
 	public void onDataChanged(int _tabId,
-			ArrayList<DeviceInfo> _devs) {
-		//tabId = _tabId;
-		//backButtonId = _backButtonId;
-		//listView.setNextFocusLeftId(backButtonId);
+			List<DeviceInfo> _devs) {
 		dataChange(_devs);
 		listView.setSelection(0);
 	}
 
-	public void dataChange(ArrayList<DeviceInfo> _devs) {
+	public void dataChange(List<DeviceInfo> _devs) {
 		if (adapter != null) {
 			deviceList = _devs;
 			adapter.notifyDataSetChanged();
 		}
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -80,18 +81,12 @@ public class DeviceFragment extends Fragment implements
 		// this.getListView().setBackgroundResource(R.drawable.cm_view_background);
 		rootView = inflater.inflate(R.layout.cm_device_list, container, false);
 		listView = (ListView) rootView.findViewById(R.id.device_content);
-		/*tabId = getArguments() != null ? getArguments().getInt(
-				MediacenterConstant.IntentFlags.TAG_ID)
-				: MediacenterConstant.IntentFlags.MUSIC_ID;
-		backButtonId = getArguments() != null ? getArguments().getInt(
-				MediacenterConstant.IntentFlags.BACK_BUTTON_ID) : R.id.pic_id;
-		*/	
-		ArrayList<DeviceInfo> _dataList = (ArrayList<DeviceInfo>) (getArguments() != null ? getArguments()
+
+		deviceList = (ArrayList<DeviceInfo>) (getArguments() != null ? getArguments()
 				.getSerializable(MediacenterConstant.INTENT_EXTRA)
 				: new ArrayList<DeviceInfo>());
 		
 		Log.i(TAG, "---deviceList.size:" + deviceList.size());
-		deviceList = _dataList;
 		adapter = new DeviceAdapter(this.getActivity(), R.layout.cm_device_item);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -131,16 +126,16 @@ public class DeviceFragment extends Fragment implements
 		return rootView;
 	}
 
-/*	private String getToastName(int tabId) {
-		String name = getString(R.string.category_picture);
-		if (tabId == MediacenterConstant.IntentFlags.MUSIC_ID) {
-			name = getString(R.string.category_music);
-		} else if (tabId == MediacenterConstant.IntentFlags.VIDEO_ID) {
-			name = getString(R.string.category_video);
-		}
-		return name;
+	@Override
+	public void onAttach(Activity activity) {
+	    super.onAttach(activity);
+	    DeviceFragment f = (DeviceFragment) getFragmentManager()
+                .findFragmentById(R.id.tabcontent);
+	    MainActivity main = (MainActivity)getActivity();
+	    main.onDataChanged(-1, null);
+	    Log.i(TAG, "onAttach success..." + f);
 	}
-*/
+	
 	public DeviceInfo getCurrentDevice() {
 		return currentDevice;
 	}

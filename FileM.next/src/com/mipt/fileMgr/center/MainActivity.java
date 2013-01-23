@@ -8,10 +8,8 @@ import org.cybergarage.upnp.Device;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,8 +21,6 @@ import com.mipt.mediacenter.center.DeviceFragment;
 import com.mipt.mediacenter.center.FavFragment;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
-import com.mipt.mediacenter.dlna.AllShareProxy;
-import com.mipt.mediacenter.dlna.DeviceUpdateBrocastFactory;
 import com.mipt.mediacenter.utils.ActivitiesManager;
 import com.mipt.mediacenter.utils.HandlerManager;
 import com.mipt.mediacenter.utils.ToastFactory;
@@ -40,8 +36,8 @@ import com.mipt.mediacenter.utils.Util.SDCardInfo;
 public class MainActivity extends Activity {
 	public static final String TAG = "MainActivity";
 	private Context cxt;
-	private ArrayList<DeviceInfo> deviceInfos = new ArrayList<DeviceInfo>();
-	private ArrayList<DeviceInfo> oldDeviceInfos = new ArrayList<DeviceInfo>();
+	private List<DeviceInfo> deviceInfos = new ArrayList<DeviceInfo>();
+	private List<DeviceInfo> oldDeviceInfos = new ArrayList<DeviceInfo>();
 	private boolean createNew;
 
 	@Override
@@ -50,9 +46,6 @@ public class MainActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.cm_activity_main);
 		cxt = MainActivity.this;
-		Log.i(TAG, "MainActivity.oncreate...");
-		/**dlna*/
-		addBroadCast();
 		createNew = true;
 		initData();
 	}
@@ -65,8 +58,8 @@ public class MainActivity extends Activity {
 	private void initData() {
 	    Log.i(TAG, "initData...");
 	    addFragmentToStack(false, deviceInfos);
-		AllShareProxy.getInstance(cxt).initSearchEngine();
-		onDataChanged(0, null);
+		//AllShareProxy.getInstance(cxt).initSearchEngine();
+		//onDataChanged(0, null);
 		HandlerManager.getInstance().registerHandler(
 				HandlerManager.MainHandler, mHandler);
 		//oldDeviceInfos.addAll(deviceInfos);
@@ -74,15 +67,14 @@ public class MainActivity extends Activity {
 
 	public interface DataChanged {
 		void onDataChanged(int _tabId,
-				ArrayList<DeviceInfo> _devs);
+				List<DeviceInfo> _devs);
 	}
 
 	private void addFragmentToStack(boolean isFav,
-			ArrayList<DeviceInfo> devs) {
+			List<DeviceInfo> devs) {
         Log.i(TAG, "addFragmentToStack...createNew:" + createNew + ",isFav:" + isFav);
 		if (isFav) {
 		    //Log.i(TAG, "loading FavFragment...isFav is" + isFav);
-		    
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			Fragment newFragment = FavFragment.newInstance();
 			ft.replace(R.id.tabcontent, newFragment);
@@ -90,86 +82,71 @@ public class MainActivity extends Activity {
 			createNew = true;
 		} else {
 			if (createNew) {
-			    Log.i(TAG, "loading DeviceFragment......");
-				FragmentTransaction ft = getFragmentManager()
-						.beginTransaction();
-				Fragment newFragment = DeviceFragment.newInstance(-1,
-						devs);
+			    Log.i(TAG, "devs:" + devs);
+			    
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				Fragment newFragment = DeviceFragment.newInstance(-1,devs);
+				Log.d(TAG,"newFragment == null" +(newFragment == null));
 				ft.replace(R.id.tabcontent, newFragment);
-				ft.commitAllowingStateLoss();
+				//ft.add(R.id.tabcontent, newFragment, "deviceFragment");
+                ft.commitAllowingStateLoss();
+                
+				//ft.add(R.id.tabcontent, newFragment);
+				//ft.commit();
 				createNew = false;
+				//Log.i(TAG, "loading DeviceFragment......:" + getFragmentManager().);
 			} else {
-			    Log.i(TAG, "loading DataChanged......");
 				DataChanged dataChanged = (DataChanged) getFragmentManager()
 						.findFragmentById(R.id.tabcontent);
 				if (dataChanged != null) {
 					dataChanged.onDataChanged(-1, devs);
 				}
+				Log.i(TAG, "loading DataChanged......");
 			}
 		}
 	}
-
-	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (DeviceUpdateBrocastFactory.ADD_DEVICES.equalsIgnoreCase(action)
-					|| DeviceUpdateBrocastFactory.REMOVE_DEVICES
-							.equalsIgnoreCase(action)
-					|| DeviceUpdateBrocastFactory.CLEAR_DEVICES
-							.equalsIgnoreCase(action)) {
-
-				Message message = mHandler.obtainMessage(MESSAGE_FRESH_DEVICE,
-						this);
-				message.obj = null;
-				mHandler.removeMessages(MESSAGE_FRESH_DEVICE);
-				mHandler.sendMessage(message);
-
-			}
-
-		}
-	};
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		this.unregisterReceiver(mReceiver);
-		AllShareProxy.getInstance(cxt).unInitSearchEngine();
+		//this.unregisterReceiver(mReceiver);
+		//AllShareProxy.getInstance(cxt).unInitSearchEngine();
 		HandlerManager.getInstance().unRegisterHandler(
 				HandlerManager.MainHandler);
 		ToastFactory.getInstance().cancelToast();
 	}
 
 	public static final int MESSAGE_FRESH_DEVICE = 10001;
-	private Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case MESSAGE_FRESH_DEVICE:
-				int addOrRemove = msg.arg2;
-				String path = null;
-				if (msg.obj != null) {
-					path = (String) msg.obj;
-				}
-				onDataChanged(addOrRemove, path);
-				break;
-			}
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case MESSAGE_FRESH_DEVICE:
+                int addOrRemove = msg.arg2;
+                String path = null;
+                if (msg.obj != null) {
+                    path = (String) msg.obj;
+                }
+                onDataChanged(addOrRemove, path);
+                break;
+            }
 
-		}
-	};
+        }
+    };
 
-	private ArrayList<DeviceInfo> onDataChanged(int remove, String path) {		
-		ArrayList<DeviceInfo> temp = new ArrayList<DeviceInfo>();
+	public ArrayList<DeviceInfo> onDataChanged(int opType, String path) {
+	    deviceInfos.clear();
 		SDCardInfo sdInfoLocal = Util.getSDCardInfo();
 		if (sdInfoLocal != null) {
-		    Log.i(TAG, "sdInfoLocal is not null");
 			String localDeviceName = Util.getLocalDeviceName(cxt);
 			if (localDeviceName != null) {
 				localDeviceName = getString(R.string.local_sdcard)
 						+ localDeviceName;
 			}
-			temp.add(new DeviceInfo(sdInfoLocal.path, localDeviceName,
+
+			Log.i(TAG, "sdcard is not null," + sdInfoLocal);
+			deviceInfos.add(new DeviceInfo(sdInfoLocal.path, localDeviceName,
 					sdInfoLocal.path, sdInfoLocal.total, sdInfoLocal.used,
 					DeviceInfo.TYPE_LOCAL, true, R.drawable.cm_sd_tag));
 
@@ -181,45 +158,35 @@ public class MainActivity extends Activity {
 		}
         ArrayList<DeviceInfo> usbList = UsbScanManager.getInstance().getDevices(cxt);		
         Log.i(TAG, "usb list.size:" + usbList.size());
-		temp.addAll(usbList);
-		if (!isHasTypeDevice(DeviceInfo.TYPE_USB, temp)) {
-			temp.add(new DeviceInfo(null, getString(R.string.usb_device), null,
+        deviceInfos.addAll(usbList);
+		if (!isHasTypeDevice(DeviceInfo.TYPE_USB, deviceInfos)) {
+		    //not have usb devices.
+		    deviceInfos.add(new DeviceInfo(null, getString(R.string.usb_device), null,
 					null, null, DeviceInfo.TYPE_USB, false,
 					R.drawable.cm_usb_remove_tag));
 		}
+		
 		DeviceFragment f = (DeviceFragment) getFragmentManager()
 		        .findFragmentById(R.id.tabcontent);
-		//show usb devices.
-		Log.i(TAG, "DeviceFragment:" + (f != null ? f.toString() : null));
-		if (f != null) {
-	        Log.i(TAG, "first deviceInfos.size:" + deviceInfos.size());
-	        f.dataChange(deviceInfos);
-	    }
-		
-        ArrayList<DeviceInfo> dlnaList = cover2DLANDevice(AllShareProxy.getInstance(cxt).getDeviceList());
-        Log.i(TAG, "dlnaList.size:" + dlnaList.size());
-		temp.addAll(dlnaList);
-		if (!isHasTypeDevice(DeviceInfo.TYPE_DLAN, temp)) {
-			temp.add(new DeviceInfo(null, "DLNA", null, null, null,
-					DeviceInfo.TYPE_DLAN, false, R.drawable.cm_dlan_remove_tag));
-		}
-		deviceInfos = temp;
 		DeviceInfo reomoveDevice = null;		
 		if (f != null) {
 		    Log.i(TAG, "next deviceInfos.size:" + deviceInfos.size());
 		    f.dataChange(deviceInfos);
 		}else{
-		    Log.i(TAG, "next DeviceFragment:" + (f != null ? f.toString() : null));
+		    Log.i(TAG, "DeviceFragment:" + (f != null ? f.toString() : null));
 		}
-		if (remove == MediacenterConstant.MESSAGE_ADD) {
+		
+		//DeviceFragment.instantiate(context, fname)
+		
+		if (opType == MediacenterConstant.MESSAGE_ADD) {
 		    DeviceInfo di = Util.isNewDevice(usbList, oldDeviceInfos, path);
 			if (di != null) {
 				Intent intent = new Intent(cxt, FindDeviceActivity.class);
 				intent.putExtra("device", di);
-				intent.putExtra("method", remove);
+				intent.putExtra("method", opType);
 				startActivity(intent);
 			}
-		} else if (remove == MediacenterConstant.MESSAGE_REMOVE) {
+		} else if (opType == MediacenterConstant.MESSAGE_REMOVE) {
 			reomoveDevice = Util.isRemoveDevice(path, deviceInfos,
 					oldDeviceInfos);
 			if (reomoveDevice != null) {
@@ -233,7 +200,7 @@ public class MainActivity extends Activity {
 						Intent intent = new Intent(cxt,
 								FindDeviceActivity.class);
 						intent.putExtra("removedevice", reomoveDevice);
-						intent.putExtra("method", remove);
+						intent.putExtra("method", opType);
 						startActivity(intent);
 					} else {
 						Activity findActivity = ActivitiesManager.getInstance()
@@ -260,7 +227,7 @@ public class MainActivity extends Activity {
 		}
 		oldDeviceInfos.clear();
 		oldDeviceInfos.addAll(deviceInfos);
-		return temp;
+		return (ArrayList<DeviceInfo>)deviceInfos;
 	}
 
 	private ArrayList<DeviceInfo> cover2DLANDevice(List<Device> devices) {
@@ -279,7 +246,7 @@ public class MainActivity extends Activity {
 		return temp;
 	}
 
-	private boolean isHasTypeDevice(int type, ArrayList<DeviceInfo> deviceInfos) {
+	private boolean isHasTypeDevice(int type, List<DeviceInfo> deviceInfos) {
 		boolean isHas = false;
 		for (DeviceInfo di : deviceInfos) {
 			if (di.type == type) {
@@ -290,7 +257,7 @@ public class MainActivity extends Activity {
 		return isHas;
 	}
 
-	private void addBroadCast() {
+/*	private void addBroadCast() {
 		registerReceiver(mReceiver, new IntentFilter(
 				DeviceUpdateBrocastFactory.ADD_DEVICES));
 		registerReceiver(mReceiver, new IntentFilter(
@@ -301,7 +268,7 @@ public class MainActivity extends Activity {
 				DeviceUpdateBrocastFactory.SEARCH_DEVICES_FAIL));
 
 	}
-
+*/
 /*	
 	int i = 0;
     @Override

@@ -2,6 +2,7 @@ package com.mipt.mediacenter.center.file;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -42,11 +43,15 @@ public class IntentBuilder {
 		Log.i(LOG_TAG, "-----IntentBuilder-filePath:" + filePath);
 		final int duration = lFileInfo.duration;
 		if (lFileInfo.fileType == 0) {
-			getFileType(lFileInfo);
+		     int dotPosition = lFileInfo.filePath.lastIndexOf('.');
+		     if (dotPosition == -1)
+		            lFileInfo.fileType = FileCategoryHelper.FileCategory.Other.ordinal();
+		     
+		     String ext = filePath.substring(dotPosition + 1, filePath.length())
+		                .toLowerCase(Locale.ENGLISH);
+		     lFileInfo.fileType = FileCategoryHelper.EXT_TO_TYPE.get(ext).ordinal();
 		}
-		// final String type = getMimeType(filePath);
-		// String selectType = "audio/*";
-		Intent intent = new Intent();
+
 		String appPackage = "com.mipt.mediacenter";
 		
 		if (lFileInfo.fileType == FileInfo.TYPE_PIC) {		    
@@ -63,35 +68,7 @@ public class IntentBuilder {
             doActionExternal(context, filePath, appPackage,
                     "com.mipt.mediacenter.music.ui.MusicPlayerActivity", isDlan, duration,
                     title, devId);
-
 		}
-
-	}
-
-	private static void doAction(Activity context, final String filePath,
-			final Class classTo, final boolean isDlna, final int duration,
-			final String title, String devId) {
-		// Log.i(LOG_TAG, "---filePath---:" +
-		// filePath+"--size:"+MediaCenterApplication.getInstance().getDataSize());
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// // TODO Auto-generated method stub
-		//
-		// }
-		// }).start();
-		Intent intent = new Intent(context, classTo);
-		intent.putExtra("isLocal", true);
-		if (isDlna) {
-			intent.putExtra(MediacenterConstant.INTENT_EXTRA, filePath);
-			intent.putExtra(MediacenterConstant.INTENT_EXTRA_DLAN, duration);
-			intent.putExtra("title", title);
-			intent.putExtra("devId", devId);
-		} else {
-			intent.setData(Uri.fromFile(new File(filePath)));
-		}
-		context.startActivityForResult(intent,
-				MediacenterConstant.ACTIVITYR_RESULT_CODE);
 	}
 
     private static void doActionExternal(Activity context, final String filePath,
@@ -158,23 +135,5 @@ public class IntentBuilder {
 		}
 
 		return mimeType != null ? mimeType : "*/*";
-	}
-
-	private static FileInfo getFileType(FileInfo lFileInfo) {
-		String filePath = lFileInfo.filePath;
-		int dotPosition = filePath.lastIndexOf('.');
-		if (dotPosition == -1)
-			return lFileInfo;
-
-		String ext = filePath.substring(dotPosition + 1, filePath.length())
-				.toLowerCase();
-		if (FileCategoryHelper.matchVideoExts(ext)) {
-			lFileInfo.fileType = FileInfo.TYPE_VIDEO;
-		} else if (FileCategoryHelper.matchMusicExts(ext)) {
-			lFileInfo.fileType = FileInfo.TYPE_MUSIC;
-		} else if (FileCategoryHelper.matchPicExts(ext)) {
-			lFileInfo.fileType = FileInfo.TYPE_PIC;
-		}
-		return lFileInfo;
 	}
 }

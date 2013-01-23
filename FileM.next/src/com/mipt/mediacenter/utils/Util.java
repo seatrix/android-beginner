@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
@@ -124,7 +125,7 @@ public class Util {
 		lFileInfo.isDir = lFile.isDirectory();
 		lFileInfo.filePath = filePath;
 		if (lFileInfo.isDir) {
-			int lCount = 0;
+/*			int lCount = 0;
 			File[] files = lFile.listFiles(filter);
 			if (files == null) {
 				return null;
@@ -135,7 +136,7 @@ public class Util {
 				}
 			}
 			lFileInfo.count = lCount;
-
+*/
 		} else {
 			lFileInfo.fileSize = lFile.length();
 
@@ -405,8 +406,8 @@ public class Util {
 	}
 
 	public static DeviceInfo isRemoveDevice(String path,
-			final ArrayList<DeviceInfo> newDevices,
-			final ArrayList<DeviceInfo> oldDevices) {
+			final List<DeviceInfo> newDevices,
+			final List<DeviceInfo> oldDevices) {
 		if (newDevices == null || newDevices.isEmpty()) {
 			if (oldDevices != null && !oldDevices.isEmpty()) {
 				return oldDevices.get(oldDevices.size() - 1);
@@ -439,8 +440,8 @@ public class Util {
 	}
 
 	public static DeviceInfo isNewDevice(
-			final ArrayList<DeviceInfo> newDevices,
-			final ArrayList<DeviceInfo> oldDevices, String path) {
+			final List<DeviceInfo> newDevices,
+			final List<DeviceInfo> oldDevices, String path) {
 		if (newDevices == null || newDevices.isEmpty()) {
 			return null;
 		}
@@ -588,8 +589,7 @@ public class Util {
 			return null;
 		}
 
-		File[] listFiles = file.listFiles(FileCategoryHelper.filters
-				.get(fileExts));
+		File[] listFiles = file.listFiles();
 		if (listFiles == null) {
 			return null;
 		}

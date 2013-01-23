@@ -233,47 +233,8 @@ public class FileIconLoader implements Callback {
 		return loaded;
 	}
 
-	private boolean loadCachedFileId(String path) {
-		Iterator<FileId> iterator = mPendingRequests.values().iterator();
-		while (iterator.hasNext()) {
-			FileId id = iterator.next();
-			if (id.mPath.equals(path)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public void cancelRequest(ImageView view) {
 		mPendingRequests.remove(view);
-	}
-
-	/**
-	 * Checks if the photo is present in cache. If so, sets the photo on the
-	 * view, otherwise sets the state of the photo to
-	 * {@link BitmapHolder#NEEDED}
-	 */
-	private boolean loadCachedIcon(ImageView view, String path,
-			FileCategory cate) {
-		ImageHolder holder = mImageCache.get(path);
-		if (holder == null) {
-			holder = ImageHolder.create(cate);
-			if (holder == null) {
-				return false;
-			} else {
-				mImageCache.put(path, holder);
-			}
-		} else if (holder.state == ImageHolder.LOADED) {
-			if (holder.isNull()) {
-				return true;
-			}
-			if (holder.setImageView(view)) {
-				return true;
-			}
-		}
-
-		holder.state = ImageHolder.NEEDED;
-		return false;
 	}
 
 	/**
@@ -311,6 +272,74 @@ public class FileIconLoader implements Callback {
 		}
 	}
 
+    /**
+     * Processes requests on the main thread.
+     */
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+        case MESSAGE_REQUEST_LOADING: {
+            mLoadingRequested = false;
+            if (!mPaused) {
+                if (mLoaderThread == null) {
+                    mLoaderThread = new LoaderThread();
+                    mLoaderThread.start();
+                }
+
+                mLoaderThread.requestLoading();
+            }
+            return true;
+        }
+
+        case MESSAGE_ICON_LOADED: {
+            if (!mPaused) {
+                processLoadedIcons();
+            }
+            return true;
+        }
+        }
+        return false;
+    }
+	
+    private boolean loadCachedFileId(String path) {
+        Iterator<FileId> iterator = mPendingRequests.values().iterator();
+        while (iterator.hasNext()) {
+            FileId id = iterator.next();
+            if (id.mPath.equals(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Checks if the photo is present in cache. If so, sets the photo on the
+     * view, otherwise sets the state of the photo to
+     * {@link BitmapHolder#NEEDED}
+     */
+    private boolean loadCachedIcon(ImageView view, String path,
+            FileCategory cate) {
+        ImageHolder holder = mImageCache.get(path);
+        if (holder == null) {
+            holder = ImageHolder.create(cate);
+            if (holder == null) {
+                return false;
+            } else {
+                mImageCache.put(path, holder);
+            }
+        } else if (holder.state == ImageHolder.LOADED) {
+            if (holder.isNull()) {
+                return true;
+            }
+            if (holder.setImageView(view)) {
+                return true;
+            }
+        }
+
+        holder.state = ImageHolder.NEEDED;
+        return false;
+    }
+	
 	/**
 	 * Sends a message to this thread itself to start loading images. If the
 	 * current view contains multiple image views, all of those image views will
@@ -322,35 +351,6 @@ public class FileIconLoader implements Callback {
 			mLoadingRequested = true;
 			mMainThreadHandler.sendEmptyMessage(MESSAGE_REQUEST_LOADING);
 		}
-	}
-
-	/**
-	 * Processes requests on the main thread.
-	 */
-	@Override
-	public boolean handleMessage(Message msg) {
-		switch (msg.what) {
-		case MESSAGE_REQUEST_LOADING: {
-			mLoadingRequested = false;
-			if (!mPaused) {
-				if (mLoaderThread == null) {
-					mLoaderThread = new LoaderThread();
-					mLoaderThread.start();
-				}
-
-				mLoaderThread.requestLoading();
-			}
-			return true;
-		}
-
-		case MESSAGE_ICON_LOADED: {
-			if (!mPaused) {
-				processLoadedIcons();
-			}
-			return true;
-		}
-		}
-		return false;
 	}
 
 	/**

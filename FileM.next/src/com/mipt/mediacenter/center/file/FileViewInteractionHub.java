@@ -92,13 +92,14 @@ public class FileViewInteractionHub {
 		mCurrentPath = path;
 	}
 
-	private void showProgress(String msg) {
+/*	private void showProgress(String msg) {
 		progressDialog = new ProgressDialog(mContext);
 		progressDialog.setMessage(msg);
 		progressDialog.setIndeterminate(true);
 		progressDialog.setCancelable(false);
 		progressDialog.show();
 	}
+*/	
 	public void sortCurrentList() {
 		mFileViewListener.sortCurrentList(mFileSortHelper);
 	}
@@ -112,6 +113,7 @@ public class FileViewInteractionHub {
 	private String mRoot;
 
 	public void refreshFileList() {
+	    Log.i(LOG_TAG, "refreshFileList..., no thing to execute...");
 		// onRefreshFileList returns true indicates list has changed
 		if (!mFileViewListener.onRefreshFileList(mCurrentPath, mFileSortHelper)) {
 			ToastFactory

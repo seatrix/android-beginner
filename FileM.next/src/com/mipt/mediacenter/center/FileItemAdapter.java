@@ -73,19 +73,17 @@ public class FileItemAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.cm_file_item, null);
 			holder = new ViewHolder();
-			holder.fileImage = (ImageView) convertView
-					.findViewById(R.id.file_image);
+			holder.fileImage = (ImageView) convertView.findViewById(R.id.file_image);
+			
 			holder.fileImageFrame = (ImageView) convertView
 					.findViewById(R.id.file_image_frame);
+			
 			holder.name = (TextView) convertView.findViewById(R.id.file_name);
 			holder.childCnt = (TextView) convertView
 					.findViewById(R.id.file_child_cnt);
-			holder.videoTag = (ImageView) convertView
-					.findViewById(R.id.file_video_tag);
-			holder.musicImage = (ImageView) convertView
-					.findViewById(R.id.music_image);
-			holder.dirImage = (ImageView) convertView
-					.findViewById(R.id.dir_image);
+			holder.videoTag = (ImageView) convertView.findViewById(R.id.file_video_tag);
+			holder.musicImage = (ImageView) convertView.findViewById(R.id.music_image);
+			holder.dirImage = (ImageView) convertView.findViewById(R.id.dir_image);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -100,6 +98,7 @@ public class FileItemAdapter extends BaseAdapter {
 				// holder.fileImage.setImageResource(R.drawable.empty_icon);
 			} else {
 				if (file.isDir) {
+				    Log.i(TAG, "is dir.....");
 					holder.videoTag.setVisibility(View.GONE);
 					holder.musicImage.setVisibility(View.GONE);
 					holder.fileImage.setVisibility(View.GONE);
@@ -163,7 +162,6 @@ public class FileItemAdapter extends BaseAdapter {
 	}
 
 	@Override
-	// TODO Auto-generated method stub
 	public FileInfo getItem(int position) {
 		return mList == null || mList.isEmpty() ? null : mList.get(position);
 	}
@@ -173,13 +171,4 @@ public class FileItemAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		return arg0;
 	}
-
-	private String replaceNameType(String name) {
-		int pos = name.lastIndexOf(".");
-		if (pos > 0) {
-			return name.substring(0, pos);
-		}
-		return name;
-	}
-
 }

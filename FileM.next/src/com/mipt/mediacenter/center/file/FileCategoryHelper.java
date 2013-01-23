@@ -2,6 +2,7 @@ package com.mipt.mediacenter.center.file;
 
 import java.io.FilenameFilter;
 import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
 
@@ -11,148 +12,84 @@ import android.content.Context;
  * 
  */
 public class FileCategoryHelper {
-
-	private static final String LOG_TAG = "FileCategoryHelper";
+	private static final String TAG = "FileCategoryHelper";
 
 	public enum FileCategory {
-		All, Music, Video, Picture, Custom, Other
+		Music, Video, Picture, text, apk, zip, Other
 	}
 
-	public static String[] VIDEO_EXTS = new String[] { "mp4", "wmv", "mpeg",
+	public final static String[] PICTURE_EXTS = new String[] { "jpg", "jpeg", "gif",
+	    "png", "bmp", "wbmp", "jfif", "tiff" };
+	
+	public final static String[] VIDEO_EXTS = new String[] { "mp4", "wmv", "mpeg",
 			"m4v", "3gp", "3gpp", "3g2", "3gpp2", "asf", "rm", "rmvb", "flv",
 			"swf", "f4v", "avi", "mkv", "mpg", "ts", "m2ts", "mov", "3dm",
 			"divx", "webm", "tp", "m4b", "ios", "trp" };
 
-	public static String[] PICTURE_EXTS = new String[] { "jpg", "jpeg", "gif",
-			"png", "bmp", "wbmp", "jfif", "tiff" };
-
-	public static String[] AUDIO_EXTS = new String[] { "mp3", "ogg", "wav",
+	public final static String[] AUDIO_EXTS = new String[] { "mp3", "ogg", "wav",
 			"wma", "m4a", "ape", "dts", "flac", "mp1", "mp2", "aac", "midi",
 			"mid", "mp5", "mpga", "mpa", "m4p", "amr", "m4r" };
 
-	public static HashMap<FileCategory, FilenameExtFilter> filters = new HashMap<FileCategory, FilenameExtFilter>();
+	public final static String[] ZIP_EXTS = new String[]{
+	    "zip", "rar"
+	};
+	
+	public final static String[] TEXT_EXTS = new String[]{
+        "txt"
+    };
 
-	static {
-		filters.put(FileCategory.Picture, new FilenameExtFilter(PICTURE_EXTS));
-		filters.put(FileCategory.Video, new FilenameExtFilter(VIDEO_EXTS));
-		filters.put(FileCategory.Music, new FilenameExtFilter(AUDIO_EXTS));
-
-	}
-
-	private FileCategory mCategory;
-
-	private Context mContext;
-
-	public FileCategoryHelper(Context context) {
-		mContext = context;
-		mCategory = FileCategory.All;
-	}
-
-	public FileCategory getCurCategory() {
-		return mCategory;
-	}
-
-	public void setCurCategory(FileCategory c) {
-		mCategory = c;
-	}
-
-	public void setCustomCategory(String[] exts) {
-		mCategory = FileCategory.Custom;
-		if (filters.containsKey(FileCategory.Custom)) {
-			filters.remove(FileCategory.Custom);
-		}
-
-		filters.put(FileCategory.Custom, new FilenameExtFilter(exts));
-	}
-
-	public FilenameFilter getFilter() {
-		return filters.get(mCategory);
-	}
-
-	private HashMap<FileCategory, CategoryInfo> mCategoryInfo = new HashMap<FileCategory, CategoryInfo>();
-
-	public HashMap<FileCategory, CategoryInfo> getCategoryInfos() {
+	private Map<FileCategory, CategoryInfo> mCategoryInfo = new HashMap<FileCategory, CategoryInfo>();
+	public Map<FileCategory, CategoryInfo> getCategoryInfos() {
 		return mCategoryInfo;
-	}
-
-	public CategoryInfo getCategoryInfo(FileCategory fc) {
-		if (mCategoryInfo.containsKey(fc)) {
-			return mCategoryInfo.get(fc);
-		} else {
-			CategoryInfo info = new CategoryInfo();
-			mCategoryInfo.put(fc, info);
-			return info;
-		}
 	}
 
 	public class CategoryInfo {
 		public long count;
-
 		public long size;
 	}
 
+    private FileCategory mCategory;
+
+    public FileCategory getCurCategory() {
+        return mCategory;
+    }
+
+    public void setCurCategory(FileCategory c) {
+        mCategory = c;
+    }	
+	
+    public static final Map<String, FileCategory> EXT_TO_TYPE = new HashMap<String, FileCategory>(100);
+    static{
+        for(String ext : FileCategoryHelper.PICTURE_EXTS){
+            EXT_TO_TYPE.put(ext, FileCategory.Picture);            
+        }
+        
+        for(String ext : FileCategoryHelper.VIDEO_EXTS){
+            EXT_TO_TYPE.put(ext, FileCategory.Video);            
+        }
+
+        for(String ext : FileCategoryHelper.AUDIO_EXTS){
+            EXT_TO_TYPE.put(ext, FileCategory.Music);            
+        }
+
+        for(String ext : FileCategoryHelper.TEXT_EXTS){
+            EXT_TO_TYPE.put(ext, FileCategory.text);            
+        }
+
+        for(String ext : FileCategoryHelper.ZIP_EXTS){
+            EXT_TO_TYPE.put(ext, FileCategory.zip);            
+        }
+        EXT_TO_TYPE.put("apk", FileCategory.apk);
+    }
+    
 	public static FileCategory getCategoryFromPath(String path) {
 		int dotPosition = path.lastIndexOf('.');
 		if (dotPosition == -1)
 			return FileCategory.Other;
 
 		String ext = path.substring(dotPosition + 1, path.length());
-
-		if (matchExts(ext, VIDEO_EXTS)) {
-			return FileCategory.Video;
-		}
-
-		if (matchExts(ext, PICTURE_EXTS)) {
-			return FileCategory.Picture;
-		}
-
-		if (matchExts(ext, AUDIO_EXTS)) {
-			return FileCategory.Music;
-		}
-
-		return FileCategory.Other;
+		FileCategory type = EXT_TO_TYPE.get(ext);
+		return type != null ? type : FileCategory.Other;
 	}
 
-	public static boolean matchExts(String ext, String[] exts) {
-		for (String ex : exts) {
-			if (ex.equalsIgnoreCase(ext))
-				return true;
-		}
-		return false;
-	}
-
-	public static boolean matchVideoExts(String ext) {
-		for (String ex : VIDEO_EXTS) {
-			if (ex.equalsIgnoreCase(ext))
-				return true;
-		}
-		return false;
-	}
-
-	public static boolean matchMusicExts(String ext) {
-		for (String ex : AUDIO_EXTS) {
-			if (ex.equalsIgnoreCase(ext))
-				return true;
-		}
-		return false;
-	}
-
-	public static boolean matchExts(String ext) {
-		boolean isMatch = matchVideoExts(ext);
-		if (!isMatch) {
-			isMatch = matchMusicExts(ext);
-		}
-		if (!isMatch) {
-			isMatch = matchPicExts(ext);
-		}
-		return isMatch;
-	}
-
-	public static boolean matchPicExts(String ext) {
-		for (String ex : PICTURE_EXTS) {
-			if (ex.equalsIgnoreCase(ext))
-				return true;
-		}
-		return false;
-	}
 }
