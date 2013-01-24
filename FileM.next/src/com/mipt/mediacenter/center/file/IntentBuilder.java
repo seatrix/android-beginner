@@ -10,19 +10,17 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.mipt.fileMgr.R;
-import com.mipt.fileMgr.center.MainActivity;
+import com.mipt.mediacenter.center.file.FileCategoryHelper.FileCategory;
 import com.mipt.mediacenter.center.server.FileInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.MimeUtils;
 import com.mipt.mediacenter.utils.ToastFactory;
 
 /**
- * 
  * @author fang
- * 
  */
 public class IntentBuilder {
-	private static final String LOG_TAG = "IntentBuilder";
+	private static final String TAG = "IntentBuilder";
 
 	public static void viewFile(Activity context, final FileInfo lFileInfo,
 			final ArrayList<FileInfo> files, boolean isDlan, String devId) {
@@ -40,7 +38,7 @@ public class IntentBuilder {
 				return;
 			}
 		}
-		Log.i(LOG_TAG, "-----IntentBuilder-filePath:" + filePath);
+		Log.i(TAG, "-----IntentBuilder-filePath:" + filePath);
 		final int duration = lFileInfo.duration;
 		if (lFileInfo.fileType == 0) {
 		     int dotPosition = lFileInfo.filePath.lastIndexOf('.');
@@ -53,22 +51,41 @@ public class IntentBuilder {
 		}
 
 		String appPackage = "com.mipt.mediacenter";
-		
-		if (lFileInfo.fileType == FileInfo.TYPE_PIC) {		    
+		if (lFileInfo.fileType == FileCategory.Picture.ordinal()) {		    
             doActionExternal(context, filePath, appPackage,
                     "com.mipt.mediacenter.picture.view.MainActivity", isDlan, duration,
                     title, devId);
 
-		} else if (lFileInfo.fileType == FileInfo.TYPE_VIDEO) {
+		} else if (lFileInfo.fileType == FileCategory.Video.ordinal()) {
             doActionExternal(context, filePath, appPackage,
                     "com.mipt.mediacenter.video.activity.VideoActivity", isDlan, duration,
                     title, devId);
 
-		} else if (lFileInfo.fileType == FileInfo.TYPE_MUSIC) {
+		} else if (lFileInfo.fileType == FileCategory.Music.ordinal()) {
             doActionExternal(context, filePath, appPackage,
                     "com.mipt.mediacenter.music.ui.MusicPlayerActivity", isDlan, duration,
                     title, devId);
-		}
+		}else if(lFileInfo.fileType == FileCategory.APK.ordinal()){
+		    Intent intent = new Intent();
+            intent.setClassName("com.android.packageinstaller",
+                    "com.android.packageinstaller.PackageInstallerActivity");
+            intent.setDataAndType(Uri.fromFile(new File(lFileInfo.filePath)), "application/vnd.android.package-archive");
+            context.startActivity(intent);
+		}else if(lFileInfo.fileType == FileCategory.Text.ordinal()){
+		    doAction(lFileInfo, "text/plain");
+		}else if(lFileInfo.fileType == FileCategory.ZIP.ordinal()){
+		    doAction(lFileInfo, "application/zip");
+        }else{
+            Log.i(TAG, "unknown type:" + lFileInfo.fileType);
+        }
+	}
+	
+	private static Intent doAction(FileInfo info, String mime){
+	    Intent intent = new Intent();
+	    intent.setAction(android.content.Intent.ACTION_VIEW);
+	    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	    intent.setDataAndType(Uri.fromFile(new File(info.filePath)), mime);
+	    return intent;
 	}
 
     private static void doActionExternal(Activity context, final String filePath,
@@ -77,7 +94,7 @@ public class IntentBuilder {
 
         Intent intent = new Intent();
         intent.setClassName(appPakage, classTo);
-        intent.putExtra("isLocal", true);
+        intent.putExtra("isLocal", false);
         if (isDlna) {
             intent.putExtra(MediacenterConstant.INTENT_EXTRA, filePath);
             intent.putExtra(MediacenterConstant.INTENT_EXTRA_DLAN, duration);

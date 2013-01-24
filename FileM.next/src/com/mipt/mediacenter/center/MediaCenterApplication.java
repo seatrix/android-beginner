@@ -1,12 +1,11 @@
 package com.mipt.mediacenter.center;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.mipt.mediacenter.center.server.FileInfo;
 
 import android.app.Application;
 import android.text.TextUtils;
+
+import com.mipt.mediacenter.center.server.FileInfo;
 
 
 /**
@@ -22,7 +21,7 @@ public class MediaCenterApplication extends Application {
 	}
 
 	private ArrayList<FileInfo> fileInfos;
-	private ArrayList<FileInfo> albumInfos;
+	//private ArrayList<FileInfo> albumInfos;
 
 	@Override
 	public void onCreate() {
@@ -30,18 +29,7 @@ public class MediaCenterApplication extends Application {
 		super.onCreate();
 		instance = this;
 		fileInfos = new ArrayList<FileInfo>();
-		albumInfos = new ArrayList<FileInfo>();
-	}
-
-	
-
-
-	public ArrayList<FileInfo> getAlbumData() {
-		return albumInfos;
-	}
-
-	public void resetAlbumData() {
-		albumInfos.clear();
+		//albumInfos = new ArrayList<FileInfo>();
 	}
 
 	public ArrayList<FileInfo> getData() {
@@ -141,14 +129,6 @@ public class MediaCenterApplication extends Application {
 	public void clearData() {
 		if (fileInfos != null && !fileInfos.isEmpty()) {
 			fileInfos.clear();
-		}
-	}
-	public void clearAllData() {
-		if (fileInfos != null && !fileInfos.isEmpty()) {
-			fileInfos.clear();
-		}
-		if (albumInfos != null && !albumInfos.isEmpty()) {
-			albumInfos.clear();
 		}
 	}
 }

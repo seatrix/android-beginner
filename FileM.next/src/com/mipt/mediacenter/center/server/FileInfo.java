@@ -10,14 +10,7 @@ import com.mipt.mediacenter.center.file.FileCategoryHelper.FileCategory;
  * @author fang
  * 
  */
-public class FileInfo implements Serializable {
-	public final static int TYPE_VIDEO = 1;
-	public final static int TYPE_MUSIC = 2;
-	public final static int TYPE_PIC = 3;
-	public final static int TYPE_APK = 4;
-	public final static int TYPE_ZIP = 5;
-	public final static int TYPE_OTHER = 6;
-		
+public class FileInfo implements Serializable {		
 	private static final long serialVersionUID = 1L;
 	public int fileType;
 	public String fileName;

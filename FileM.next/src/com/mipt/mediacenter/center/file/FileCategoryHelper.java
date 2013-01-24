@@ -1,10 +1,8 @@
 package com.mipt.mediacenter.center.file;
 
-import java.io.FilenameFilter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-
-import android.content.Context;
 
 /**
  * 
@@ -15,7 +13,7 @@ public class FileCategoryHelper {
 	private static final String TAG = "FileCategoryHelper";
 
 	public enum FileCategory {
-		Music, Video, Picture, text, apk, zip, Other
+		Music, Video, Picture, Text, APK, ZIP, Other
 	}
 
 	public final static String[] PICTURE_EXTS = new String[] { "jpg", "jpeg", "gif",
@@ -31,11 +29,11 @@ public class FileCategoryHelper {
 			"mid", "mp5", "mpga", "mpa", "m4p", "amr", "m4r" };
 
 	public final static String[] ZIP_EXTS = new String[]{
-	    "zip", "rar"
+	    "zip", "rar","iso", "gz","tar","bz"
 	};
 	
 	public final static String[] TEXT_EXTS = new String[]{
-        "txt"
+        "txt","ini","preperties","log","text","asc","diff","srt"
     };
 
 	private Map<FileCategory, CategoryInfo> mCategoryInfo = new HashMap<FileCategory, CategoryInfo>();
@@ -73,13 +71,13 @@ public class FileCategoryHelper {
         }
 
         for(String ext : FileCategoryHelper.TEXT_EXTS){
-            EXT_TO_TYPE.put(ext, FileCategory.text);            
+            EXT_TO_TYPE.put(ext, FileCategory.Text);            
         }
 
         for(String ext : FileCategoryHelper.ZIP_EXTS){
-            EXT_TO_TYPE.put(ext, FileCategory.zip);            
+            EXT_TO_TYPE.put(ext, FileCategory.ZIP);            
         }
-        EXT_TO_TYPE.put("apk", FileCategory.apk);
+        EXT_TO_TYPE.put("apk", FileCategory.APK);
     }
     
 	public static FileCategory getCategoryFromPath(String path) {
@@ -88,7 +86,7 @@ public class FileCategoryHelper {
 			return FileCategory.Other;
 
 		String ext = path.substring(dotPosition + 1, path.length());
-		FileCategory type = EXT_TO_TYPE.get(ext);
+		FileCategory type = EXT_TO_TYPE.get(ext.toLowerCase(Locale.ENGLISH));
 		return type != null ? type : FileCategory.Other;
 	}
 

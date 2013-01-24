@@ -10,7 +10,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.mipt.fileMgr.R;
-import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.file.GroupInfo;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;

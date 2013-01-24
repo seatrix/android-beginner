@@ -33,7 +33,7 @@ import com.mipt.mediacenter.utils.Util;
  * 
  */
 public class FavFragment extends Fragment {
-	private static final String LOG_TAG = "FavFragment";
+	private static final String TAG = "FavFragment";
 	private Activity mActivity;
 	private GridView gridViewPlay;
 	private GridView gridViewAdd;
@@ -58,7 +58,7 @@ public class FavFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mActivity = this.getActivity();
-		Log.i(LOG_TAG, "in FavFragment.oncreateView...");
+		Log.i(TAG, "in FavFragment.oncreateView...");
 		
 		rootView = inflater.inflate(R.layout.fav_list, container, false);
 		Util.setText(rootView, R.id.current_play_tag,
@@ -73,7 +73,7 @@ public class FavFragment extends Fragment {
 		di = new DatabaseImpl(mActivity);
 		dataList = di.getFiles(DatabaseIfc.RECENT_PLAY, Util.getLastTimeLong(
 				mActivity, MediacenterConstant.LAST_PLYA_TIEM), 6);
-		Log.i(LOG_TAG, "--size:" + dataList.size());
+		Log.i(TAG, "--size:" + dataList.size());
 		// ArrayList<FileInfo> list = new ArrayList<FileInfo>();
 		// list.addAll(dataList);
 		// List<FileInfo> temp = list;
@@ -204,7 +204,7 @@ public class FavFragment extends Fragment {
 				startActivity(intent);
 			} else {
 
-				Log.i(LOG_TAG, "--item click--");
+				Log.i(TAG, "--item click--");
 			}
 		}
 

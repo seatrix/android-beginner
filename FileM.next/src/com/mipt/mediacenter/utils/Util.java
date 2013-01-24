@@ -58,7 +58,7 @@ import com.mipt.mediacenter.center.server.MediacenterConstant;
  * 
  */
 public class Util {
-	private static final String LOG_TAG = "Util";
+	private static final String TAG = "Util";
 	public static final String LAST_TIME = "last_time";
 	public static final String LAST_VIEW_TYPE = "last_view";
 
@@ -77,7 +77,9 @@ public class Util {
 
 		return false;
 	}
-
+	/**
+	 * construct file path.
+	 * */
 	public static String makePath(String path1, String path2) {
 		if (path1.endsWith(File.separator)) {
 			return path1 + path2;
@@ -153,7 +155,7 @@ public class Util {
 			try {
 				return pm.getApplicationIcon(appInfo);
 			} catch (OutOfMemoryError e) {
-				Log.e(LOG_TAG, e.toString());
+				Log.e(TAG, e.toString());
 			}
 		}
 		return null;
@@ -224,7 +226,11 @@ public class Util {
 
 	// does not include sd card folder
 	private static String[] SysFileDirs = new String[] { "miren_browser/imagecaches" };
-
+	
+	/**
+	 * <li>1. do not show hidden file.
+	 * <li>2. do not show start with point file. 
+	 * */
 	public static boolean shouldShowFile(String path) {
 		return shouldShowFile(new File(path));
 	}
@@ -320,7 +326,7 @@ public class Util {
 			info.path = pathFile.getPath();
 			return info;
 		} catch (IllegalArgumentException e) {
-			Log.e(LOG_TAG, e.toString());
+			Log.e(TAG, e.toString());
 		}
 
 		return null;
@@ -565,20 +571,20 @@ public class Util {
 
 	public static ArrayList<FileInfo> getMusicFileByPath(String path) {
 		return getList(path, FileCategoryHelper.FileCategory.Music,
-				FileInfo.TYPE_MUSIC);
+		        FileCategoryHelper.FileCategory.Music.ordinal());
 
 	}
 
 	public static ArrayList<FileInfo> getVideoFileByPath(String path) {
 		return getList(path, FileCategoryHelper.FileCategory.Video,
-				FileInfo.TYPE_VIDEO);
+		        FileCategoryHelper.FileCategory.Video.ordinal());
 
 	}
 
 	public static ArrayList<FileInfo> getPicFileByPath(String path) {
 
 		return getList(path, FileCategoryHelper.FileCategory.Picture,
-				FileInfo.TYPE_PIC);
+		        FileCategoryHelper.FileCategory.Picture.ordinal());
 
 	}
 

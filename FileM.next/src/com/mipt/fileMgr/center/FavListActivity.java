@@ -25,7 +25,7 @@ import com.mipt.mediacenter.utils.Util;
  * 
  */
 public class FavListActivity extends Activity {
-	private static final String LOG_TAG = "DeviceFragment";
+	private static final String TAG = "DeviceFragment";
 	private FileIconHelper mFileIconHelper;
 	private GridView gridView;
 	private FavFragment.favAdapter adapter;
@@ -51,7 +51,7 @@ public class FavListActivity extends Activity {
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				// TODO Auto-generated method stub
-				Log.i(LOG_TAG, "--onItemSelected--");
+				Log.i(TAG, "--onItemSelected--");
 				FileInfo file = (FileInfo) arg0.getAdapter().getItem(arg2);
 				setFileInfo(file);
 			}
@@ -59,7 +59,7 @@ public class FavListActivity extends Activity {
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 				// TODO Auto-generated method stub
-				Log.i(LOG_TAG, "--onNothingSelected--");
+				Log.i(TAG, "--onNothingSelected--");
 			}
 			//
 		});

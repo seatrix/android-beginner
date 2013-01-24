@@ -23,7 +23,7 @@ import com.mipt.mediacenter.utils.ToastFactory;
  * 
  */
 public class FileViewInteractionHub {
-	private static final String LOG_TAG = "FileViewInteractionHub";
+	private static final String TAG = "FileViewInteractionHub";
 	private IFileInteractionListener mFileViewListener;
 	private FileSortHelper mFileSortHelper;
 	private ProgressDialog progressDialog;
@@ -58,7 +58,7 @@ public class FileViewInteractionHub {
 			long id) {
 		FileInfo lFileInfo = mFileViewListener.getItem(position);
 		if (lFileInfo == null) {
-			Log.e(LOG_TAG, "file does not exist on position:" + position);
+			Log.e(TAG, "file does not exist on position:" + position);
 			return;
 		}
 		if (!lFileInfo.isDir) {
@@ -91,15 +91,7 @@ public class FileViewInteractionHub {
 	public void setCurrentPath(String path) {
 		mCurrentPath = path;
 	}
-
-/*	private void showProgress(String msg) {
-		progressDialog = new ProgressDialog(mContext);
-		progressDialog.setMessage(msg);
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCancelable(false);
-		progressDialog.show();
-	}
-*/	
+	
 	public void sortCurrentList() {
 		mFileViewListener.sortCurrentList(mFileSortHelper);
 	}
@@ -113,7 +105,7 @@ public class FileViewInteractionHub {
 	private String mRoot;
 
 	public void refreshFileList() {
-	    Log.i(LOG_TAG, "refreshFileList..., no thing to execute...");
+	    Log.i(TAG, "refreshFileList..., no thing to execute...");
 		// onRefreshFileList returns true indicates list has changed
 		if (!mFileViewListener.onRefreshFileList(mCurrentPath, mFileSortHelper)) {
 			ToastFactory
@@ -123,22 +115,5 @@ public class FileViewInteractionHub {
 					.show();
 			mActivity.finish();
 		}
-	}
-
-	public boolean onBackPressed() {
-		if (!onOperationUpLevel()) {
-			return false;
-		}
-		return true;
-	}
-
-	public boolean onOperationUpLevel() {
-		if (!mCurrentPath.equals(mRoot)) {
-			mCurrentPath = new File(mCurrentPath).getParent();
-			refreshFileList();
-			return true;
-		}
-
-		return false;
 	}
 }

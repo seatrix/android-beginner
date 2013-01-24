@@ -11,7 +11,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,11 +44,9 @@ public class DirViewFragment extends Fragment implements
 	private FileItemAdapter mAdapter;
 	private ArrayList<FileInfo> mFileNameList;
 	private FileViewInteractionHub mFileViewInteractionHub;
-	//private FileCategoryHelper mFileCagetoryHelper;
 	private FileIconHelper mFileIconHelper;
 	private GridView gridView;
 	private String orginPath;
-	//private int type;
 	private TextView fileType;
 	private TextView fileName;
 	private TextView fileDate;
@@ -99,7 +96,8 @@ public class DirViewFragment extends Fragment implements
 	@Override
 	public boolean onBack() {
 		// TODO Auto-generated method stub
-		return mFileViewInteractionHub.onBackPressed();
+		//return mFileViewInteractionHub.onBackPressed();
+	    return false;
 	}
 
 	@Override
@@ -200,9 +198,6 @@ public class DirViewFragment extends Fragment implements
 		ArrayList<FileInfo> fileList = mFileNameList;
 		fileList.clear();
 		File[] listFiles = file.listFiles();
-		if (listFiles == null) {
-			return true;
-		}
 
 		for (File child : listFiles) {
 			// do not show selected file if in move state
@@ -213,7 +208,9 @@ public class DirViewFragment extends Fragment implements
 				if (lFileInfo != null) {
 					if (!lFileInfo.isDir) {
 						lFileInfo.fileType = fileInfoType;
-					}
+					}else {
+					    lFileInfo.count = (child != null && child.list() != null) ? (int)child.list().length : 0;                        
+                    }
 					fileList.add(lFileInfo);
 				}
 			}
@@ -299,8 +296,7 @@ public class DirViewFragment extends Fragment implements
 			emptyView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					onBack();
+				    getActivity().onBackPressed();
 				}
 			});
 		}
@@ -308,10 +304,10 @@ public class DirViewFragment extends Fragment implements
 	}
 
 	private final OnItemSelectedListener fileChange = new OnItemSelectedListener() {
-
 		@Override
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {		    
+				long arg3) {
+		    Log.i(TAG, "OnItemSelectedListener...");
 			if (mAdapter == null) {
 				return;
 			}
@@ -338,19 +334,7 @@ public class DirViewFragment extends Fragment implements
 		if (fi != null) {
 			currentFilePath = fi.filePath;
 			if (fi.mediaName == null) {
-			fileName.setText(fi.fileName);
-				if (fi.fileType == FileInfo.TYPE_MUSIC) {
-					getFileInfo(fi, new FileMainActivity.FileInfoCallback() {
-						@Override
-						public void fileInfoLoaded(String reallyName,
-								String filePath) {
-							if (!TextUtils.isEmpty(currentFilePath)
-									&& filePath.equals(currentFilePath)) {
-								fileName.setText(reallyName);
-							}
-						}
-					});
-				}
+			    fileName.setText(fi.fileName);
 			} else {
 				fileName.setText(fi.mediaName);
 			}
@@ -410,7 +394,6 @@ public class DirViewFragment extends Fragment implements
 					setFileInfo(pos, mAdapter.getCount(), mAdapter.getItem(pos));
 				}
 				break;
-
 			}
 		}
 	};
@@ -420,32 +403,5 @@ public class DirViewFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		mFileIconHelper.stopLoad();
-	}
-
-	String getFileInfo(final FileInfo fi,
-			final FileMainActivity.FileInfoCallback fileInfoCallback) {
-		final Handler handler = new Handler() {
-			@Override
-			public void handleMessage(Message message) {
-				fileInfoCallback.fileInfoLoaded((String) message.obj,
-						fi.filePath);
-			}
-		};
-		new Thread() {
-			@Override
-			public void run() {
-				if (fi.fileType == FileInfo.TYPE_MUSIC) {
-					Util.getMusicInfo(fi);
-				} else if (fi.fileType == FileInfo.TYPE_VIDEO) {
-					Util.getVideoInfo(fi);
-				}
-				if (TextUtils.isEmpty(fi.mediaName)) {
-					fi.mediaName = fi.fileName;
-				}
-				Message message = handler.obtainMessage(0, fi.mediaName);
-				handler.sendMessage(message);
-			}
-		}.start();
-		return fi.mediaName;
 	}
 }

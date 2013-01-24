@@ -19,11 +19,6 @@
     <string name="artist_view_type">艺术家视图</string>
     <string name="cm_dlan_desc">播放可能会不稳定,具体取决于网络连接状态</string>
     <string name="cm_dlan_title">连接到共享设备</string>
-        <!-- 
-    <string name="title_activity_main">MainActivity</string>
-    <string name="tab_audio">audio</string>
-     <string name="tab_video">video</string>
-     -->
     <string name="category_all">all</string>
     <string name="category_music">music</string>
    <string name="enable_sd_card">enable_sd_card</string>
@@ -47,6 +42,6 @@
     <string name="up_file">上级文件夹</string>
     <string name="confirm">确定</string>
     <string name="cancle">取消</string>
-    <string name="cm_data_loading">数据正在加载中</string>  
-   
+    <string name="cm_data_loading">数据正在加载中</string>
+    
 </resources>
