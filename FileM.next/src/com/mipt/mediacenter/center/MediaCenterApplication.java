@@ -9,9 +9,9 @@ import com.mipt.mediacenter.center.server.FileInfo;
 
 
 /**
- * 
  * @author fang
- * 
+ * @version $Id: 2013-01-21 09:26:01Z slieer $ 
+ *
  */
 public class MediaCenterApplication extends Application {
 	private static MediaCenterApplication instance;

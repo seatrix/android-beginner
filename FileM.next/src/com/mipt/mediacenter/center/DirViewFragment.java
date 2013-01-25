@@ -33,7 +33,8 @@ import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.Util;
 /**
  * @author fang
- * 
+ * @version $Id: 2013-01-21 09:26:01Z slieer $ 
+ *
  */
 public class DirViewFragment extends Fragment implements
 		IFileInteractionListener, FileMainActivity.IBackPressedListener,
@@ -95,9 +96,7 @@ public class DirViewFragment extends Fragment implements
 
 	@Override
 	public boolean onBack() {
-		// TODO Auto-generated method stub
-		//return mFileViewInteractionHub.onBackPressed();
-	    return false;
+	    return mFileViewInteractionHub.onBackPressed();
 	}
 
 	@Override

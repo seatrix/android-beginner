@@ -1,7 +1,6 @@
 package com.mipt.fileMgr.center;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 import android.app.Activity;
@@ -11,9 +10,6 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -37,7 +33,6 @@ import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.FileInfo;
 import com.mipt.mediacenter.center.server.FileSortHelper;
-import com.mipt.mediacenter.center.server.FileSortHelper.SortMethod;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.ActivitiesManager;
 import com.mipt.mediacenter.utils.Util;
@@ -54,8 +49,8 @@ public class FileMainActivity extends Activity {
     //private ArrayList<FileInfo> dataList;
     //private Context cxt;
     //private LinearLayout progressBar;
-    private String[] tyeStr;
     //private boolean isCheck;
+    private String[] tyeStr;
     private FileSortHelper fsortHelper;
     private TextView currentPath;
     private TextView viewTypeTag;
@@ -181,8 +176,12 @@ public class FileMainActivity extends Activity {
     }
 
     @Override
-    public void onBackPressed() {        
-        super.onBackPressed();
+    public void onBackPressed() {
+        IBackPressedListener backPressedListener = (IBackPressedListener) getFragmentManager()
+                .findFragmentById(R.id.file_content);
+        if (backPressedListener != null && !backPressedListener.onBack()) {
+            super.onBackPressed();
+        }        
     }
     
     @Override

@@ -3,7 +3,6 @@ package com.mipt.mediacenter.center.file;
 import java.io.File;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -18,42 +17,21 @@ import com.mipt.mediacenter.center.server.IFileInteractionListener;
 import com.mipt.mediacenter.utils.ToastFactory;
 
 /**
- * 
  * @author fang
- * 
+ * @version $Id: 2013-01-21 09:26:01Z slieer $ 
+ *
  */
 public class FileViewInteractionHub {
 	private static final String TAG = "FileViewInteractionHub";
 	private IFileInteractionListener mFileViewListener;
 	private FileSortHelper mFileSortHelper;
-	private ProgressDialog progressDialog;
 	private Context mContext;
 	private Activity mActivity;
 	private int backPost = 0;
-
-	public int getBackPost() {
-		return backPost;
-	}
-
-	public String getRootPath() {
-		return mRoot;
-	}
-
+	private String mCurrentPath;
+	private String mRoot;
 	private GridView mFileListView;
-
-	private void setupFileListView() {
-		mFileListView = (GridView) mFileViewListener
-				.getViewById(R.id.file_content);
-		mFileListView.setLongClickable(true);
-		mFileListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				onListItemClick(parent, view, position, id);
-			}
-		});
-	}
-
+	
 	public void onListItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		FileInfo lFileInfo = mFileViewListener.getItem(position);
@@ -63,15 +41,11 @@ public class FileViewInteractionHub {
 		}
 		if (!lFileInfo.isDir) {
 			IntentBuilder.viewFile(mActivity, lFileInfo, null, false, null);
-			return;
+		}else{		    
+		    mCurrentPath = getAbsoluteName(mCurrentPath, lFileInfo.fileName);
+		    refreshFileList();
+		    backPost = position;		    
 		}
-		mCurrentPath = getAbsoluteName(mCurrentPath, lFileInfo.fileName);
-		refreshFileList();
-		backPost = position;
-	}
-
-	private String getAbsoluteName(String path, String name) {
-		return path.equals("/") ? path + name : path + File.separator + name;
 	}
 
 	public FileViewInteractionHub(IFileInteractionListener fileViewListener) {
@@ -83,37 +57,64 @@ public class FileViewInteractionHub {
 		setupFileListView();
 	}
 
-	public void setRootPath(String path) {
-		mRoot = path;
-		mCurrentPath = path;
-	}
-
-	public void setCurrentPath(String path) {
-		mCurrentPath = path;
-	}
-	
 	public void sortCurrentList() {
 		mFileViewListener.sortCurrentList(mFileSortHelper);
 	}
 
-	public FileInfo getItem(int pos) {
-		return mFileViewListener.getItem(pos);
-	}
-
-	private String mCurrentPath;
-
-	private String mRoot;
-
 	public void refreshFileList() {
 	    Log.i(TAG, "refreshFileList..., no thing to execute...");
 		// onRefreshFileList returns true indicates list has changed
-		if (!mFileViewListener.onRefreshFileList(mCurrentPath, mFileSortHelper)) {
-			ToastFactory
-					.getInstance()
-					.getToast(mContext,
+	    boolean refreshSuccess = mFileViewListener.onRefreshFileList(mCurrentPath, mFileSortHelper);
+		if (!refreshSuccess) {
+		    ToastFactory factory = ToastFactory.getInstance();
+		    factory.getToast(mContext,
 							mContext.getString(R.string.current_sd_remove))
 					.show();
 			mActivity.finish();
 		}
 	}
+	
+    public boolean onBackPressed() {
+        if (!mCurrentPath.equals(mRoot)) {
+            mCurrentPath = new File(mCurrentPath).getParent();
+            refreshFileList();
+            return true;
+        }
+
+        return false;
+    }
+
+    public void setRootPath(String path) {
+        mRoot = path;
+        mCurrentPath = path;
+    }
+
+    public void setCurrentPath(String path) {
+        mCurrentPath = path;
+    }
+    
+    public int getBackPost() {
+        return backPost;
+    }
+
+    public String getRootPath() {
+        return mRoot;
+    }
+    
+    private String getAbsoluteName(String path, String name) {
+        return path.equals("/") ? path + name : path + File.separator + name;
+    }
+    
+    private void setupFileListView() {
+        mFileListView = (GridView) mFileViewListener
+                .getViewById(R.id.file_content);
+        mFileListView.setLongClickable(true);
+        mFileListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                    int position, long id) {
+                onListItemClick(parent, view, position, id);
+            }
+        });
+    }    
 }

@@ -3,8 +3,6 @@ package com.mipt.fileMgr.center;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cybergarage.upnp.Device;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -31,7 +29,7 @@ import com.mipt.mediacenter.utils.Util.SDCardInfo;
 /**
  * 
  * @author fang
- * 
+ * @version $Id: 2013-01-24 17:26:01Z slieer $ 
  */
 public class MainActivity extends Activity {
 	public static final String TAG = "MainActivity";
@@ -228,22 +226,6 @@ public class MainActivity extends Activity {
 		oldDeviceInfos.clear();
 		oldDeviceInfos.addAll(deviceInfos);
 		return (ArrayList<DeviceInfo>)deviceInfos;
-	}
-
-	private ArrayList<DeviceInfo> cover2DLANDevice(List<Device> devices) {
-		ArrayList<DeviceInfo> temp = new ArrayList<DeviceInfo>();
-		if (devices != null && !devices.isEmpty()) {
-			for (Device d : devices) {
-				DeviceInfo di = new DeviceInfo();
-				di.devId = d.getUDN();
-				di.devName = d.getFriendlyName();
-				di.isLive = true;
-				di.type = DeviceInfo.TYPE_DLAN;
-				di.resId = R.drawable.cm_dlan_tag;
-				temp.add(di);
-			}
-		}
-		return temp;
 	}
 
 	private boolean isHasTypeDevice(int type, List<DeviceInfo> deviceInfos) {
