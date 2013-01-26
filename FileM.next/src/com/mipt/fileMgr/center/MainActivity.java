@@ -16,7 +16,6 @@ import android.view.Window;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.DeviceFragment;
-import com.mipt.mediacenter.center.FavFragment;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.ActivitiesManager;
@@ -73,12 +72,12 @@ public class MainActivity extends Activity {
         Log.i(TAG, "addFragmentToStack...createNew:" + createNew + ",isFav:" + isFav);
 		if (isFav) {
 		    //Log.i(TAG, "loading FavFragment...isFav is" + isFav);
-			FragmentTransaction ft = getFragmentManager().beginTransaction();
+/*			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			Fragment newFragment = FavFragment.newInstance();
 			ft.replace(R.id.tabcontent, newFragment);
 			ft.commitAllowingStateLoss();
 			createNew = true;
-		} else {
+*/		} else {
 			if (createNew) {
 			    Log.i(TAG, "devs:" + devs);
 			    

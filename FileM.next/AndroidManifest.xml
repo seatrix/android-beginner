@@ -34,11 +34,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
+        <!-- 
+         <activity
             android:name=".center.FavListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="landscape" >
         </activity>
+         -->
         <activity
             android:name=".center.FileMainActivity"
             android:launchMode="singleTask"

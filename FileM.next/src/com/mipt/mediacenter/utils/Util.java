@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
@@ -39,7 +40,6 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.MediaStore.Video;
-import android.provider.MediaStore.Audio.AudioColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -200,7 +200,7 @@ public class Util {
 			return "*/*";
 
 		String ext = filePath.substring(dotPosition + 1, filePath.length())
-				.toLowerCase();
+				.toLowerCase(Locale.ENGLISH);
 
 		return ext;
 	}
@@ -211,7 +211,7 @@ public class Util {
 			return "*/*";
 
 		String ext = filePath.substring(dotPosition + 1, filePath.length())
-				.toUpperCase();
+				.toUpperCase(Locale.ENGLISH);
 
 		return ext;
 	}
@@ -385,28 +385,12 @@ public class Util {
 		return lastCheck;
 	}
 
-	private static boolean isHasByPath(String path,
-			final ArrayList<FileInfo> list) {
-		boolean isHas = false;
-		if (path == null || "".equals(path.trim()) || list == null
-				|| list.isEmpty()) {
-			return isHas;
-		}
-		for (FileInfo fi : list) {
-			if (path.equals(fi.filePath)) {
-				isHas = true;
-				break;
-			}
-		}
-		return isHas;
-	}
-
 	public static void closeStream(Closeable stream) {
 		if (stream != null) {
 			try {
 				stream.close();
 			} catch (IOException e) {
-
+			    Log.e(TAG, e.getMessage(), e);
 			}
 		}
 	}
@@ -1109,70 +1093,7 @@ public class Util {
 		}
 		return "UTF-8";
 	}
-	public static FileInfo getMusicInfo(FileInfo _fi) {
-		if (_fi.filePath == null) {
-			return null;
-		}
-		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-		try {
-			mmr.setDataSource(_fi.filePath);
-		} catch (Exception e) {
-			mmr.release();
-			return null;
-		}
-		_fi.mediaName = mmr
-				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-		String str = mmr
-				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-		if (!TextUtils.isEmpty(str)) {
-			_fi.duration = Integer.valueOf(str);
-		}
-		_fi.albumName = mmr
-				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-		_fi.artist = mmr
-				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-		_fi.mediaName = Util.converString(_fi.mediaName);
-		_fi.albumName = Util.converString(_fi.albumName);
-		_fi.artist = Util.converString(_fi.artist);
-		String gener = mmr
-				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
-		if (!TextUtils.isEmpty(gener)) {
-			gener = gener.replace("(", "").replace(")", "").replace("[", "")
-					.replace("]", "");
-			if (Util.isNumeric(gener)) {
-				int pos = Integer.parseInt(gener);
-				if (pos < ID3_GENRES.length) {
-					_fi.genreName = ID3_GENRES[Integer.parseInt(gener)];
-				}
-			} else {
-				_fi.genreName = gener;
-			}
-		}
-		mmr.release();
-		return _fi;
-	}
-	public static FileInfo getVideoInfo(FileInfo _fi) {
-		if (_fi.filePath == null) {
-			return null;
-		}
-		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-		try {
-			mmr.setDataSource(_fi.filePath);
-			_fi.mediaName = mmr
-					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-			_fi.mediaName = Util.converString(_fi.mediaName);
-			String str = mmr
-					.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-			if (!TextUtils.isEmpty(str)) {
-				_fi.duration = Integer.valueOf(str);
-			}
-		} catch (Exception e) {
-			return _fi;
-		} finally {
-			mmr.release();
-		}
-		return _fi;
-	}
+
 	private static final String[] ID3_GENRES = {
 			"Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk",
 			"Grunge", "Hip-Hop", "Jazz", "Metal", "New Age", "Oldies", "Other",

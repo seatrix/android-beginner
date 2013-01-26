@@ -3,15 +3,9 @@ package com.mipt.fileMgr.center;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -30,7 +24,7 @@ import com.mipt.mediacenter.utils.ActivitiesManager;
  */
 public class FindDeviceActivity extends Activity {
 	private FindDeviceDialog fDialog;
-	private String[] deviceStr;
+	//private String[] deviceStr;
 	private Context cxt;
 	private ExitDialog pullDevice;
 	private DeviceInfo currentInfo;
@@ -46,10 +40,10 @@ public class FindDeviceActivity extends Activity {
 		type = intent.getIntExtra("method", 0);
 		currentInfo = (DeviceInfo) intent.getSerializableExtra("device");
 		removeDevice = (DeviceInfo) intent.getSerializableExtra("removedevice");
-		deviceStr = new String[] { this.getString(R.string.category_video),
+/*		deviceStr = new String[] { this.getString(R.string.category_video),
 				this.getString(R.string.category_music),
 				this.getString(R.string.category_picture) };
-		ActivitiesManager.getInstance().registerActivity(
+*/		ActivitiesManager.getInstance().registerActivity(
 				ActivitiesManager.ACTIVITY_POP_VIEW, this);
 		doAction();
 	}
@@ -230,16 +224,6 @@ public class FindDeviceActivity extends Activity {
 			devName = _devName;
 			title.setText(getString(R.string.cm_pop_title) + devName);
 		}
-	}
-
-	private int getTpyeByName(String name) {
-		int type = MediacenterConstant.IntentFlags.PIC_ID;
-		if (name.equals(getString(R.string.category_music))) {
-			type = MediacenterConstant.IntentFlags.MUSIC_ID;
-		} else if (name.equals(getString(R.string.category_video))) {
-			type = MediacenterConstant.IntentFlags.VIDEO_ID;
-		}
-		return type;
 	}
 
 	@Override

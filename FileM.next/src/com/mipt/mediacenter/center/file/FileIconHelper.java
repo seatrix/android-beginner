@@ -12,9 +12,8 @@ import com.mipt.mediacenter.center.file.FileIconLoader.IconLoadFinishListener;
 import com.mipt.mediacenter.center.server.FileInfo;
 
 /**
- * 
  * @author fang
- * 
+ * @version $Id: 2013-01-21 09:26:01Z slieer $
  */
 public class FileIconHelper implements IconLoadFinishListener {
 

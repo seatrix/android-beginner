@@ -11,4 +11,15 @@
         <item>排序方式切换</item>
         <item>文件操作</item>
     </string-array>
+<!-- 
+    <string-array name="file_menu_items">
+        <item>排序方式</item>
+        <item>收藏</item>
+        <item>选择文件</item>
+        <item>复制</item>
+        <item>删除</item>
+        <item>返回</item>
+    </string-array>
+ -->    
+    
 </resources>

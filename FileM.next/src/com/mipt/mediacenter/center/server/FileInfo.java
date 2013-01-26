@@ -43,35 +43,15 @@ public class FileInfo implements Serializable {
 
 	public String albumName; // for music
 
-	public String mediaName;
-	public String artist;// for music
-
-	public int duration;// for music video
-
-	public String genreName; // for music
-
 	public ArrayList<FileInfo> childs;
 
-	// @Override
-	// public boolean equals(Object object) {
-	// // TODO: Warning - this method won't work in the case the componentId
-	// // fields are not set
-	// if (!(object instanceof FileInfo)) {
-	// return false;
-	// }
-	// FileInfo other = (FileInfo) object;
-	// if ((this.filePath == null && other.filePath != null)
-	// || (this.filePath != null && !this.filePath
-	// .equals(other.filePath))) {
-	// return false;
-	// }
-	// return true;
-	// }
-	//
-	// @Override
-	// public int hashCode() {
-	// int hash = 0;
-	// hash += (filePath != null ? filePath.hashCode() : 0);
-	// return hash;
-	// }
+    @Override
+    public String toString() {
+        return "FileInfo [fileType=" + fileType + ", fileName=" + fileName + ", fileId=" + fileId
+                + ", filePath=" + filePath + ", fileSize=" + fileSize + ", isDir=" + isDir
+                + ", count=" + count + ", modifiedDate=" + modifiedDate + ", isHidden=" + isHidden
+                + ", dbId=" + dbId + ", imgPath=" + imgPath + ", mCategory=" + mCategory
+                + ", extra=" + extra + ", selected=" + selected + ", albumName=" + albumName
+                + ", childs=" + (childs !=null ? childs.size() : 0) + "]";
+    }
 }

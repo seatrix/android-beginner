@@ -1,7 +1,9 @@
 package com.mipt.mediacenter.center;
 
 import java.io.File;
+import java.lang.ref.FinalizerReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -17,8 +19,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -91,6 +97,12 @@ public class DirViewFragment extends Fragment implements
 		mFileViewInteractionHub.refreshFileList();
 		gridView.setOnItemSelectedListener(fileChange);
 		gridView.requestFocus();
+		
+        //ListView rightMenu = (ListView)mRootView.findViewById(R.id.function_menu);
+        //String[] menuItem = getResources().getStringArray(R.array.file_menu_items);
+        //Log.i(TAG, Arrays.asList(menuItem).toString() + ",rightMenu:" + rightMenu);
+        //rightMenu.setAdapter(new RightMenuList(mActivity, R.id.file_op_item, menuItem));
+        //rightMenu.setOnItemClickListener(new RightMenu(menuItem));
 		return mRootView;
 	}
 
@@ -228,6 +240,38 @@ public class DirViewFragment extends Fragment implements
 		return mFileNameList.size();
 	}
 
+    @Override
+    public void dataChange() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setBackPos(final int pos, final String path) {
+        // TODO Auto-generated method stub
+        Util.runOnUiThread(mActivity, new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                gridView.setSelection(pos);
+            }
+        });
+    }
+
+    @Override
+    public Activity getmActivity() {
+        // TODO Auto-generated method stub
+        return mActivity;
+    }
+
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        mFileIconHelper.stopLoad();
+    }	
+	    
 	private ArrayList<PathScrollPositionItem> mScrollPositionList = new ArrayList<PathScrollPositionItem>();
 	private String mPreviousPath;
 
@@ -241,7 +285,7 @@ public class DirViewFragment extends Fragment implements
 		}
 	}
 
-	// execute before change, return the memorized scroll position
+    // execute before change, return the memorized scroll position
 	private int computeScrollPosition(String path) {
 		int pos = 0;
 		if (mPreviousPath != null) {
@@ -324,7 +368,7 @@ public class DirViewFragment extends Fragment implements
 
 	};
 
-	void setFileInfo(int pos, int size, FileInfo fi) {
+	private void setFileInfo(int pos, int size, FileInfo fi) {
 		if (size == 0) {
 			mActivity.resetCurrentNum();
 		} else {
@@ -332,11 +376,7 @@ public class DirViewFragment extends Fragment implements
 		}
 		if (fi != null) {
 			currentFilePath = fi.filePath;
-			if (fi.mediaName == null) {
-			    fileName.setText(fi.fileName);
-			} else {
-				fileName.setText(fi.mediaName);
-			}
+			fileName.setText(fi.fileName);
 			if (!fi.isDir) {
 				fileType.setVisibility(View.VISIBLE);
 				fileType.setText(Util.getTypeUpperCase(fi.filePath));
@@ -356,33 +396,8 @@ public class DirViewFragment extends Fragment implements
 		}
 
 	}
-
-	@Override
-	public void dataChange() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setBackPos(final int pos, final String path) {
-		// TODO Auto-generated method stub
-		Util.runOnUiThread(mActivity, new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				gridView.setSelection(pos);
-			}
-		});
-	}
-
-	@Override
-	public Activity getmActivity() {
-		// TODO Auto-generated method stub
-		return mActivity;
-	}
-
-	static final int MESSAGE_SETINFO = 111;
+	
+	private static final int MESSAGE_SETINFO = 111;
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -396,11 +411,4 @@ public class DirViewFragment extends Fragment implements
 			}
 		}
 	};
-
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		mFileIconHelper.stopLoad();
-	}
 }

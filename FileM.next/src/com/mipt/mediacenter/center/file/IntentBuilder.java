@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
@@ -39,7 +40,7 @@ public class IntentBuilder {
 			}
 		}
 		Log.i(TAG, "-----IntentBuilder-filePath:" + filePath);
-		final int duration = lFileInfo.duration;
+		//final int duration = lFileInfo.duration;
 		if (lFileInfo.fileType == 0) {
 		     int dotPosition = lFileInfo.filePath.lastIndexOf('.');
 		     if (dotPosition == -1)
@@ -53,43 +54,46 @@ public class IntentBuilder {
 		String appPackage = "com.mipt.mediacenter";
 		if (lFileInfo.fileType == FileCategory.Picture.ordinal()) {		    
             doActionExternal(context, filePath, appPackage,
-                    "com.mipt.mediacenter.picture.view.MainActivity", isDlan, duration,
+                    "com.mipt.mediacenter.picture.view.MainActivity", isDlan,
                     title, devId);
 
 		} else if (lFileInfo.fileType == FileCategory.Video.ordinal()) {
             doActionExternal(context, filePath, appPackage,
-                    "com.mipt.mediacenter.video.activity.VideoActivity", isDlan, duration,
+                    "com.mipt.mediacenter.video.activity.VideoActivity", isDlan,
                     title, devId);
 
 		} else if (lFileInfo.fileType == FileCategory.Music.ordinal()) {
             doActionExternal(context, filePath, appPackage,
-                    "com.mipt.mediacenter.music.ui.MusicPlayerActivity", isDlan, duration,
+                    "com.mipt.mediacenter.music.ui.MusicPlayerActivity", isDlan,
                     title, devId);
 		}else if(lFileInfo.fileType == FileCategory.APK.ordinal()){
+		    Log.i(TAG, "open text file, path:" + lFileInfo);
 		    Intent intent = new Intent();
             intent.setClassName("com.android.packageinstaller",
                     "com.android.packageinstaller.PackageInstallerActivity");
             intent.setDataAndType(Uri.fromFile(new File(lFileInfo.filePath)), "application/vnd.android.package-archive");
             context.startActivity(intent);
 		}else if(lFileInfo.fileType == FileCategory.Text.ordinal()){
-		    doAction(lFileInfo, "text/plain");
+		    Log.i(TAG, "open text file, path:" + lFileInfo);
+		    doAction(context, lFileInfo, "text/plain");
 		}else if(lFileInfo.fileType == FileCategory.ZIP.ordinal()){
-		    doAction(lFileInfo, "application/zip");
+		    Log.i(TAG, "open text file, path:" + lFileInfo);
+		    doAction(context, lFileInfo, "application/zip");
         }else{
             Log.i(TAG, "unknown type:" + lFileInfo.fileType);
         }
 	}
 	
-	private static Intent doAction(FileInfo info, String mime){
+	private static void doAction(Context context, FileInfo info, String mime){
 	    Intent intent = new Intent();
 	    intent.setAction(android.content.Intent.ACTION_VIEW);
 	    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    intent.setDataAndType(Uri.fromFile(new File(info.filePath)), mime);
-	    return intent;
+	    context.startActivity(intent);
 	}
 
     private static void doActionExternal(Activity context, final String filePath,
-            final String appPakage, final String classTo, final boolean isDlna, final int duration,
+            final String appPakage, final String classTo, final boolean isDlna,
             final String title, String devId) {
 
         Intent intent = new Intent();
@@ -97,7 +101,7 @@ public class IntentBuilder {
         intent.putExtra("isLocal", false);
         if (isDlna) {
             intent.putExtra(MediacenterConstant.INTENT_EXTRA, filePath);
-            intent.putExtra(MediacenterConstant.INTENT_EXTRA_DLAN, duration);
+            //intent.putExtra(MediacenterConstant.INTENT_EXTRA_DLAN, duration);
             intent.putExtra("title", title);
             intent.putExtra("devId", devId);
         } else {
@@ -145,7 +149,7 @@ public class IntentBuilder {
 			return "*/*";
 
 		String ext = filePath.substring(dotPosition + 1, filePath.length())
-				.toLowerCase();
+				.toLowerCase(Locale.ENGLISH);
 		String mimeType = MimeUtils.guessMimeTypeFromExtension(ext);
 		if (ext.equals("mtz")) {
 			mimeType = "application/miui-mtz";

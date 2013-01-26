@@ -1,6 +1,7 @@
 package com.mipt.fileMgr.center;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 import android.app.Activity;
@@ -17,10 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -46,10 +47,6 @@ public class FileMainActivity extends Activity {
     private static final String DATA_BUNDEL = "data_bundel";
     private int viewType;
     private DeviceInfo dInfo;
-    //private ArrayList<FileInfo> dataList;
-    //private Context cxt;
-    //private LinearLayout progressBar;
-    //private boolean isCheck;
     private String[] tyeStr;
     private FileSortHelper fsortHelper;
     private TextView currentPath;
@@ -60,7 +57,7 @@ public class FileMainActivity extends Activity {
     private LinearLayout menuLayout;
     private FrameLayout mmLayout;
     private String[] menuListItem;
-    private boolean menuShow = false;
+    //private boolean menuShow = false;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,9 +77,6 @@ public class FileMainActivity extends Activity {
                     MediacenterConstant.INTENT_EXTRA);
         }
         fsortHelper = FileSortHelper.getInstance();
-        //dataList = MediaCenterApplication.getInstance().getData();
-        //albumList = MediaCenterApplication.getInstance().getAlbumData();
-        //progressBar = (LinearLayout) findViewById(R.id.cm_progress_small);
         ActivitiesManager.getInstance().registerActivity(
                 ActivitiesManager.ACTIVITY_FILE_VIEW, this);
         
@@ -93,13 +87,13 @@ public class FileMainActivity extends Activity {
         addFragmentToStack(-1, dInfo);
 
         //add right menu
-        menuListItem = getResources().getStringArray(R.array.items_fm);
-        LayoutInflater mInflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-        mmLayout = (FrameLayout) mInflater.inflate(R.layout.pp_menu_layout,
-                menuLayout);        
-        ListView menuList = (ListView) mmLayout.findViewById(R.id.menuList);
-        menuList.setAdapter(new ToolAdapter(this, R.id.tool_name, menuListItem));
-        menuLayout = (LinearLayout)findViewById(R.id.menu_layout);
+        //menuListItem = getResources().getStringArray(R.array.items_fm);
+        //LayoutInflater mInflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        //mmLayout = (FrameLayout) mInflater.inflate(R.layout.pp_menu_layout, menuLayout);        
+        //ListView menuList = (ListView) mmLayout.findViewById(R.id.menuList);
+        //menuList.setAdapter(new ToolAdapter(this, R.id.tool_name, menuListItem));
+        //menuLayout = (LinearLayout)findViewById(R.id.menu_layout);
+        //showMenu();
     }
 
     @Override
@@ -139,28 +133,6 @@ public class FileMainActivity extends Activity {
         super.onResume();
     }
     
-    private void addFragmentToStack(int _viewTpe, DeviceInfo _dInfo) {
-        MediaCenterApplication.getInstance().resetData();
-        Fragment fg = getFragmentManager().findFragmentById(R.id.file_content);
-        if (fg != null) {
-            fg.onDetach();
-        }
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment newFragment = null;
-        if(_dInfo.type == DeviceInfo.TYPE_LOCAL || _dInfo.type == DeviceInfo.TYPE_USB) {
-            currentPath.setText(Util.handlePath(dInfo.devPath));
-
-            Log.i(TAG, "view local  file info....");
-            viewTypeTag.setText(getString(R.string.all_file_view_type));
-            newFragment = DirViewFragment.newInstance(_dInfo.devPath, _dInfo.type);
-        }else{
-            //smb
-            //......
-        }
-        ft.replace(R.id.file_content, newFragment);
-        ft.commit();        
-    }
-
     public interface IBackPressedListener {
         boolean onBack();
     }
@@ -194,7 +166,6 @@ public class FileMainActivity extends Activity {
             case KeyEvent.KEYCODE_DPAD_RIGHT:
                 break;
             case KeyEvent.KEYCODE_MENU:
-                showMenu();
                 break;
             case KeyEvent.KEYCODE_BACK:
                 break;
@@ -209,24 +180,8 @@ public class FileMainActivity extends Activity {
         ActivitiesManager.getInstance().unRegisterActivity(
                 ActivitiesManager.ACTIVITY_FILE_VIEW);
     }
-    
-    private void showMenu() {        
-        Log.i(TAG, "showMenu");
-        if (menuShow) {
-            hideMenu(true);
-            return;
-        }
-        mmLayout.setAnimation(AnimationUtils.loadAnimation(this,
-                R.anim.vp_menu_in));
         
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT);
-        menuLayout.addView(mmLayout, layoutParams);
-        menuLayout.requestFocus();
-        menuShow = true;
-    }
-    
-    private void hideMenu(boolean isAnimation) {
+/*    private void hideMenu(boolean isAnimation) {
         Log.i(TAG, "hideMenu");
         if (!menuShow) {
             return;
@@ -260,7 +215,7 @@ public class FileMainActivity extends Activity {
             return convertView;
         }
     }
-    
+*/    
     class MenuOnItemClickListener implements OnItemClickListener{
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -343,13 +298,6 @@ public class FileMainActivity extends Activity {
         }
     }
 
-/*    static final int MESSAGE_SCAN_BEGIN = 101;
-    static final int MESSAGE_SCAN_END = 102;
-    static final int MESSAGE_SCAN_END_NO_DATA = 103;
-    static final int MESSAGE_CHANGE_DATA = 104;
-    static final int MESSAGE_SET_POS = 105;
-*/    // boolean isCheck = true;
-
     public ArrayList<FileInfo> handleTreeList(ArrayList<FileInfo> _orginList,
             Comparator<FileInfo> comparator) {
         ArrayList<FileInfo> orginList = new ArrayList<FileInfo>();
@@ -380,6 +328,64 @@ public class FileMainActivity extends Activity {
         return returnList;
     }
 
+    @Override
+    public void onLowMemory() {
+        // TODO Auto-generated method stub
+        super.onLowMemory();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        Log.i(TAG,
+                "0000onActivityResult00000000000000000000000000requestCode:"
+                        + requestCode + ",resultCode:" + resultCode);
+        if (requestCode == MediacenterConstant.ACTIVITYR_RESULT_CODE) {
+        }
+    }
+
+    public void resetCurrentNum() {
+        currentNum.setText("0/0");
+    }
+    public void setCurrentNum(String num) {
+        currentNum.setText(num);
+    }
+    public void setCurrentPath(String path) {
+        currentPath.setText(path);
+    }
+    
+    private void addFragmentToStack(int _viewTpe, DeviceInfo _dInfo) {
+        MediaCenterApplication.getInstance().resetData();
+        Fragment fg = getFragmentManager().findFragmentById(R.id.file_content);
+        if (fg != null) {
+            fg.onDetach();
+        }
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment newFragment = null;
+        if(_dInfo.type == DeviceInfo.TYPE_LOCAL || _dInfo.type == DeviceInfo.TYPE_USB) {
+            currentPath.setText(Util.handlePath(dInfo.devPath));
+
+            Log.i(TAG, "view local  file info....");
+            viewTypeTag.setText(getString(R.string.all_file_view_type));
+            newFragment = DirViewFragment.newInstance(_dInfo.devPath, _dInfo.type);
+        }else{
+            //smb
+            //......
+        }
+        ft.replace(R.id.file_content, newFragment);
+        ft.commit();        
+    }
+
+    private void showMenu() {        
+        Log.i(TAG, "show right operate Menu.");
+        //mmLayout.setAnimation(AnimationUtils.loadAnimation(this, R.anim.vp_menu_in));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT);
+        menuLayout.addView(mmLayout, layoutParams);
+        menuLayout.requestFocus();
+        //menuShow = true;
+    }
+    
     private boolean isHas(String name, ArrayList<FileInfo> list) {
         boolean isHas = false;
         if (name == null || "".equals(name.trim()) || list == null
@@ -428,31 +434,5 @@ public class FileMainActivity extends Activity {
         return selectPath;
     }
     
-    String posPath = null;
-
-    @Override
-    public void onLowMemory() {
-        // TODO Auto-generated method stub
-        super.onLowMemory();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        Log.i(TAG,
-                "0000onActivityResult00000000000000000000000000requestCode:"
-                        + requestCode + ",resultCode:" + resultCode);
-        if (requestCode == MediacenterConstant.ACTIVITYR_RESULT_CODE) {
-        }
-    }
-
-    public void resetCurrentNum() {
-        currentNum.setText("0/0");
-    }
-    public void setCurrentNum(String num) {
-        currentNum.setText(num);
-    }
-    public void setCurrentPath(String path) {
-        currentPath.setText(path);
-    }
+    private String posPath = null;
 }

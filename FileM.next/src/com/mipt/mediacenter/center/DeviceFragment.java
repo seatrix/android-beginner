@@ -29,9 +29,8 @@ import com.mipt.mediacenter.utils.ToastFactory;
 import com.mipt.mediacenter.utils.Util;
 import com.mipt.fileMgr.center.MainActivity;
 /**
- * 
  * @author fang
- * 
+ * @version $Id: 2013-01-21 09:26:01Z slieer $
  */
 public class DeviceFragment extends Fragment implements
 		MainActivity.DataChanged {
@@ -202,16 +201,7 @@ public class DeviceFragment extends Fragment implements
 					holder.devName.setTextColor(Color.WHITE);
 					holder.devStatus.setTextColor(Color.WHITE);
 					if (device.type == DeviceInfo.TYPE_DLAN) {
-						holder.devStatus.setText(cxt
-								.getString(R.string.cm_dlan_title));
-						holder.dlanDesc.setText(cxt
-								.getString(R.string.cm_dlan_desc));
-						holder.devStatus.setVisibility(View.VISIBLE);
-						holder.dlanDesc.setVisibility(View.VISIBLE);
-						holder.pbar.setVisibility(View.GONE);
-						holder.percent.setVisibility(View.GONE);
-						holder.pbar.setVisibility(View.GONE);
-						holder.percent.setVisibility(View.GONE);
+					    
 					} else {
 						holder.devStatus.setVisibility(View.GONE);
 						holder.pbar.setVisibility(View.VISIBLE);
