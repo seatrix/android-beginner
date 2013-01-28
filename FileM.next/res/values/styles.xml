@@ -21,5 +21,7 @@
         <item name="android:button">@null</item>
         <item name="android:singleLine">true</item>
     </style>
-
+    <style name="default_word_size">
+        <item name="android:textSize">24sp</item>
+    </style>
 </resources>

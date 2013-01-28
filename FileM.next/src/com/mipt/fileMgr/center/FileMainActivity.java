@@ -1,39 +1,23 @@
 package com.mipt.fileMgr.center;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.DirViewFragment;
 import com.mipt.mediacenter.center.MediaCenterApplication;
+import com.mipt.mediacenter.center.file.FileOperatorEvent;
 import com.mipt.mediacenter.center.server.DeviceInfo;
-import com.mipt.mediacenter.center.server.FileInfo;
-import com.mipt.mediacenter.center.server.FileSortHelper;
+import com.mipt.mediacenter.center.server.IFileInteractionListener;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.ActivitiesManager;
 import com.mipt.mediacenter.utils.Util;
@@ -47,17 +31,17 @@ public class FileMainActivity extends Activity {
     private static final String DATA_BUNDEL = "data_bundel";
     private int viewType;
     private DeviceInfo dInfo;
-    private String[] tyeStr;
-    private FileSortHelper fsortHelper;
+    //private String[] tyeStr;
+    //private FileSortHelper fsortHelper;
+    //private boolean isUserPause;
+    //private LinearLayout menuLayout;
+    //private FrameLayout mmLayout;
+    //private String[] menuListItem;
+    //private boolean menuShow = false;
     private TextView currentPath;
     private TextView viewTypeTag;
-    private boolean isUserPause;
     private TextView currentNum;
     
-    private LinearLayout menuLayout;
-    private FrameLayout mmLayout;
-    private String[] menuListItem;
-    //private boolean menuShow = false;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,12 +60,12 @@ public class FileMainActivity extends Activity {
            dInfo = (DeviceInfo) savedInstanceState.getBundle(DATA_BUNDEL).get(
                     MediacenterConstant.INTENT_EXTRA);
         }
-        fsortHelper = FileSortHelper.getInstance();
+        //fsortHelper = FileSortHelper.getInstance();
         ActivitiesManager.getInstance().registerActivity(
                 ActivitiesManager.ACTIVITY_FILE_VIEW, this);
         
-        posPath = null;
-        isUserPause = false;
+        //posPath = null;
+        //isUserPause = false;
         //isCheck = false;
         Log.i(TAG, "viewType:" + viewType + ",dInfo:" + dInfo);
         addFragmentToStack(-1, dInfo);
@@ -109,8 +93,8 @@ public class FileMainActivity extends Activity {
         // TODO Auto-generated method stub
         dInfo = (DeviceInfo) intent
                 .getSerializableExtra(MediacenterConstant.INTENT_EXTRA);       
-        posPath = null;
-        isUserPause = false;
+        //posPath = null;
+        //isUserPause = false;
         addFragmentToStack(viewType, dInfo);
         super.onNewIntent(intent);
     }
@@ -122,14 +106,7 @@ public class FileMainActivity extends Activity {
     }
 
     @Override
-    protected void onResume() {        
-        tyeStr = new String[] { this.getString(R.string.file_view_type),
-                this.getString(R.string.all_file_view_type) };
-
-        if (posPath != null
-                && viewType != MediacenterConstant.FileViewType.VIEW_DIR
-                && dInfo.type != DeviceInfo.TYPE_DLAN && !isUserPause) {
-        }
+    protected void onResume() {
         super.onResume();
     }
     
@@ -215,7 +192,6 @@ public class FileMainActivity extends Activity {
             return convertView;
         }
     }
-*/    
     class MenuOnItemClickListener implements OnItemClickListener{
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -234,12 +210,14 @@ public class FileMainActivity extends Activity {
             }
         }        
     }
+ */    
     
     
     public DeviceInfo getCurrentDeviceInfo() {
         return dInfo;
     }
 
+    /*
     class ViewTypeChooseDialog extends Dialog {
         private OnItemClickListener listener;
         private Context context;
@@ -297,7 +275,7 @@ public class FileMainActivity extends Activity {
             return 0;
         }
     }
-
+    
     public ArrayList<FileInfo> handleTreeList(ArrayList<FileInfo> _orginList,
             Comparator<FileInfo> comparator) {
         ArrayList<FileInfo> orginList = new ArrayList<FileInfo>();
@@ -327,7 +305,7 @@ public class FileMainActivity extends Activity {
         }
         return returnList;
     }
-
+    */
     @Override
     public void onLowMemory() {
         // TODO Auto-generated method stub
@@ -354,6 +332,20 @@ public class FileMainActivity extends Activity {
         currentPath.setText(path);
     }
     
+    public void onClickOrder(View v) {
+        DirViewFragment f = (DirViewFragment) getFragmentManager()
+                .findFragmentById(R.id.tabcontent);
+        //Fragment f1 = getFragmentManager().popBackStack();
+        
+        DirViewFragment f1 = (DirViewFragment) getFragmentManager()
+                .findFragmentByTag("dirViewFragment");
+        
+        Log.i(TAG, "f:" + f + ", f1:" + f1 + ", f2");
+        
+        //IFileInteractionListener listener = f;
+        FileOperatorEvent.onClickOrder(v, this);
+    }
+
     private void addFragmentToStack(int _viewTpe, DeviceInfo _dInfo) {
         MediaCenterApplication.getInstance().resetData();
         Fragment fg = getFragmentManager().findFragmentById(R.id.file_content);
@@ -372,10 +364,11 @@ public class FileMainActivity extends Activity {
             //smb
             //......
         }
-        ft.replace(R.id.file_content, newFragment);
-        ft.commit();        
+        ft.replace(R.id.file_content, newFragment,"dirViewFragment");
+        ft.commit();
     }
 
+    /*
     private void showMenu() {        
         Log.i(TAG, "show right operate Menu.");
         //mmLayout.setAnimation(AnimationUtils.loadAnimation(this, R.anim.vp_menu_in));
@@ -415,7 +408,6 @@ public class FileMainActivity extends Activity {
         }
         return isHas;
     }
-
     private ArrayList<FileInfo> getChilelist(String name,
             ArrayList<FileInfo> list) {
         for (FileInfo fi : list) {
@@ -435,4 +427,5 @@ public class FileMainActivity extends Activity {
     }
     
     private String posPath = null;
+     */
 }

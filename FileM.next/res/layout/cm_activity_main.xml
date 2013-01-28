@@ -11,50 +11,6 @@
     <include
         android:id="@+id/tail_tag"
         layout="@layout/cm_tail" />
-<!-- 
-
-    <RadioGroup
-        android:id="@+id/main_table"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/tail_tag"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/title_tag"
-        android:layout_gravity="top"
-        android:layout_marginLeft="50dp"
-        android:orientation="vertical" >
-
-        <RadioButton
-            android:id="@+id/pic_id"
-            style="@style/home_tag_bottom"
-            android:layout_marginBottom="60dp"
-            android:layout_marginTop="80dp"
-            android:background="@drawable/cm_pic_select"
-            android:paddingLeft="70dp"
-            android:text="@string/category_picture"
-            android:textColor="@drawable/cm_tag_color"
-            android:textSize="32sp" />
-
-        <RadioButton
-            android:id="@+id/video_id"
-            style="@style/home_tag_bottom"
-            android:layout_marginBottom="60dp"
-            android:background="@drawable/cm_video_select"
-            android:paddingLeft="70dp"
-            android:text="@string/category_video"
-            android:textColor="@drawable/cm_tag_color"
-            android:textSize="32sp" />
-
-        <RadioButton
-            android:id="@+id/music_id"
-            style="@style/home_tag_bottom"
-            android:background="@drawable/cm_music_select"
-            android:paddingLeft="70dp"
-            android:text="@string/category_music"
-            android:textColor="@drawable/cm_tag_color"
-            android:textSize="32sp" />
-    </RadioGroup>
- -->
     <FrameLayout
         android:id="@+id/tabcontent"
         android:layout_width="fill_parent"

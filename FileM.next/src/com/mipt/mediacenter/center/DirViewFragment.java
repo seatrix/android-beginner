@@ -1,9 +1,7 @@
 package com.mipt.mediacenter.center;
 
 import java.io.File;
-import java.lang.ref.FinalizerReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -19,12 +17,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -248,7 +242,6 @@ public class DirViewFragment extends Fragment implements
 
     @Override
     public void setBackPos(final int pos, final String path) {
-        // TODO Auto-generated method stub
         Util.runOnUiThread(mActivity, new Runnable() {
 
             @Override
@@ -271,7 +264,7 @@ public class DirViewFragment extends Fragment implements
         super.onDestroy();
         mFileIconHelper.stopLoad();
     }	
-	    
+
 	private ArrayList<PathScrollPositionItem> mScrollPositionList = new ArrayList<PathScrollPositionItem>();
 	private String mPreviousPath;
 
@@ -382,6 +375,7 @@ public class DirViewFragment extends Fragment implements
 				fileType.setText(Util.getTypeUpperCase(fi.filePath));
 			} else {
 				fileType.setVisibility(View.GONE);
+				fileSize.setVisibility(View.GONE);
 			}
 			fileDate.setText(Util.formatDateString(fi.modifiedDate) + "");
 			if (fi.fileSize != 0) {

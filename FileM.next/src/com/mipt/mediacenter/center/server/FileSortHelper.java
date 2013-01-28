@@ -1,20 +1,5 @@
 /*
  * Copyright (c) 2010-2011, The MiCode Open Source Community (www.micode.net)
- *
- * This file is part of FileExplorer.
- *
- * FileExplorer is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * FileExplorer is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.mipt.mediacenter.center.server;
@@ -30,13 +15,23 @@ import com.mipt.mediacenter.utils.Util;
  * 
  */
 public class FileSortHelper {
-
 	public enum SortMethod {
 		name, size, date, type
 	}
 
 	private SortMethod sMethod;
 	private static FileSortHelper instance;
+	private boolean mFileFirst;
+	
+	private HashMap<SortMethod, Comparator<FileInfo>> mComparatorList = new HashMap<SortMethod, Comparator<FileInfo>>();
+	
+	private FileSortHelper() {
+	    sMethod = SortMethod.name;
+	    mComparatorList.put(SortMethod.name, cmpName);
+	    mComparatorList.put(SortMethod.size, cmpSize);
+	    mComparatorList.put(SortMethod.date, cmpDate);
+	    mComparatorList.put(SortMethod.type, cmpType);
+	}
 
 	public static FileSortHelper getInstance() {
 		if (instance == null)
@@ -44,17 +39,6 @@ public class FileSortHelper {
 		return instance;
 	}
 
-	private boolean mFileFirst;
-
-	private HashMap<SortMethod, Comparator<FileInfo>> mComparatorList = new HashMap<SortMethod, Comparator<FileInfo>>();
-
-	private FileSortHelper() {
-		sMethod = SortMethod.name;
-		mComparatorList.put(SortMethod.name, cmpName);
-		mComparatorList.put(SortMethod.size, cmpSize);
-		mComparatorList.put(SortMethod.date, cmpDate);
-		mComparatorList.put(SortMethod.type, cmpType);
-	}
 
 	public void setSortMethod(SortMethod s) {
 		sMethod = s;

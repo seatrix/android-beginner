@@ -10,10 +10,11 @@
     android:background="@drawable/cm_content_bg">
      
     <LinearLayout
-	    android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
         >
 
 	    <TextView
@@ -21,45 +22,63 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:gravity="center"
+	        android:layout_gravity="center"
 	        android:text="@string/file_right_title"
 	        android:textColor="@color/white"
+	        android:textSize="24sp"
 	        />
 	    
-        <Button 
+        <Button
             android:id="@+id/cm_file_order_style"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/right_menu_order_style"
-            />         
-        <Button 
+            android:onClick="onClickOrder"
+            android:textSize="24sp"
+            />
+
+        <Button
             android:id="@+id/cm_file_bookmark"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/right_menu_bookmark"
+            android:onClick="onClickBookMark"
+            android:textSize="24sp"
             />
+
         <Button 
             android:id="@+id/cm_file_select"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/right_menu_select_file"      
+            android:text="@string/right_menu_select_file"
+            android:onClick="onClickSelect"
+            android:textSize="24sp"
             />
         <Button 
             android:id="@+id/cm_file_copy"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/right_menu_copy"      
+            android:clickable="false"
+            android:text="@string/right_menu_copy"
+            android:onClick="onclickCopay"
+            android:textSize="24sp"
             />
         <Button 
             android:id="@+id/cm_file_delete"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/right_menu_delete"         
+            android:clickable="false"
+            android:text="@string/right_menu_delete"
+            android:onClick="onClickDelete"
+            android:textSize="24sp"
             />
         <Button 
             android:id="@+id/cm_file_undo"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/right_menu_undo"      
+            android:text="@string/right_menu_undo"
+            android:onClick="onClickUndo"
+            android:textSize="24sp"
             />
     </LinearLayout>
     

@@ -23,9 +23,9 @@ import com.mipt.mediacenter.utils.ActivitiesManager;
  * 
  */
 public class FindDeviceActivity extends Activity {
-	private FindDeviceDialog fDialog;
+	//private FindDeviceDialog fDialog;
 	//private String[] deviceStr;
-	private Context cxt;
+	//private Context cxt;
 	private ExitDialog pullDevice;
 	private DeviceInfo currentInfo;
 	private int type = 0;
@@ -35,7 +35,7 @@ public class FindDeviceActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		cxt = FindDeviceActivity.this;
+		//cxt = FindDeviceActivity.this;
 		Intent intent = this.getIntent();
 		type = intent.getIntExtra("method", 0);
 		currentInfo = (DeviceInfo) intent.getSerializableExtra("device");
@@ -122,24 +122,13 @@ public class FindDeviceActivity extends Activity {
 		} else if (type == MediacenterConstant.MESSAGE_REMOVE) {
 			Activity showActivity = ActivitiesManager.getInstance()
 					.getActivity(ActivitiesManager.ACTIVITY_FILE_VIEW);
-			if (fDialog != null && fDialog.isShowing()
-					&& currentInfo.devPath.equals(removeDevice.devPath)
-					&& showActivity == null) {
-				fDialog.dismiss();
-				fDialog = null;
-				FindDeviceActivity.this.finish();
-			}
 			if (showActivity != null) {
 				final FileMainActivity fm = (FileMainActivity) showActivity;
 				DeviceInfo di = fm.getCurrentDeviceInfo();
 				if (di != null && removeDevice != null
 						&& di.devPath.equals(removeDevice.devPath)
 						&& pullDevice == null) {
-					if (fDialog != null && fDialog.isShowing()) {
-						fDialog.dismiss();
-						fDialog = null;
-						FindDeviceActivity.this.finish();
-					}
+					
 					/*pullDevice = new ExitDialog(cxt, R.style.exit_dialog,
 							false, cxt.getString(R.string.current_sd_remove),
 							new View.OnClickListener() {
@@ -172,60 +161,6 @@ public class FindDeviceActivity extends Activity {
 		return currentInfo;
 	}
 
-	class FindDeviceDialog extends Dialog {
-		private OnItemClickListener listener;
-		private Context context;
-		private String[] mStrings;
-		private ArrayAdapter<String> adapter;
-		private String devName;
-		private TextView title;
-
-		public FindDeviceDialog(Context context) {
-			super(context);
-			// TODO Auto-generated constructor stub
-			this.context = context;
-		}
-
-		public FindDeviceDialog(Context context, int theme) {
-			super(context, theme);
-			this.context = context;
-		}
-
-		public FindDeviceDialog(Context _context, int theme,
-				OnItemClickListener _listener, String[] strs, String _devName) {
-			super(_context, theme);
-			this.context = _context;
-			this.listener = _listener;
-			mStrings = strs;
-			devName = _devName;
-		}
-
-		@Override
-		protected void onCreate(Bundle savedInstanceState) {
-			// TODO Auto-generated method stub
-			super.onCreate(savedInstanceState);
-			this.setContentView(R.layout.cm_pop_dialog);
-			iniUI();
-		}
-
-		private void iniUI() {
-			ListView lv = (ListView) findViewById(R.id.tpe_item_select);
-			lv.setDividerHeight(0);
-			title = (TextView) findViewById(R.id.item_select_title_tag);
-			title.setText(getString(R.string.cm_pop_title) + devName);
-			adapter = new ArrayAdapter<String>(context, R.layout.cm_pop_item,
-					mStrings);
-			// adapter.get
-			lv.setAdapter(adapter);
-			lv.setOnItemClickListener(listener);
-		}
-
-		public void setName(String _devName) {
-			devName = _devName;
-			title.setText(getString(R.string.cm_pop_title) + devName);
-		}
-	}
-
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -234,16 +169,7 @@ public class FindDeviceActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
-		if (fDialog != null && fDialog.isShowing()) {
-			fDialog.dismiss();
-			fDialog = null;
-		}
-		if (pullDevice != null && pullDevice.isShowing()) {
-			pullDevice.dismiss();
-			pullDevice = null;
-		}
 		ActivitiesManager.getInstance().unRegisterActivity(
 				ActivitiesManager.ACTIVITY_POP_VIEW);
 	}
