@@ -14,10 +14,11 @@ import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.DirViewFragment;
+import com.mipt.mediacenter.center.FileItemAdapter;
 import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.file.FileOperatorEvent;
+import com.mipt.mediacenter.center.file.FileOperatorEvent.Model;
 import com.mipt.mediacenter.center.server.DeviceInfo;
-import com.mipt.mediacenter.center.server.IFileInteractionListener;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.ActivitiesManager;
 import com.mipt.mediacenter.utils.Util;
@@ -27,8 +28,8 @@ import com.mipt.mediacenter.utils.Util;
  * @version $Id: 2013-01-21 09:26:01Z slieer $ 
  */
 public class FileMainActivity extends Activity {
-    private static final String TAG = "FileActivity";
     private static final String DATA_BUNDEL = "data_bundel";
+    private static final String TAG = "FileActivity";
     private int viewType;
     private DeviceInfo dInfo;
     //private String[] tyeStr;
@@ -126,11 +127,19 @@ public class FileMainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        IBackPressedListener backPressedListener = (IBackPressedListener) getFragmentManager()
-                .findFragmentById(R.id.file_content);
-        if (backPressedListener != null && !backPressedListener.onBack()) {
-            super.onBackPressed();
-        }        
+        Model m = FileOperatorEvent.getModel(this);
+        Log.i(TAG, "SELECT_FLAG:" + m.toString());
+        if(m.equals(Model.SELECT_MODEL)){
+            //FileOperatorEvent.setModel(this, Model.DEFAULT_BROSWER_MODEL);
+            FileOperatorEvent.switchoverView(this, Model.DEFAULT_BROSWER_MODEL);
+        }else{
+            IBackPressedListener backPressedListener = (IBackPressedListener) getFragmentManager()
+                    .findFragmentById(R.id.file_content);
+            if (backPressedListener != null && !backPressedListener.onBack()) {
+                super.onBackPressed();
+            }
+        }
+        
     }
     
     @Override
@@ -333,19 +342,13 @@ public class FileMainActivity extends Activity {
     }
     
     public void onClickOrder(View v) {
-        DirViewFragment f = (DirViewFragment) getFragmentManager()
-                .findFragmentById(R.id.tabcontent);
-        //Fragment f1 = getFragmentManager().popBackStack();
-        
-        DirViewFragment f1 = (DirViewFragment) getFragmentManager()
-                .findFragmentByTag("dirViewFragment");
-        
-        Log.i(TAG, "f:" + f + ", f1:" + f1 + ", f2");
-        
-        //IFileInteractionListener listener = f;
         FileOperatorEvent.onClickOrder(v, this);
     }
 
+    public void onClickSelect(View v){
+        FileOperatorEvent.onClickSelect(v, this);
+    }
+    
     private void addFragmentToStack(int _viewTpe, DeviceInfo _dInfo) {
         MediaCenterApplication.getInstance().resetData();
         Fragment fg = getFragmentManager().findFragmentById(R.id.file_content);
@@ -364,7 +367,7 @@ public class FileMainActivity extends Activity {
             //smb
             //......
         }
-        ft.replace(R.id.file_content, newFragment,"dirViewFragment");
+        ft.replace(R.id.file_content, newFragment, DirViewFragment.TAG);
         ft.commit();
     }
 

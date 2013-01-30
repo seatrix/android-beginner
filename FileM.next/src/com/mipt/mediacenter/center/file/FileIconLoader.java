@@ -412,8 +412,8 @@ public class FileIconLoader implements Callback {
 					switch (id.mCategory) {
 					case Music:
 						if (id.mId == -1) {
-							holder.setImage(Util.getDlanThumbnail(id.mPath,
-									id.devName, 102, 91, true));
+							//holder.setImage(Util.getDlanThumbnail(id.mPath,
+									//id.devName, 102, 91, true));
 						} else if (id.mId == -2) {
 							Bitmap bitmapTrack = Util
 									.createAlbumThumbnail(id.mPath);
@@ -446,8 +446,8 @@ public class FileIconLoader implements Callback {
 					case Video:
 						boolean isVideo = id.mCategory == FileCategory.Video;
 						if (id.mId == -1) {
-							holder.setImage(Util.getDlanThumbnail(id.mPath,
-									id.devName, 121, 91, true));
+							//holder.setImage(Util.getDlanThumbnail(id.mPath,
+									//id.devName, 121, 91, true));
 						} else {
 							if (id.mId == 0)
 								id.mId = Util.getDbId(mContext, id.mPath,

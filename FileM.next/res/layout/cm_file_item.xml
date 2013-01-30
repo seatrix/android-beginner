@@ -87,6 +87,16 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />
+        
+         <CheckBox
+            android:id="@+id/select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+         />
+            
     </LinearLayout>
 
 </RelativeLayout>

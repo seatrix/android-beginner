@@ -2,6 +2,7 @@ package com.mipt.mediacenter.utils;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -59,6 +60,7 @@ import com.mipt.mediacenter.center.server.MediacenterConstant;
  */
 public class Util {
 	private static final String TAG = "Util";
+	private static String ANDROID_SECURE = "/mnt/sdcard/.android_secure";
 	public static final String LAST_TIME = "last_time";
 	public static final String LAST_VIEW_TYPE = "last_view";
 
@@ -97,7 +99,7 @@ public class Util {
 				+ "/.mediacenter/";
 	}
 
-	public static FileInfo GetFileInfo(String filePath) {
+	public static FileInfo getFileInfo(String filePath) {
 		File lFile = new File(filePath);
 		if (!lFile.exists())
 			return null;
@@ -114,7 +116,7 @@ public class Util {
 		return lFileInfo;
 	}
 
-	public static FileInfo GetFileInfo(File f, FilenameFilter filter,
+	public static FileInfo getFileInfo(File f, FilenameFilter filter,
 			boolean showHidden) {
 		FileInfo lFileInfo = new FileInfo();
 		String filePath = f.getPath();
@@ -864,14 +866,18 @@ public class Util {
 		return temp;
 	}
 
-	public static Bitmap getDlanThumbnail(String path, String devName) {
+	private static Bitmap getDlanThumbnail(String path, String devName) {
 		if (TextUtils.isEmpty(path) || TextUtils.isEmpty(devName)) {
 			return null;
 		}
 		return getDlanThumbnail(path, devName, 121, 9, false);
 	}
 
-	public static Bitmap getDlanThumbnail(String path, String devName, int w,
+    public static boolean isNormalFile(String fullName) {
+        return !fullName.equals(ANDROID_SECURE);
+    }
+    
+	private static Bitmap getDlanThumbnail(String path, String devName, int w,
 			int y, boolean save) {
 		Bitmap bimap = getDlnaThumbnail(path, devName);
 		if (bimap != null) {
@@ -1055,6 +1061,7 @@ public class Util {
 		}
 		return null;
 	}
+	
 	public static String getEncoding(String str) {
 		if (TextUtils.isEmpty(str)) {
 			return "UTF-8";
@@ -1094,6 +1101,66 @@ public class Util {
 		return "UTF-8";
 	}
 
+    // return new file path if successful, or return null
+    public static String copyFile(String src, String dest) {
+        File file = new File(src);
+        if (!file.exists() || file.isDirectory()) {
+            Log.v(TAG, "copyFile: file not exist or is directory, " + src);
+            return null;
+        }
+        FileInputStream fi = null;
+        FileOutputStream fo = null;
+        try {
+            fi = new FileInputStream(file);
+            File destPlace = new File(dest);
+            if (!destPlace.exists()) {
+                if (!destPlace.mkdirs())
+                    return null;
+            }
+
+            String destPath = Util.makePath(dest, file.getName());
+            File destFile = new File(destPath);
+            int i = 1;
+            while (destFile.exists()) {
+                String destName = Util.getNameFromFilename(file.getName()) + " " + i++ + "."
+                        + Util.getExtFromFilename(file.getName());
+                destPath = Util.makePath(dest, destName);
+                destFile = new File(destPath);
+            }
+
+            if (!destFile.createNewFile())
+                return null;
+
+            fo = new FileOutputStream(destFile);
+            int count = 102400;
+            byte[] buffer = new byte[count];
+            int read = 0;
+            while ((read = fi.read(buffer, 0, count)) != -1) {
+                fo.write(buffer, 0, read);
+            }
+
+            // TODO: set access privilege
+
+            return destPath;
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "copyFile: file not found, " + src);
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e(TAG, "copyFile: " + e.toString());
+        } finally {
+            try {
+                if (fi != null)
+                    fi.close();
+                if (fo != null)
+                    fo.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }	
+	
 	private static final String[] ID3_GENRES = {
 			"Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk",
 			"Grunge", "Hip-Hop", "Jazz", "Metal", "New Age", "Oldies", "Other",

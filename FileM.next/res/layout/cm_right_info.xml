@@ -44,6 +44,8 @@
             android:text="@string/right_menu_bookmark"
             android:onClick="onClickBookMark"
             android:textSize="24sp"
+            android:background="@drawable/cm_exit_btn_bg"
+            android:visibility="gone"
             />
 
         <Button 
@@ -62,6 +64,7 @@
             android:text="@string/right_menu_copy"
             android:onClick="onclickCopay"
             android:textSize="24sp"
+            android:background="@drawable/cm_exit_btn_bg"
             />
         <Button 
             android:id="@+id/cm_file_delete"
@@ -71,6 +74,7 @@
             android:text="@string/right_menu_delete"
             android:onClick="onClickDelete"
             android:textSize="24sp"
+            android:background="@drawable/cm_exit_btn_bg"
             />
         <Button 
             android:id="@+id/cm_file_undo"

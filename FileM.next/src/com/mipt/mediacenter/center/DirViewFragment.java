@@ -18,7 +18,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.CheckBox;
 import android.widget.GridView;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,7 +41,6 @@ import com.mipt.mediacenter.utils.Util;
 public class DirViewFragment extends Fragment implements
 		IFileInteractionListener, FileMainActivity.IBackPressedListener,
 		FileMainActivity.DataChangeListener {
-	private static final String TAG = "DirViewFragment";
 	private FileMainActivity mActivity;
 	private View mRootView;
 	private FileItemAdapter mAdapter;
@@ -54,6 +55,8 @@ public class DirViewFragment extends Fragment implements
 	private TextView fileSize;
 	private int fileInfoType;
 	private String currentFilePath;
+	public static final String TAG = "DirViewFragment";
+    public static final int MESSAGE_SETINFO = 111;
 
 	public static DirViewFragment newInstance(String path, int type) {
 		DirViewFragment f = new DirViewFragment();
@@ -79,6 +82,7 @@ public class DirViewFragment extends Fragment implements
 		fileType = (TextView) mRootView.findViewById(R.id.cm_file_type);
 		fileDate = (TextView) mRootView.findViewById(R.id.cm_file_date);
 		fileSize = (TextView) mRootView.findViewById(R.id.cm_file_size);
+		/**add OnItemClickListener*/
 		mFileViewInteractionHub = new FileViewInteractionHub(this);
 		gridView = (GridView) mRootView.findViewById(R.id.file_content);
 		mFileIconHelper = new FileIconHelper(mActivity);
@@ -90,6 +94,11 @@ public class DirViewFragment extends Fragment implements
 		mFileViewInteractionHub.setRootPath(orginPath);
 		mFileViewInteractionHub.refreshFileList();
 		gridView.setOnItemSelectedListener(fileChange);
+		/*if(! FileItemAdapter.SELECT_FLAG){
+		}else{
+		    Log.i(TAG, "enter select model.");
+		    gridView.setOnItemSelectedListener(selectFile);
+		}*/
 		gridView.requestFocus();
 		
         //ListView rightMenu = (ListView)mRootView.findViewById(R.id.function_menu);
@@ -208,7 +217,7 @@ public class DirViewFragment extends Fragment implements
 			// do not show selected file if in move state
 			String absolutePath = child.getAbsolutePath();
 			if (Util.shouldShowFile(absolutePath)) {
-				FileInfo lFileInfo = Util.GetFileInfo(child,
+				FileInfo lFileInfo = Util.getFileInfo(child,
 						null, false);
 				if (lFileInfo != null) {
 					if (!lFileInfo.isDir) {
@@ -360,7 +369,7 @@ public class DirViewFragment extends Fragment implements
 		}
 
 	};
-
+	
 	private void setFileInfo(int pos, int size, FileInfo fi) {
 		if (size == 0) {
 			mActivity.resetCurrentNum();
@@ -390,8 +399,7 @@ public class DirViewFragment extends Fragment implements
 		}
 
 	}
-	
-	private static final int MESSAGE_SETINFO = 111;
+
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -405,4 +413,24 @@ public class DirViewFragment extends Fragment implements
 			}
 		}
 	};
+
+    public static class mHandler extends Handler{
+        private DirViewFragment fragment;
+        private  ListAdapter mAdapter;
+        public mHandler(DirViewFragment fragment, ListAdapter mAdapter){
+            this.fragment = fragment;
+            this.mAdapter = mAdapter;
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case MESSAGE_SETINFO:
+                final int pos = msg.arg1;
+                if (mAdapter != null) {
+                    fragment.setFileInfo(pos, mAdapter.getCount(), (FileInfo)mAdapter.getItem(pos));
+                }
+                break;
+            }
+        }
+    }	
 }

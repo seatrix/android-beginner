@@ -33,7 +33,7 @@ public class FileCategoryHelper {
 	};
 	
 	public final static String[] TEXT_EXTS = new String[]{
-        "txt","ini","properties","log","text","asc","diff","srt","lrc","smi","ssa"
+        "txt","ini","properties","log","text","asc","diff","srt","lrc","smi","ssa","xml"
     };
 
 	private Map<FileCategory, CategoryInfo> mCategoryInfo = new HashMap<FileCategory, CategoryInfo>();

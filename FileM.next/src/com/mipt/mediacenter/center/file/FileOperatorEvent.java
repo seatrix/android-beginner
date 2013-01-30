@@ -7,22 +7,29 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.DirViewFragment;
+import com.mipt.mediacenter.center.FileItemAdapter;
 import com.mipt.mediacenter.center.server.FileSortHelper;
 import com.mipt.mediacenter.center.server.FileSortHelper.SortMethod;
 
 public class FileOperatorEvent {
     private final static String TAG = "FileOperatorEvent";
+    public final static String MODEL_TAG = "model";
+    public enum Model{UNKNOWN,DEFAULT_BROSWER_MODEL, SELECT_MODEL};
     
     public enum OrderStyle{
         OrderbySize, OrderbyType, OrderbyAlphabetical, OrderbyLastModified
@@ -47,10 +54,37 @@ public class FileOperatorEvent {
 
     }
 
-    public void onClickSelect(View v) {
-
+    public static void onClickSelect(View v, Activity activity) {
+        switchoverView(activity, Model.SELECT_MODEL);
     }
 
+    public static void switchoverView(Activity activity, Model model){
+        DirViewFragment f1 = (DirViewFragment) activity.getFragmentManager()
+                .findFragmentByTag(DirViewFragment.TAG);
+        
+        GridView grid = (GridView)f1.getView().findViewById(R.id.file_content);
+        
+        //FileItemAdapter.SELECT_FLAG = true;
+        setModel(activity, model);
+        
+        FileItemAdapter adapter = (FileItemAdapter)grid.getAdapter();        
+        FileItemAdapter newSelectAdapter = new FileItemAdapter(activity, adapter.getDataList());
+        grid.setAdapter(newSelectAdapter);
+        grid.setOnItemClickListener(selectFile);
+    }
+    
+    public static void setModel(Activity activity, Model model){
+        SharedPreferences.Editor ed = activity.getSharedPreferences(TAG, 0).edit();
+        ed.putInt(MODEL_TAG, model.ordinal());
+        ed.commit();
+    }
+    
+    public static Model getModel(Activity activity){
+        SharedPreferences ed = activity.getSharedPreferences(TAG, 0);
+        int m = ed.getInt(MODEL_TAG, Model.UNKNOWN.ordinal());
+        return Model.values()[m];
+    }
+    
     public void onClickCopy(View v) {
 
     }
@@ -62,6 +96,17 @@ public class FileOperatorEvent {
     public void onClickUndo(View v) {
 
     }
+    
+    private static final OnItemClickListener selectFile = new OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            CheckBox box = (CheckBox)view.findViewById(R.id.select);
+            Log.i(TAG, box.toString());
+            box.setChecked(true);
+            
+        }
+    };
+    
     
     private static class OnClickOrderStyle implements OnItemClickListener {
         private Dialog dialog;
@@ -79,9 +124,8 @@ public class FileOperatorEvent {
             //DirViewFragment f = (DirViewFragment) activity.getFragmentManager()
                     //.findFragmentById(R.id.tabcontent);
             DirViewFragment f1 = (DirViewFragment) activity.getFragmentManager()
-                    .findFragmentByTag("dirViewFragment");
-            
-            Log.i(TAG, "f:" + ", f1:" + f1);
+                    .findFragmentByTag(DirViewFragment.TAG);
+            //Log.i(TAG, "f:" + ", f1:" + f1);
             
             final String name = (String) arg0
                     .getItemAtPosition(arg2);

@@ -12,11 +12,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.file.FileIconHelper;
+import com.mipt.mediacenter.center.file.FileOperatorEvent;
+import com.mipt.mediacenter.center.file.FileOperatorEvent.Model;
 import com.mipt.mediacenter.center.server.FileInfo;
 
 /**
@@ -26,18 +29,25 @@ import com.mipt.mediacenter.center.server.FileInfo;
  */
 public class FileItemAdapter extends BaseAdapter {
 	public static final String TAG = "FileItemAdapter";
+	//public static boolean SELECT_FLAG = false;
+	
 	private ArrayList<FileInfo> mList = new ArrayList<FileInfo>();
-	private final Context mContext;
+	private final Activity mContext;
 	private FileIconHelper mHelper;
 	private Handler mHandler;
 	private int messId;
 
-	public FileItemAdapter(Activity activity, FileIconHelper _mFileIconHelper,
-			ArrayList<FileInfo> fileList) {
+	public FileItemAdapter(Activity activity,
+            ArrayList<FileInfo> fileList){
 		mContext = activity;
 		inflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mHelper = _mFileIconHelper;
+		mHelper = new FileIconHelper(activity);
+		messId = DirViewFragment.MESSAGE_SETINFO;
+		
+		DirViewFragment f1 = (DirViewFragment) activity.getFragmentManager()
+                .findFragmentByTag(DirViewFragment.TAG);
+		mHandler = new DirViewFragment.mHandler(f1, this);
 		mList = fileList;
 	}
 
@@ -84,6 +94,8 @@ public class FileItemAdapter extends BaseAdapter {
 			holder.videoTag = (ImageView) convertView.findViewById(R.id.file_video_tag);
 			holder.musicImage = (ImageView) convertView.findViewById(R.id.music_image);
 			holder.dirImage = (ImageView) convertView.findViewById(R.id.dir_image);
+			
+			holder.selectBox = (CheckBox)convertView.findViewById(R.id.select);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -92,18 +104,25 @@ public class FileItemAdapter extends BaseAdapter {
 		if (mList.get(position) != null) {
 			FileInfo file = mList.get(position);
 			holder.name.setText(file.fileName);
-			String cntTag = mContext.getString(R.string.cm_file_cnt);
+			
+			Model m = FileOperatorEvent.getModel(mContext);
+			if(! m.equals(Model.SELECT_MODEL)){
+			    holder.selectBox.setVisibility(View.GONE);
+			}else{
+			    holder.selectBox.setVisibility(View.VISIBLE);
+			}
 			if (file.extra) {
 			    Log.i(TAG, "file.extra:" + file.extra);
 				// holder.fileImage.setImageResource(R.drawable.empty_icon);
 			} else {
 				if (file.isDir) {
-				    Log.i(TAG, "is dir.....");
+				    Log.i(TAG, "FileItemAdapter.getView, is dir.....");
 					holder.videoTag.setVisibility(View.GONE);
 					holder.musicImage.setVisibility(View.GONE);
 					holder.fileImage.setVisibility(View.GONE);
 					holder.fileImageFrame.setVisibility(View.GONE);
 
+					String cntTag = mContext.getString(R.string.cm_file_cnt);
 					holder.childCnt.setText(file.count + cntTag);
 					holder.childCnt.setVisibility(View.VISIBLE);
 					holder.dirImage.setImageResource(R.drawable.cm_folder);
@@ -120,9 +139,9 @@ public class FileItemAdapter extends BaseAdapter {
 		}
 		final int currentPos = position;
 		convertView.setOnHoverListener(new View.OnHoverListener() {
-
 			@Override
 			public boolean onHover(View v, MotionEvent event) {
+			    Log.i(TAG, "OnHoverListener......");
 
 				if (MotionEvent.ACTION_HOVER_ENTER == event.getAction()) {
 					if (mHandler != null) {
@@ -150,6 +169,7 @@ public class FileItemAdapter extends BaseAdapter {
 		TextView childCnt;
 		ImageView videoTag;
 		ImageView dirImage;
+		CheckBox selectBox;
 	}
 
 	@Override
