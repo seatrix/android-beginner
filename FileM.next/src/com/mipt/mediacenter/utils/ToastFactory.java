@@ -1,13 +1,13 @@
 package com.mipt.mediacenter.utils;
 
-import com.mipt.fileMgr.R;
-
 import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mipt.fileMgr.R;
 
 /**
  * 

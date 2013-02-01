@@ -3,6 +3,7 @@ package com.mipt.mediacenter.center.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.mipt.mediacenter.center.file.FileCategoryHelper;
 import com.mipt.mediacenter.center.file.FileCategoryHelper.FileCategory;
 import com.mipt.mediacenter.center.server.FileInfo;
 
@@ -31,14 +32,10 @@ public class FileBuilder extends DatabaseBuilder<FileInfo> {
 		file.modifiedDate = query.getLong(columnFileDate);
 		file.imgPath = query.getString(columnFileImg);
 		file.filePath = query.getString(columnFilePath);
-		int type = query.getInt(columnFileType);
-		if (DatabaseIfc.TYPE_MUSIC == type) {
-			file.mCategory = FileCategory.Music;
-		} else if (DatabaseIfc.TYPE_PIC == type) {
-			file.mCategory = FileCategory.Picture;
-		} else if (DatabaseIfc.TYPE_VIDEO == type) {
-			file.mCategory = FileCategory.Video;
-		}
+		//int type = query.getInt(columnFileType);
+		
+		FileCategory cat = FileCategoryHelper.getCategoryFromPath(file.fileName);
+		file.mCategory = cat;
 		return file;
 	}
 

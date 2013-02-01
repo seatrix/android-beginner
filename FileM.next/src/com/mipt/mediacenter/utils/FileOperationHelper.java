@@ -5,12 +5,12 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mipt.mediacenter.center.server.FileInfo;
-
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.mipt.mediacenter.center.server.FileInfo;
 
 public class FileOperationHelper {
     private static final String TAG = "FileOperation";

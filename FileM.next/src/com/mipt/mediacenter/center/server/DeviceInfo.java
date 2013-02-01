@@ -12,27 +12,20 @@ import android.util.Log;
 public class DeviceInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final int TYPE_LOCAL = 1;
-	public static final int TYPE_DLAN = 3;
+	//public static final int TYPE_DLAN = 3;
 	public static final int TYPE_USB = 2;
+	public static final int TYPE_SMB = 3;
 	public String devName;
-
 	public String devPath;
-
 	public String usedPercent;
 	public long devSize;
-
 	public long devUsedSize;
-
 	public String desc;
-
 	public int type;
-
 	public boolean isLive;
-
 	public int resId; // for pic
-
 	public String devId;
-	public String dlanDes;
+	//public String dlanDes;
 
 	public DeviceInfo() {
 	}

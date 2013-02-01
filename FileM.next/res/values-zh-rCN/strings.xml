@@ -49,6 +49,7 @@
      <string name="right_menu_undo">返回</string>
      -->
     <string name="right_menu_plaster">粘贴</string>
-    
     <string name="file_order_pop_title">排序方式</string>
+    <string name="smb_share_device">网上邻居设备</string>
+    <string name="smb_more_share_device">查看网上邻居设备</string>
 </resources>

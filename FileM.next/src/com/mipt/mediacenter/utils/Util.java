@@ -48,9 +48,7 @@ import android.widget.TextView;
 
 import com.mipt.mediacenter.center.file.FileCategoryHelper;
 import com.mipt.mediacenter.center.server.DeviceInfo;
-import com.mipt.mediacenter.center.server.ErrorThrowable;
 import com.mipt.mediacenter.center.server.FileInfo;
-import com.mipt.mediacenter.center.server.HttpManager;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 
 /**
@@ -866,90 +864,10 @@ public class Util {
 		return temp;
 	}
 
-	private static Bitmap getDlanThumbnail(String path, String devName) {
-		if (TextUtils.isEmpty(path) || TextUtils.isEmpty(devName)) {
-			return null;
-		}
-		return getDlanThumbnail(path, devName, 121, 9, false);
-	}
-
     public static boolean isNormalFile(String fullName) {
         return !fullName.equals(ANDROID_SECURE);
     }
     
-	private static Bitmap getDlanThumbnail(String path, String devName, int w,
-			int y, boolean save) {
-		Bitmap bimap = getDlnaThumbnail(path, devName);
-		if (bimap != null) {
-			return bimap;
-		}
-		if (!save) {
-			return null;
-		}
-		File file = Util.getDlnaFile(path, devName);
-		if (file != null && file.exists()) {
-			file.delete();
-		}
-		InputStream is = null;
-		try {
-			is = HttpManager.doGetReturnInputStream(path, null);
-		} catch (ErrorThrowable e) {
-			// TODO Auto-generated catch block
-			return null;
-		}
-		if (is == null) {
-			return null;
-		}
-		File isFile = Util.getDlnaTempFile(path, devName);
-		try {
-			isFile = mkFilePath(isFile);
-			saveInputStream2File(isFile, is);
-		} catch (IOException e1) {
-			return null;
-		}
-		if (!isFile.exists()) {
-			return null;
-		}
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(isFile.getAbsolutePath(), opts);
-
-		opts.inSampleSize = computeSampleSize(opts, -1, 128 * 128);
-		opts.inJustDecodeBounds = false;
-
-		try {
-			File newFile = mkFilePath(file);
-			if (newFile.exists()) {
-				try {
-					Bitmap b = BitmapFactory.decodeFile(
-							isFile.getAbsolutePath(), opts);
-					if (b != null) {
-						final Bitmap newBitmap = Util.extractMiniThumb(b, true,
-								w, y);
-						b.recycle();
-						// final Bitmap savaBitmap = newBitmap;
-						saveImage2File(file, newBitmap);
-						if (isFile.exists()) {
-							isFile.delete();
-						}
-						return newBitmap;
-					} else {
-						return b;
-					}
-
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-				}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-
-		}
-
-		return null;
-
-	}
-
 	private static File mkFilePath(File file) throws IOException {
 		File lFile = file;
 		if (!lFile.exists()) {

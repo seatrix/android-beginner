@@ -200,23 +200,21 @@ public class DeviceFragment extends Fragment implements
 				} else {
 					holder.devName.setTextColor(Color.WHITE);
 					holder.devStatus.setTextColor(Color.WHITE);
-					if (device.type == DeviceInfo.TYPE_DLAN) {
+/*					if (device.type == DeviceInfo.TYPE_DLAN) {
 					    
-					} else {
-						holder.devStatus.setVisibility(View.GONE);
-						holder.pbar.setVisibility(View.VISIBLE);
-						holder.dlanDesc.setVisibility(View.GONE);
-						int total = (int) (device.devSize / 10000000);
-						int used = (int) (device.devUsedSize / 10000000);
-						holder.pbar.setMax(total);
-						holder.pbar.setProgress(used);
-						holder.percent.setText(Util
-								.convertStorage(device.devSize
-										- device.devUsedSize)
-								+ getString(R.string.cm_device_progress)
-								+ Util.convertStorage(device.devSize));
-						holder.percent.setVisibility(View.VISIBLE);
-					}
+					} else {*/
+                    holder.devStatus.setVisibility(View.GONE);
+                    holder.pbar.setVisibility(View.VISIBLE);
+                    holder.dlanDesc.setVisibility(View.GONE);
+                    int total = (int)(device.devSize / 10000000);
+                    int used = (int)(device.devUsedSize / 10000000);
+                    holder.pbar.setMax(total);
+                    holder.pbar.setProgress(used);
+                    holder.percent.setText(Util.convertStorage(device.devSize - device.devUsedSize)
+                            + getString(R.string.cm_device_progress)
+                            + Util.convertStorage(device.devSize));
+                    holder.percent.setVisibility(View.VISIBLE);
+					//}
 
 				}
 

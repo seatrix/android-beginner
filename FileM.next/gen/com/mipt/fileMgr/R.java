@@ -13,6 +13,7 @@ public final class R {
         public static final int vp_menu_out=0x7f040001;
     }
     public static final class array {
+        public static final int file_order_style=0x7f050002;
         public static final int items_fm=0x7f050001;
         public static final int mountType=0x7f050000;
     }
@@ -119,9 +120,9 @@ public final class R {
         public static final int vp_two_level_tool_bg2=0x7f02004e;
     }
     public static final class id {
-        public static final int app_img_tag=0x7f0b001c;
-        public static final int app_name_tag=0x7f0b001d;
-        public static final int artist_name=0x7f0b0023;
+        public static final int app_img_tag=0x7f0b001d;
+        public static final int app_name_tag=0x7f0b001e;
+        public static final int artist_name=0x7f0b0024;
         public static final int back_up_file=0x7f0b0010;
         public static final int back_up_name=0x7f0b0011;
         public static final int choose_txt_img_tag=0x7f0b0038;
@@ -129,20 +130,19 @@ public final class R {
         public static final int cm_exit_btn_cancel=0x7f0b000e;
         public static final int cm_exit_btn_ok=0x7f0b000d;
         public static final int cm_exit_title=0x7f0b000c;
-        public static final int cm_file_bookmark=0x7f0b0029;
-        public static final int cm_file_copy=0x7f0b002b;
+        public static final int cm_file_bookmark=0x7f0b002a;
+        public static final int cm_file_copy=0x7f0b002c;
         public static final int cm_file_date=0x7f0b0031;
-        public static final int cm_file_delete=0x7f0b002c;
+        public static final int cm_file_delete=0x7f0b002d;
         public static final int cm_file_name=0x7f0b002f;
-        public static final int cm_file_order_style=0x7f0b0028;
-        public static final int cm_file_select=0x7f0b002a;
+        public static final int cm_file_order_style=0x7f0b0029;
+        public static final int cm_file_select=0x7f0b002b;
         public static final int cm_file_size=0x7f0b0032;
         public static final int cm_file_type=0x7f0b0030;
-        public static final int cm_file_undo=0x7f0b002d;
         public static final int cm_progress_small=0x7f0b0003;
         public static final int cm_toast_name=0x7f0b003a;
-        public static final int current_num_tag=0x7f0b0020;
-        public static final int current_path_tag=0x7f0b0021;
+        public static final int current_num_tag=0x7f0b0021;
+        public static final int current_path_tag=0x7f0b0022;
         public static final int dev_des_title=0x7f0b0009;
         public static final int dev_img=0x7f0b0005;
         public static final int dev_name=0x7f0b0004;
@@ -162,31 +162,37 @@ public final class R {
         public static final int file_image=0x7f0b0014;
         public static final int file_image_frame=0x7f0b0016;
         public static final int file_name=0x7f0b0019;
-        public static final int file_right_title=0x7f0b0027;
+        public static final int file_right_title=0x7f0b0028;
         public static final int file_tag=0x7f0b0013;
         public static final int file_video_tag=0x7f0b0017;
         public static final int gray_bg=0x7f0b0040;
-        public static final int item1=0x7f0b0043;
-        public static final int item_select_title_tag=0x7f0b0024;
+        public static final int ip=0x7f0b0045;
+        public static final int item1=0x7f0b0048;
+        public static final int item_select_title_tag=0x7f0b0025;
+        public static final int list_view=0x7f0b0043;
         public static final int menuList=0x7f0b003f;
-        public static final int menu_layout=0x7f0b001b;
-        public static final int menu_settings=0x7f0b0042;
+        public static final int menu_layout=0x7f0b001c;
+        public static final int menu_settings=0x7f0b0047;
         public static final int music_image=0x7f0b0015;
-        public static final int music_name_tag=0x7f0b0022;
+        public static final int music_name_tag=0x7f0b0023;
+        public static final int netbios_name=0x7f0b0044;
         public static final int ok_back_img_tag=0x7f0b0034;
         public static final int ok_back_txt_tag=0x7f0b0033;
         public static final int ok_open_img_tag=0x7f0b0036;
         public static final int ok_open_txt_tag=0x7f0b0037;
+        public static final int progress_bar=0x7f0b0042;
         public static final int right_bottom_content=0x7f0b002e;
-        public static final int right_content=0x7f0b0026;
+        public static final int right_content=0x7f0b0027;
+        public static final int select=0x7f0b001b;
+        public static final int smb_main_layout=0x7f0b0041;
         public static final int tabcontent=0x7f0b0002;
         public static final int tail_other_tag=0x7f0b0035;
         public static final int tail_tag=0x7f0b0001;
         public static final int title_tag=0x7f0b0000;
-        public static final int tool_name=0x7f0b0041;
-        public static final int tpe_item_select=0x7f0b0025;
-        public static final int view_type_parent_tag=0x7f0b001e;
-        public static final int view_type_tag=0x7f0b001f;
+        public static final int tool_name=0x7f0b0046;
+        public static final int tpe_item_select=0x7f0b0026;
+        public static final int view_type_parent_tag=0x7f0b001f;
+        public static final int view_type_tag=0x7f0b0020;
     }
     public static final class layout {
         public static final int cm_activity_main=0x7f030000;
@@ -208,7 +214,9 @@ public final class R {
         public static final int cm_toast_bg=0x7f030010;
         public static final int fav_item=0x7f030011;
         public static final int pp_menu_layout=0x7f030012;
-        public static final int vp_tool_list_item=0x7f030013;
+        public static final int smb_device_list=0x7f030013;
+        public static final int smb_device_list_item=0x7f030014;
+        public static final int vp_tool_list_item=0x7f030015;
     }
     public static final class menu {
         public static final int activity_main=0x7f0a0000;
@@ -217,56 +225,61 @@ public final class R {
     public static final class string {
         public static final int all_file_view_type=0x7f080008;
         public static final int app_name=0x7f080000;
-        public static final int back_button_desc=0x7f080018;
-        public static final int cancle=0x7f08001e;
+        public static final int back_button_desc=0x7f080019;
+        public static final int cancle=0x7f08001f;
         public static final int category_video=0x7f080004;
         public static final int change_view=0x7f080006;
-        public static final int choose_desc=0x7f080019;
-        public static final int cm_data_loading=0x7f08001f;
+        public static final int choose_desc=0x7f08001a;
+        /**  
+    <string name="cm_pop_title">连接到</string>
+     
+         */
+        public static final int cm_back_toast=0x7f08000f;
+        public static final int cm_data_loading=0x7f080020;
         public static final int cm_device_progress=0x7f08000c;
         public static final int cm_device_unlive_click=0x7f08000e;
         public static final int cm_dlan_title=0x7f08000b;
         public static final int cm_file_cnt=0x7f08000d;
-        public static final int cm_genre_unknow=0x7f080011;
-        public static final int cm_pop_title=0x7f08000f;
-        public static final int cm_unknow=0x7f080010;
+        public static final int cm_genre_unknow=0x7f080012;
+        public static final int cm_selected_toast=0x7f080010;
+        public static final int cm_unknow=0x7f080011;
         public static final int cm_usb_desc=0x7f080009;
-        public static final int confirm=0x7f08001d;
-        public static final int current_dlan_remove=0x7f08001b;
-        public static final int current_sd_remove=0x7f080015;
-        public static final int dialog_select_type=0x7f080013;
+        public static final int confirm=0x7f08001e;
+        public static final int current_dlan_remove=0x7f08001c;
+        public static final int current_sd_remove=0x7f080016;
+        public static final int dialog_select_type=0x7f080014;
         public static final int dlan_unconnect=0x7f080005;
-        /**  
-    <string name="tab_favorite">我的列表</string>
-    <string name="tab_pic">图片</string>
-    <string name="category_all">所有</string>
-    <string name="category_music">音乐</string>
-    <string name="category_picture">图片</string>
- 
-         */
         public static final int enable_sd_card=0x7f080002;
-        public static final int file_right_title=0x7f080021;
+        public static final int file_order_pop_title=0x7f08002a;
+        public static final int file_right_title=0x7f080022;
         public static final int file_view_type=0x7f080007;
-        public static final int local_sdcard=0x7f080016;
+        public static final int local_sdcard=0x7f080017;
         public static final int menu_settings=0x7f080001;
-        public static final int more_tool=0x7f080020;
+        public static final int more_tool=0x7f080021;
         public static final int no_file=0x7f080003;
-        public static final int ok_open_desc=0x7f08001a;
+        public static final int ok_open_desc=0x7f08001b;
         public static final int recent_content=0x7f08000a;
-        public static final int recent_date=0x7f080012;
-        public static final int right_menu_bookmark=0x7f080023;
-        public static final int right_menu_cancel_bookmark=0x7f080024;
-        public static final int right_menu_copy=0x7f080026;
-        public static final int right_menu_delete=0x7f080027;
-        public static final int right_menu_order_style=0x7f080022;
-        public static final int right_menu_select_file=0x7f080025;
-        public static final int right_menu_undo=0x7f080028;
-        public static final int unknow_name=0x7f080014;
-        public static final int up_file=0x7f08001c;
-        public static final int usb_device=0x7f080017;
+        public static final int recent_date=0x7f080013;
+        public static final int right_menu_bookmark=0x7f080024;
+        public static final int right_menu_cancel_bookmark=0x7f080025;
+        public static final int right_menu_copy=0x7f080027;
+        public static final int right_menu_delete=0x7f080028;
+        public static final int right_menu_order_style=0x7f080023;
+        /**  
+     <string name="right_menu_undo">返回</string>
+     
+         */
+        public static final int right_menu_plaster=0x7f080029;
+        public static final int right_menu_select_file=0x7f080026;
+        public static final int smb_more_share_device=0x7f08002c;
+        public static final int smb_share_device=0x7f08002b;
+        public static final int unknow_name=0x7f080015;
+        public static final int up_file=0x7f08001d;
+        public static final int usb_device=0x7f080018;
     }
     public static final class style {
         public static final int AppTheme=0x7f090000;
+        public static final int default_word_size=0x7f090004;
         public static final int exit_dialog=0x7f090002;
         public static final int home_tag_bottom=0x7f090003;
         public static final int show_choose_type_dialog=0x7f090001;

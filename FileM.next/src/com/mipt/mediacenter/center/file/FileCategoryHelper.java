@@ -35,7 +35,9 @@ public class FileCategoryHelper {
 	public final static String[] TEXT_EXTS = new String[]{
         "txt","ini","properties","log","text","asc","diff","srt","lrc","smi","ssa","xml"
     };
-
+	
+	//pdf application/pdf
+	//wo
 	private Map<FileCategory, CategoryInfo> mCategoryInfo = new HashMap<FileCategory, CategoryInfo>();
 	public Map<FileCategory, CategoryInfo> getCategoryInfos() {
 		return mCategoryInfo;
@@ -78,6 +80,7 @@ public class FileCategoryHelper {
             EXT_TO_TYPE.put(ext, FileCategory.ZIP);            
         }
         EXT_TO_TYPE.put("apk", FileCategory.APK);
+        //EXT_TO_TYPE.put("pdf", FileCategory.APK);
     }
     
 	public static FileCategory getCategoryFromPath(String path) {
