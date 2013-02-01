@@ -60,7 +60,6 @@
             android:id="@+id/cm_file_copy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
             android:text="@string/right_menu_copy"
             android:onClick="onclickCopay"
             android:textSize="24sp"
@@ -70,13 +69,13 @@
             android:id="@+id/cm_file_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
             android:text="@string/right_menu_delete"
             android:onClick="onClickDelete"
             android:textSize="24sp"
             android:background="@drawable/cm_exit_btn_bg"
             />
-        <Button 
+        <!-- 
+         <Button 
             android:id="@+id/cm_file_undo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,6 +83,7 @@
             android:onClick="onClickUndo"
             android:textSize="24sp"
             />
+         -->
     </LinearLayout>
     
     <LinearLayout

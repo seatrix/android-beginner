@@ -32,6 +32,15 @@ public class FileViewInteractionHub {
 	private String mRoot;
 	private GridView mFileListView;
 	
+    public FileViewInteractionHub(IFileInteractionListener fileViewListener) {
+        assert (fileViewListener != null);
+        mFileViewListener = fileViewListener;
+        mFileSortHelper = FileSortHelper.getInstance();
+        mContext = mFileViewListener.getContext();
+        mActivity = mFileViewListener.getmActivity();
+        setupFileListView();
+    }
+
 	public void onListItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		FileInfo lFileInfo = mFileViewListener.getItem(position);
@@ -41,20 +50,12 @@ public class FileViewInteractionHub {
 		}
 		if (!lFileInfo.isDir) {
 			IntentBuilder.viewFile(mActivity, lFileInfo, null, false, null);
-		}else{		    
+		}else{
+		    Log.i(TAG, "mCurrentPath:" + mCurrentPath + ", fileName:" + lFileInfo.fileName);
 		    mCurrentPath = getAbsoluteName(mCurrentPath, lFileInfo.fileName);
 		    refreshFileList();
-		    backPost = position;		    
+		    backPost = position;
 		}
-	}
-
-	public FileViewInteractionHub(IFileInteractionListener fileViewListener) {
-		assert (fileViewListener != null);
-		mFileViewListener = fileViewListener;
-		mFileSortHelper = FileSortHelper.getInstance();
-		mContext = mFileViewListener.getContext();
-		mActivity = mFileViewListener.getmActivity();
-		setupFileListView();
 	}
 
 	public void sortCurrentList() {
@@ -62,9 +63,10 @@ public class FileViewInteractionHub {
 	}
 
 	public void refreshFileList() {
-	    Log.i(TAG, "refreshFileList..., no thing to execute...");
 		// onRefreshFileList returns true indicates list has changed
 	    boolean refreshSuccess = mFileViewListener.onRefreshFileList(mCurrentPath, mFileSortHelper);
+	    
+	    Log.i(TAG, "refreshFileList execute...,refreshSuccess:" + refreshSuccess);
 		if (!refreshSuccess) {
 		    ToastFactory factory = ToastFactory.getInstance();
 		    factory.getToast(mContext,
@@ -89,8 +91,8 @@ public class FileViewInteractionHub {
         mCurrentPath = path;
     }
 
-    public void setCurrentPath(String path) {
-        mCurrentPath = path;
+    public String getCurrentPath() {
+        return mCurrentPath;
     }
     
     public int getBackPost() {
@@ -101,11 +103,7 @@ public class FileViewInteractionHub {
         return mRoot;
     }
     
-    private String getAbsoluteName(String path, String name) {
-        return path.equals("/") ? path + name : path + File.separator + name;
-    }
-    
-    private void setupFileListView() {
+    public void setupFileListView() {
         mFileListView = (GridView) mFileViewListener
                 .getViewById(R.id.file_content);
         mFileListView.setLongClickable(true);
@@ -116,5 +114,9 @@ public class FileViewInteractionHub {
                 onListItemClick(parent, view, position, id);
             }
         });
+    }    
+    
+    private String getAbsoluteName(String path, String name) {
+        return path.equals("/") ? path + name : path + File.separator + name;
     }    
 }

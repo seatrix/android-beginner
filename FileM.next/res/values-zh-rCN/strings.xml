@@ -18,6 +18,8 @@
     <!-- 
     <string name="cm_pop_title">连接到</string>
      -->
+    <string name="cm_back_toast">再按返回键将退出应用</string>
+    <string name="cm_selected_toast">未选中任何文件</string>
     <string name="cm_unknow">未知</string>
     <string name="cm_genre_unknow">未知</string>
     <string name="recent_date">更新日期</string>
@@ -43,7 +45,10 @@
     <string name="right_menu_select_file">选择文件</string>
     <string name="right_menu_copy">复制</string>
     <string name="right_menu_delete">删除</string>
-    <string name="right_menu_undo">返回</string>
+    <!-- 
+     <string name="right_menu_undo">返回</string>
+     -->
+    <string name="right_menu_plaster">粘贴</string>
     
     <string name="file_order_pop_title">排序方式</string>
 </resources>

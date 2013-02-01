@@ -3,6 +3,7 @@ package com.mipt.mediacenter.utils;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.mipt.mediacenter.center.server.FileInfo;
 
@@ -189,7 +190,7 @@ public class FileOperationHelper {
         return false;
     }
 
-    public boolean Delete(ArrayList<FileInfo> files) {
+    public boolean Delete(List<FileInfo> files) {
         copyFileList(files);
         asnycExecute(new Runnable() {
             @Override
@@ -276,7 +277,7 @@ public class FileOperationHelper {
         return false;
     }
 
-    private void copyFileList(ArrayList<FileInfo> files) {
+    private void copyFileList(List<FileInfo> files) {
         synchronized(mCurFileNameList) {
             mCurFileNameList.clear();
             for (FileInfo f : files) {

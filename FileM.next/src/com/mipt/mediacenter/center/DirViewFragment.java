@@ -18,7 +18,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
@@ -27,6 +26,8 @@ import android.widget.TextView;
 import com.mipt.fileMgr.R;
 import com.mipt.fileMgr.center.FileMainActivity;
 import com.mipt.mediacenter.center.file.FileIconHelper;
+import com.mipt.mediacenter.center.file.FileOperatorEvent;
+import com.mipt.mediacenter.center.file.FileOperatorEvent.Model;
 import com.mipt.mediacenter.center.file.FileViewInteractionHub;
 import com.mipt.mediacenter.center.server.FileInfo;
 import com.mipt.mediacenter.center.server.FileSortHelper;
@@ -83,7 +84,6 @@ public class DirViewFragment extends Fragment implements
 		fileDate = (TextView) mRootView.findViewById(R.id.cm_file_date);
 		fileSize = (TextView) mRootView.findViewById(R.id.cm_file_size);
 		/**add OnItemClickListener*/
-		mFileViewInteractionHub = new FileViewInteractionHub(this);
 		gridView = (GridView) mRootView.findViewById(R.id.file_content);
 		mFileIconHelper = new FileIconHelper(mActivity);
 		
@@ -91,14 +91,23 @@ public class DirViewFragment extends Fragment implements
 		mAdapter = new FileItemAdapter(mActivity, mFileIconHelper,
 				mFileNameList, mHandler, MESSAGE_SETINFO);
 		gridView.setAdapter(mAdapter);
+		
+		mFileViewInteractionHub = new FileViewInteractionHub(this);
 		mFileViewInteractionHub.setRootPath(orginPath);
 		mFileViewInteractionHub.refreshFileList();
 		gridView.setOnItemSelectedListener(fileChange);
-		/*if(! FileItemAdapter.SELECT_FLAG){
-		}else{
-		    Log.i(TAG, "enter select model.");
-		    gridView.setOnItemSelectedListener(selectFile);
-		}*/
+		
+		Model model = FileOperatorEvent.getModel(this.getActivity());
+        if(model.equals(Model.SELECT_MODEL)){
+            gridView.setOnItemClickListener(new FileOperatorEvent.SelectFile(mActivity));
+        }else if(model.equals(Model.DEFAULT_BROSWER_MODEL)){
+            //grid.setOnItemClickListener(listener);
+            //FileViewInteractionHub hub = getFileViewInteractionHub();
+            //hub.setupFileListView();
+            //hub.refreshFileList();
+        }
+
+		
 		gridView.requestFocus();
 		
         //ListView rightMenu = (ListView)mRootView.findViewById(R.id.function_menu);
@@ -122,13 +131,11 @@ public class DirViewFragment extends Fragment implements
 
 	@Override
 	public Context getContext() {
-		// TODO Auto-generated method stub
 		return mActivity;
 	}
 
 	@Override
 	public void onDataChanged() {
-		// TODO Auto-generated method stub
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -140,7 +147,6 @@ public class DirViewFragment extends Fragment implements
 
 	@Override
 	public String getDisplayPath(String path) {
-		// TODO Auto-generated method stub
 		String root = mFileViewInteractionHub.getRootPath();
 
 		if (root.equals(path))
@@ -169,19 +175,17 @@ public class DirViewFragment extends Fragment implements
 
 	@Override
 	public void runOnUiThread(Runnable r) {
-		// TODO Auto-generated method stub
 		mActivity.runOnUiThread(r);
 	}
 
 	@Override
 	public FileIconHelper getFileIconHelper() {
-		// TODO Auto-generated method stub
 		return mFileIconHelper;
 	}
 
 	@Override
 	public FileInfo getItem(int pos) {
-		// TODO Auto-generated method stub
+	    Log.i(TAG, "pos:" + pos);
 		if (pos < 0 || pos > mFileNameList.size() - 1)
 			return null;
 
@@ -190,14 +194,12 @@ public class DirViewFragment extends Fragment implements
 
 	@Override
 	public void sortCurrentList(FileSortHelper sort) {
-		// TODO Auto-generated method stub
 		Collections.sort(mFileNameList, sort.getComparator());
 		onDataChanged();
 	}
 
 	@Override
 	public Collection<FileInfo> getAllFiles() {
-		// TODO Auto-generated method stub
 		return mFileNameList;
 	}
 
@@ -209,8 +211,7 @@ public class DirViewFragment extends Fragment implements
 		}
 		mActivity.setCurrentPath(Util.handlePath(path));
 		final int pos = computeScrollPosition(path);
-		ArrayList<FileInfo> fileList = mFileNameList;
-		fileList.clear();
+		mFileNameList.clear();
 		File[] listFiles = file.listFiles();
 
 		for (File child : listFiles) {
@@ -225,13 +226,15 @@ public class DirViewFragment extends Fragment implements
 					}else {
 					    lFileInfo.count = (child != null && child.list() != null) ? (int)child.list().length : 0;                        
                     }
-					fileList.add(lFileInfo);
+					mFileNameList.add(lFileInfo);
 				}
 			}
 		}
-		showEmptyView(fileList.isEmpty());
-		if (!fileList.isEmpty() && pos == 0) {
-			setFileInfo(0, fileList.size(), fileList.get(pos));
+		Log.i(TAG, "mFileNameList.size:" + mFileNameList.size() + ", sort" + sort);
+		showEmptyView(mFileNameList.isEmpty());
+		if (!mFileNameList.isEmpty() && pos == 0) {
+		    Log.i(TAG, "pos:" + pos);
+			setFileInfo(0, mFileNameList.size(), mFileNameList.get(pos));
 		}
 		gridView.setSelection(pos);
 		sortCurrentList(sort);
@@ -273,7 +276,11 @@ public class DirViewFragment extends Fragment implements
         super.onDestroy();
         mFileIconHelper.stopLoad();
     }	
-
+    
+    public FileViewInteractionHub getFileViewInteractionHub(){
+        return mFileViewInteractionHub;
+    }
+    
 	private ArrayList<PathScrollPositionItem> mScrollPositionList = new ArrayList<PathScrollPositionItem>();
 	private String mPreviousPath;
 

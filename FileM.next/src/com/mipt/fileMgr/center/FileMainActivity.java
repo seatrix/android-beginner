@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.DirViewFragment;
-import com.mipt.mediacenter.center.FileItemAdapter;
 import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.file.FileOperatorEvent;
 import com.mipt.mediacenter.center.file.FileOperatorEvent.Model;
@@ -32,13 +31,6 @@ public class FileMainActivity extends Activity {
     private static final String TAG = "FileActivity";
     private int viewType;
     private DeviceInfo dInfo;
-    //private String[] tyeStr;
-    //private FileSortHelper fsortHelper;
-    //private boolean isUserPause;
-    //private LinearLayout menuLayout;
-    //private FrameLayout mmLayout;
-    //private String[] menuListItem;
-    //private boolean menuShow = false;
     private TextView currentPath;
     private TextView viewTypeTag;
     private TextView currentNum;
@@ -128,7 +120,7 @@ public class FileMainActivity extends Activity {
     @Override
     public void onBackPressed() {
         Model m = FileOperatorEvent.getModel(this);
-        Log.i(TAG, "SELECT_FLAG:" + m.toString());
+        Log.i(TAG, "onBackPressed, SELECT_FLAG:" + m.toString());
         if(m.equals(Model.SELECT_MODEL)){
             //FileOperatorEvent.setModel(this, Model.DEFAULT_BROSWER_MODEL);
             FileOperatorEvent.switchoverView(this, Model.DEFAULT_BROSWER_MODEL);
@@ -140,6 +132,8 @@ public class FileMainActivity extends Activity {
             }
         }
         
+        Model m1 = FileOperatorEvent.getModel(this);
+        Log.i(TAG, "onBackPressed, select_flag:" + m1.toString());
     }
     
     @Override
@@ -342,11 +336,19 @@ public class FileMainActivity extends Activity {
     }
     
     public void onClickOrder(View v) {
-        FileOperatorEvent.onClickOrder(v, this);
+        FileOperatorEvent.onClickOrder(this, v);
     }
 
     public void onClickSelect(View v){
-        FileOperatorEvent.onClickSelect(v, this);
+        FileOperatorEvent.onClickSelect(this,v);
+    }
+    
+    public void onclickCopay(View v){
+        FileOperatorEvent.onClickCopy(this, v);
+    }
+    
+    public void onClickDelete(View v){
+        FileOperatorEvent.onClickDelete(this, v); 
     }
     
     private void addFragmentToStack(int _viewTpe, DeviceInfo _dInfo) {

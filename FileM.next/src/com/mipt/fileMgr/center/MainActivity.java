@@ -12,10 +12,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Window;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.DeviceFragment;
+import com.mipt.mediacenter.center.file.FileOperatorEvent;
+import com.mipt.mediacenter.center.file.FileOperatorEvent.Model;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.ActivitiesManager;
@@ -26,7 +29,6 @@ import com.mipt.mediacenter.utils.Util;
 import com.mipt.mediacenter.utils.Util.SDCardInfo;
 
 /**
- * 
  * @author fang
  * @version $Id: 2013-01-24 17:26:01Z slieer $ 
  */
@@ -52,66 +54,21 @@ public class MainActivity extends Activity {
 		super.onSaveInstanceState(outState);
 	}
 
-	private void initData() {
-	    Log.i(TAG, "initData...");
-	    addFragmentToStack(false, deviceInfos);
-		//AllShareProxy.getInstance(cxt).initSearchEngine();
-		//onDataChanged(0, null);
-		HandlerManager.getInstance().registerHandler(
-				HandlerManager.MainHandler, mHandler);
-		//oldDeviceInfos.addAll(deviceInfos);
-	}
-
 	public interface DataChanged {
 		void onDataChanged(int _tabId,
 				List<DeviceInfo> _devs);
 	}
 
-	private void addFragmentToStack(boolean isFav,
-			List<DeviceInfo> devs) {
-        Log.i(TAG, "addFragmentToStack...createNew:" + createNew + ",isFav:" + isFav);
-		if (isFav) {
-		    //Log.i(TAG, "loading FavFragment...isFav is" + isFav);
-/*			FragmentTransaction ft = getFragmentManager().beginTransaction();
-			Fragment newFragment = FavFragment.newInstance();
-			ft.replace(R.id.tabcontent, newFragment);
-			ft.commitAllowingStateLoss();
-			createNew = true;
-*/		} else {
-			if (createNew) {
-			    Log.i(TAG, "devs:" + devs);
-			    
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				Fragment newFragment = DeviceFragment.newInstance(-1,devs);
-				Log.d(TAG,"newFragment == null" +(newFragment == null));
-				ft.replace(R.id.tabcontent, newFragment);
-				//ft.add(R.id.tabcontent, newFragment, "deviceFragment");
-                ft.commitAllowingStateLoss();
-                
-				//ft.add(R.id.tabcontent, newFragment);
-				//ft.commit();
-				createNew = false;
-				//Log.i(TAG, "loading DeviceFragment......:" + getFragmentManager().);
-			} else {
-				DataChanged dataChanged = (DataChanged) getFragmentManager()
-						.findFragmentById(R.id.tabcontent);
-				if (dataChanged != null) {
-					dataChanged.onDataChanged(-1, devs);
-				}
-				Log.i(TAG, "loading DataChanged......");
-			}
-		}
-	}
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
-		//this.unregisterReceiver(mReceiver);
-		//AllShareProxy.getInstance(cxt).unInitSearchEngine();
+		FileOperatorEvent.setModel(this, Model.DEFAULT_BROSWER_MODEL);
 		HandlerManager.getInstance().unRegisterHandler(
 				HandlerManager.MainHandler);
 		ToastFactory.getInstance().cancelToast();
+		
+		//clean copy flag.
 	}
 
 	public static final int MESSAGE_FRESH_DEVICE = 10001;
@@ -227,6 +184,78 @@ public class MainActivity extends Activity {
 		return (ArrayList<DeviceInfo>)deviceInfos;
 	}
 
+    private void initData() {
+        Log.i(TAG, "initData...");
+        addFragmentToStack(false, deviceInfos);
+        HandlerManager.getInstance().registerHandler(
+                HandlerManager.MainHandler, mHandler);
+    }
+    
+    int i = 0;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            Fragment fg = getFragmentManager()
+                    .findFragmentById(R.id.tabcontent);
+            fg.getView().requestFocus();
+            i = 0;
+            return true;
+        } else if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (i > 1) {
+                this.finish();
+                return true;
+            } else {
+                ToastFactory.getInstance()
+                        .getToast(cxt, cxt.getString(R.string.cm_back_toast))
+                        .show();
+                i++;
+                return false;
+            }
+
+        } else {
+            i = 0;
+            return super.dispatchKeyEvent(event);
+        }
+    }
+    
+    private void addFragmentToStack(boolean isFav,
+            List<DeviceInfo> devs) {
+        Log.i(TAG, "addFragmentToStack...createNew:" + createNew + ",isFav:" + isFav);
+        if (isFav) {
+            //Log.i(TAG, "loading FavFragment...isFav is" + isFav);
+/*          FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment newFragment = FavFragment.newInstance();
+            ft.replace(R.id.tabcontent, newFragment);
+            ft.commitAllowingStateLoss();
+            createNew = true;
+*/      } else {
+            if (createNew) {
+                Log.i(TAG, "devs:" + devs);
+                
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment newFragment = DeviceFragment.newInstance(-1,devs);
+                Log.d(TAG,"newFragment == null" +(newFragment == null));
+                ft.replace(R.id.tabcontent, newFragment);
+                //ft.add(R.id.tabcontent, newFragment, "deviceFragment");
+                ft.commitAllowingStateLoss();
+                
+                //ft.add(R.id.tabcontent, newFragment);
+                //ft.commit();
+                createNew = false;
+                //Log.i(TAG, "loading DeviceFragment......:" + getFragmentManager().);
+            } else {
+                DataChanged dataChanged = (DataChanged) getFragmentManager()
+                        .findFragmentById(R.id.tabcontent);
+                if (dataChanged != null) {
+                    dataChanged.onDataChanged(-1, devs);
+                }
+                Log.i(TAG, "loading DataChanged......");
+            }
+        }
+    }
+	
 	private boolean isHasTypeDevice(int type, List<DeviceInfo> deviceInfos) {
 		boolean isHas = false;
 		for (DeviceInfo di : deviceInfos) {
@@ -237,53 +266,4 @@ public class MainActivity extends Activity {
 		}
 		return isHas;
 	}
-
-/*	private void addBroadCast() {
-		registerReceiver(mReceiver, new IntentFilter(
-				DeviceUpdateBrocastFactory.ADD_DEVICES));
-		registerReceiver(mReceiver, new IntentFilter(
-				DeviceUpdateBrocastFactory.REMOVE_DEVICES));
-		registerReceiver(mReceiver, new IntentFilter(
-				DeviceUpdateBrocastFactory.CLEAR_DEVICES));
-		registerReceiver(mReceiver, new IntentFilter(
-				DeviceUpdateBrocastFactory.SEARCH_DEVICES_FAIL));
-
-	}
-*/
-/*	
-	int i = 0;
-    @Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-		// TODO Auto-generated method stub
-		if (event.getAction() == KeyEvent.ACTION_DOWN
-				&& event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-			Fragment fg = getFragmentManager()
-					.findFragmentById(R.id.tabcontent);
-			fg.getView().requestFocus();
-			i = 0;
-			return true;
-		} else if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			if (lastView != null) {
-				lastView.requestFocus();
-			} else {
-				tabGroup.requestFocus();
-			}
-			if (i > 1) {
-				this.finish();
-				return true;
-			} else {
-				ToastFactory.getInstance()
-						.getToast(cxt, cxt.getString(R.string.cm_back_toast))
-						.show();
-				i++;
-				return false;
-			}
-
-		} else {
-			i = 0;
-			return super.dispatchKeyEvent(event);
-		}
-	}
-*/
-
 }
