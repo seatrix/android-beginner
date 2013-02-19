@@ -14,7 +14,7 @@ public class DeviceInfo implements Serializable {
 	public static final int TYPE_LOCAL = 1;
 	//public static final int TYPE_DLAN = 3;
 	public static final int TYPE_USB = 2;
-	public static final int TYPE_SMB = 3;
+	public static final int TYPE_CIFS = 3;
 	public String devName;
 	public String devPath;
 	public String usedPercent;

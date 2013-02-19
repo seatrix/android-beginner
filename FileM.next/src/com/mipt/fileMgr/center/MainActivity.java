@@ -119,6 +119,11 @@ public class MainActivity extends Activity {
 					null, null, DeviceInfo.TYPE_USB, false,
 					R.drawable.cm_usb_remove_tag));
 		}
+		//从数据库中取"已成功登录过的cifs"
+		
+		//add “更多cifs设备”
+		deviceInfos.add(new DeviceInfo(
+		        null, getString(R.string.smb_more_share_device), null, null, null, DeviceInfo.TYPE_CIFS, false, R.drawable.lan_multi_devices));
 		
 		DeviceFragment f = (DeviceFragment) getFragmentManager()
 		        .findFragmentById(R.id.tabcontent);

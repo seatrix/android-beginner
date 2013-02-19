@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -23,9 +24,7 @@ import com.mipt.mediacenter.utils.ActivitiesManager;
  * 
  */
 public class FindDeviceActivity extends Activity {
-	//private FindDeviceDialog fDialog;
-	//private String[] deviceStr;
-	//private Context cxt;
+    private static final String TAG = "FindDeviceActivity";
 	private ExitDialog pullDevice;
 	private DeviceInfo currentInfo;
 	private int type = 0;
@@ -45,6 +44,8 @@ public class FindDeviceActivity extends Activity {
 				this.getString(R.string.category_picture) };
 */		ActivitiesManager.getInstance().registerActivity(
 				ActivitiesManager.ACTIVITY_POP_VIEW, this);
+
+        Log.i(TAG, "call FindDeviceActivity.....");
 		doAction();
 	}
 
@@ -83,42 +84,6 @@ public class FindDeviceActivity extends Activity {
 					}
 				}
 			}
-			/*if (fDialog == null) {
-				fDialog = new FindDeviceDialog(this,
-						R.style.show_choose_type_dialog,
-						new OnItemClickListener() {
-							@Override
-							public void onItemClick(AdapterView<?> arg0,
-									View arg1, int arg2, long arg3) {
-								// TODO Auto-generated method stub
-								final String name = (String) arg0
-										.getItemAtPosition(arg2);
-								Intent intent = new Intent(cxt,
-										FileMainActivity.class);
-								intent.putExtra(
-										MediacenterConstant.INTENT_EXTRA,
-										currentInfo);
-								intent.putExtra(
-										MediacenterConstant.INTENT_TYPE_VIEW,
-										getTpyeByName(name));
-								startActivity(intent);
-								fDialog.dismiss();
-								fDialog = null;
-								FindDeviceActivity.this.finish();
-							}
-
-						}, deviceStr, currentInfo.devName);
-				fDialog.setOnDismissListener(new OnDismissListener() {
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						// TODO Auto-generated method stub
-						FindDeviceActivity.this.finish();
-					}
-				});
-			} else {
-				fDialog.setName(currentInfo.devName);
-			}
-			fDialog.show();*/
 		} else if (type == MediacenterConstant.MESSAGE_REMOVE) {
 			Activity showActivity = ActivitiesManager.getInstance()
 					.getActivity(ActivitiesManager.ACTIVITY_FILE_VIEW);
@@ -128,29 +93,6 @@ public class FindDeviceActivity extends Activity {
 				if (di != null && removeDevice != null
 						&& di.devPath.equals(removeDevice.devPath)
 						&& pullDevice == null) {
-					
-					/*pullDevice = new ExitDialog(cxt, R.style.exit_dialog,
-							false, cxt.getString(R.string.current_sd_remove),
-							new View.OnClickListener() {
-								@Override
-								public void onClick(View arg0) {
-									// TODO Auto-generated method stub
-									fm.finish();
-									FindDeviceActivity.this.finish();
-								}
-							});
-					pullDevice.setOnKeyListener(new OnKeyListener() {
-						@Override
-						public boolean onKey(DialogInterface dialog,
-								int keyCode, KeyEvent event) {
-							if (keyCode == KeyEvent.KEYCODE_BACK)
-								return true;
-							return false;
-						}
-					});
-					if (!pullDevice.isShowing()) {
-						pullDevice.show();
-					}*/
 				}
 			}
 

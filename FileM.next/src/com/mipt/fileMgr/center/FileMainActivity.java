@@ -357,20 +357,22 @@ public class FileMainActivity extends Activity {
         if (fg != null) {
             fg.onDetach();
         }
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment newFragment = null;
-        if(_dInfo.type == DeviceInfo.TYPE_LOCAL || _dInfo.type == DeviceInfo.TYPE_USB) {
+        if(_dInfo.type == DeviceInfo.TYPE_LOCAL || _dInfo.type == DeviceInfo.TYPE_USB || (_dInfo.type == DeviceInfo.TYPE_CIFS && _dInfo.devPath != null)) {
+            if( _dInfo.type == DeviceInfo.TYPE_CIFS ){
+                Log.i(TAG, "mount device. source path:" + _dInfo.devPath);
+                //mount.
+            }
             currentPath.setText(Util.handlePath(dInfo.devPath));
 
             Log.i(TAG, "view local  file info....");
             viewTypeTag.setText(getString(R.string.all_file_view_type));
-            newFragment = DirViewFragment.newInstance(_dInfo.devPath, _dInfo.type);
-        }else{
-            //smb
-            //......
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment newFragment = DirViewFragment.newInstance(_dInfo.devPath, _dInfo.type);
+            ft.replace(R.id.file_content, newFragment, DirViewFragment.TAG);
+            ft.commit();
         }
-        ft.replace(R.id.file_content, newFragment, DirViewFragment.TAG);
-        ft.commit();
+
     }
 
     /*

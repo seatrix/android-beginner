@@ -2,20 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" android:id="@+id/smb_main_layout">	
+    android:orientation="vertical"
+    android:id="@+id/smb_main_layout"
+    android:background="#00141f" 
+    android:layout_marginLeft="20dp"
+    >	
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone" 
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        
+        />
     
     <ListView
         android:id="@+id/list_view"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:transcriptMode="disabled" >
+	    android:layout_width="match_parent"
+	    android:background="@drawable/cm_content_bg"
+	    android:cacheColorHint="#00000000"
+	    android:divider="@drawable/cm_devcice_divi"
+	    android:footerDividersEnabled="false"
+	    android:headerDividersEnabled="false"
+	    android:focusableInTouchMode="true"
+	    android:listSelector="@drawable/cm_item_select"
+	    android:scrollbarThumbVertical="@drawable/cm_scroll_thumb"
+	    android:scrollbarTrackVertical="@drawable/cm_scroll_track"
+	    android:scrollbars="vertical"         
+        >
     </ListView>
-
-
 </LinearLayout>

@@ -1,8 +1,9 @@
 package com.mipt.mediacenter.center;
 
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,10 +27,10 @@ import com.mipt.mediacenter.utils.cifs.UdpGetClientMacAddr;
 
 public class CifsLanBrowserAdpter {
 	public final static String TAG = "SmbAsynLanBrowserAdpter";
-	
+	public final static Pattern ASCII = Pattern.compile("[\\x21-\\x7E]+");
 
 	public static class LanBrowserAdapter extends ArrayAdapter<LanNodeInfo> {
-		public LanBrowserAdapter(Context thiz, List servers) {
+		public LanBrowserAdapter(Context thiz, List<LanNodeInfo> servers) {
 			super(thiz, R.layout.smb_device_list_item, servers);
 		}
 
@@ -41,15 +42,12 @@ public class CifsLanBrowserAdpter {
 				 row = inflater.inflate(R.layout.smb_device_list_item, parent, false);
 		    }
 
-					
 			TextView netbiosName = (TextView) row
 					.findViewById(R.id.netbios_name);
 			TextView ip = (TextView) row.findViewById(R.id.ip);
 			LanNodeInfo info = getItem(position);
 			
-			int fisrtBlankIndex = info.name.indexOf(" ");
-			String name = fisrtBlankIndex != -1  ? info.name.substring(0, fisrtBlankIndex) : info.name;
-			netbiosName.setText(name);
+			netbiosName.setText(info.name);
 			ip.setText("(" + info.ip + ")");
 			return row;
 		}
@@ -59,14 +57,14 @@ public class CifsLanBrowserAdpter {
 		private Activity act = null;
 		private ProgressBar bar = null;
 		private ListView listView;
-
-		List<LanNodeInfo>nodeInfoList = new ArrayList<LanNodeInfo>();
+		private List<LanNodeInfo>nodeInfoList;
 		
 		public BakLanBrowserHandler(Activity act, ProgressBar bar,
-				ListView listView) {
+				ListView listView, List<LanNodeInfo> nodeInfoList) {
 			this.act = act;
 			this.bar = bar;
 			this.listView = listView;
+			this.nodeInfoList = nodeInfoList; 
 		}
 
 		@SuppressWarnings("unchecked")
@@ -79,24 +77,17 @@ public class CifsLanBrowserAdpter {
 					//Log.i(TAG, "obtain Msg:" + msg.obj.toString());
 					LanNodeInfo nodeInfo = (LanNodeInfo) msg.obj;
 					
-					if(listView.getAdapter() == null){
-						Log.i(TAG, "init ...listadapter.");
-						listView.setAdapter(new CifsLanBrowserAdpter
-								.LanBrowserAdapter(act, nodeInfoList));
-						
-					}else {
-						Log.i(TAG, "add ...listadapter.");
-						nodeInfoList.add(nodeInfo);
-						((ArrayAdapter<LanNodeInfo>)listView.getAdapter()).notifyDataSetChanged();
-						listView.setSelection(0);
-					}
-				}				
+					//Log.i(TAG, "add ...listadapter:" + nodeInfo);
+					nodeInfoList.add(nodeInfo);
+					((ArrayAdapter<LanNodeInfo>)listView.getAdapter()).notifyDataSetChanged();
+					listView.setSelection(0);
+				}
 				
 				break;
 			case CifsConstants.GUI_STOP_NOTIFIER:
 				listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 				bar.setVisibility(View.GONE);
-/*				bar.setVisibility(View.GONE);
+/*				
 				if(msg.obj != null){
 					@SuppressWarnings("unchecked")
 					List<LanNodeInfo> nodeInfoList = (List<LanNodeInfo>) msg.obj;
@@ -146,6 +137,16 @@ public class CifsLanBrowserAdpter {
 						UdpGetClientMacAddr udp = new UdpGetClientMacAddr(adr);
 						LanNodeInfo info = udp.getRemoteMacAddr();
 						
+		                int fisrtBlankIndex = info.name.indexOf(" ");
+		                String name = fisrtBlankIndex != -1  ? info.name.substring(0, fisrtBlankIndex) : info.name;
+		                
+		                Matcher matcher = ASCII.matcher(name);
+		                if (! matcher.matches()){
+		                    Log.i(TAG, "illegal name:" + name);
+		                    continue;
+		                }
+		                info.name = name;
+		                
 						info.num = idx++;
 						m = handler.obtainMessage();
 						m.what = CifsConstants.GUI_THREADING_NOTIIER;
@@ -153,9 +154,9 @@ public class CifsLanBrowserAdpter {
 						handler.sendMessage(m);
 						//list.add(info);
 					} catch (SocketTimeoutException e) {
-
+					    //Log.e(TAG, e.getMessage(), e);
 					} catch (Exception e) {
-						e.printStackTrace();
+					    Log.e(TAG, e.getMessage(), e);
 					}
 				}
 				Log.i(TAG, "scan finish ! comsume time:" + (System.currentTimeMillis() - start));

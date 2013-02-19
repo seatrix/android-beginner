@@ -53,6 +53,13 @@
             android:theme="@android:style/Theme.Translucent" >
         </activity>
 
+        <activity
+            android:name=".center.CifsActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Translucent" >
+        </activity>
+                
         <receiver android:name="com.mipt.mediacenter.center.USBReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />

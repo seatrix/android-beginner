@@ -17,17 +17,20 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
+import com.mipt.fileMgr.center.CifsActivity;
 import com.mipt.fileMgr.center.FileMainActivity;
+import com.mipt.fileMgr.center.MainActivity;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.ToastFactory;
 import com.mipt.mediacenter.utils.Util;
-import com.mipt.fileMgr.center.MainActivity;
 /**
  * @author fang
  * @version $Id: 2013-01-21 09:26:01Z slieer $
@@ -96,27 +99,42 @@ public class DeviceFragment extends Fragment implements
 				// TODO Auto-generated method stub
 				final DeviceInfo file = adapter.getItem(arg2);
 				currentDevice = file;
-				if (file.isLive) {
-					Util.runOnUiThread(mActivity, new Runnable() {
-						@Override
-						public void run() {
-							Intent intent = new Intent(mActivity,
-									FileMainActivity.class);
-							intent.putExtra(MediacenterConstant.INTENT_EXTRA,
-									file);
-							//intent.putExtra(MediacenterConstant.INTENT_TYPE_VIEW, file.type);
-							startActivity(intent);
-						}
-
-					});
-
-				} else {
-					ToastFactory
-							.getInstance()
-							.getToast(
-									mActivity,
-									mActivity
-											.getString(R.string.cm_device_unlive_click)).show();
+				if(file.type == DeviceInfo.TYPE_CIFS && file.devPath == null){
+	                //navigate to multi cifs devices.
+				    Log.i(TAG, "navigate to multi cifs devices.start new Activity.");
+				    //CifsActivity
+				    Util.runOnUiThread(mActivity, new Runnable() {
+                        @Override
+                        public void run() {
+        				    Intent intent = new Intent(mActivity,
+        				            CifsActivity.class);
+        				    startActivity(intent);
+                        }
+                    });
+				    return ;
+				}else{
+				    if (file.isLive) {
+				        Util.runOnUiThread(mActivity, new Runnable() {
+				            @Override
+				            public void run() {
+				                Intent intent = new Intent(mActivity,
+				                        FileMainActivity.class);
+				                intent.putExtra(MediacenterConstant.INTENT_EXTRA,
+				                        file);
+				                //intent.putExtra(MediacenterConstant.INTENT_TYPE_VIEW, file.type);
+				                startActivity(intent);
+				            }
+				            
+				        });
+				        
+				    } else {
+				        ToastFactory
+				        .getInstance()
+				        .getToast(
+				                mActivity,
+				                mActivity
+				                .getString(R.string.cm_device_unlive_click)).show();
+				    }
 				}
 			}
 
@@ -170,8 +188,8 @@ public class DeviceFragment extends Fragment implements
 						.findViewById(R.id.dev_name);
 				holder.percent = (TextView) convertView
 						.findViewById(R.id.dev_percent_desc);
-				holder.dlanDesc = (TextView) convertView
-						.findViewById(R.id.dlan_des);
+				//.dlanDesc = (TextView) convertView
+				//		.findViewById(R.id.dlan_des);
 				holder.devStatus = (TextView) convertView
 						.findViewById(R.id.dev_des_title);
 				holder.pbar = (ProgressBar) convertView
@@ -181,31 +199,47 @@ public class DeviceFragment extends Fragment implements
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			if (deviceList.get(position) != null) {
+			DeviceInfo info = deviceList.get(position);
+			if (info != null) {
 				DeviceInfo device = deviceList.get(position);
 				holder.devName.setText(device.devName);
 				holder.devImg.setImageResource(device.resId);
 				if (!device.isLive) {
-					int color = getResources().getColor(
-							R.color.cm_device_unused);
+					int color = 0;
+					if(info.devPath == null && info.type == DeviceInfo.TYPE_CIFS){
+					    holder.pbar.setVisibility(View.GONE);
+					    holder.percent.setText("连接到共享设备。\n访问可能会不稳定，具体取决于网络连接状态。");
+					    color = Color.WHITE;
+					    holder.devStatus.setVisibility(View.GONE);
+					    
+					    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+					    //lp.setMarginsRelative(start, top, end, bottom)
+					    lp.setMargins(0, 0, 0, 0);  
+					    holder.percent.setLayoutParams(lp);
+					    //holder.percent.getm
+					    //holder.percent.setPadding(0, 0, 0, 0);
+					    //holder.percent.setGravity(Gravity.LEFT);
+					    //LayoutParams p = holder.percent.getLayoutParams();
+					    //holder.percent.setLayoutParams(p);
+					}else{
+					    color = getResources().getColor(
+	                            R.color.cm_device_unused);
+					    holder.percent.setVisibility(View.GONE);
+					    holder.devStatus.setVisibility(View.VISIBLE);
+					    holder.devStatus.setText(cxt
+					            .getString(R.string.cm_usb_desc));
+					    holder.devStatus.setTextColor(color);
+					}
 					holder.devName.setTextColor(color);
-					holder.devStatus.setTextColor(color);
-					holder.devStatus.setText(cxt
-							.getString(R.string.cm_usb_desc));
-					holder.devStatus.setVisibility(View.VISIBLE);
-					holder.dlanDesc.setVisibility(View.GONE);
+					//holder.dlanDesc.setVisibility(View.GONE);
 
 					holder.pbar.setVisibility(View.GONE);
-					holder.percent.setVisibility(View.GONE);
 				} else {
 					holder.devName.setTextColor(Color.WHITE);
 					holder.devStatus.setTextColor(Color.WHITE);
-/*					if (device.type == DeviceInfo.TYPE_DLAN) {
-					    
-					} else {*/
                     holder.devStatus.setVisibility(View.GONE);
                     holder.pbar.setVisibility(View.VISIBLE);
-                    holder.dlanDesc.setVisibility(View.GONE);
+                    //holder.dlanDesc.setVisibility(View.GONE);
                     int total = (int)(device.devSize / 10000000);
                     int used = (int)(device.devUsedSize / 10000000);
                     holder.pbar.setMax(total);
@@ -215,9 +249,7 @@ public class DeviceFragment extends Fragment implements
                             + Util.convertStorage(device.devSize));
                     holder.percent.setVisibility(View.VISIBLE);
 					//}
-
-				}
-
+			    }
 			}
 			return convertView;
 		}
