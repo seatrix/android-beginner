@@ -12,5 +12,5 @@ public class CifsConstants {
 	public final static int GUI_THREADING_NOTIIER = 2;
 	
 	public final static int REMOTE_PORT = 137;
-	public final static int OUT_TIME_UNIT = 100;
+	public final static int OUT_TIME_UNIT = 50;
 }

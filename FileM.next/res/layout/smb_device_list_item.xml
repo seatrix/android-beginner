@@ -16,6 +16,7 @@
         android:id="@+id/netbios_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:layout_marginLeft="10dp"
         android:layout_gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -24,6 +25,7 @@
         android:id="@+id/ip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:layout_gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 </LinearLayout>

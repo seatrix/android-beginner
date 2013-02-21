@@ -27,7 +27,8 @@ import com.mipt.mediacenter.utils.cifs.UdpGetClientMacAddr;
 
 public class CifsLanBrowserAdpter {
 	public final static String TAG = "SmbAsynLanBrowserAdpter";
-	public final static Pattern ASCII = Pattern.compile("[\\x21-\\x7E]+");
+	public final static String ASCII_REGEX = "[\\x21-\\x7E]+";
+	public final static Pattern ASCII_Pattern = Pattern.compile(ASCII_REGEX); //ascii visual letter.
 
 	public static class LanBrowserAdapter extends ArrayAdapter<LanNodeInfo> {
 		public LanBrowserAdapter(Context thiz, List<LanNodeInfo> servers) {
@@ -79,8 +80,11 @@ public class CifsLanBrowserAdpter {
 					
 					//Log.i(TAG, "add ...listadapter:" + nodeInfo);
 					nodeInfoList.add(nodeInfo);
-					((ArrayAdapter<LanNodeInfo>)listView.getAdapter()).notifyDataSetChanged();
-					listView.setSelection(0);
+					
+					if(msg.arg1 != 0){
+					    ((ArrayAdapter<LanNodeInfo>)listView.getAdapter()).notifyDataSetChanged();
+					    listView.setSelection(listView.getSelectedItemPosition());
+					}
 				}
 				
 				break;
@@ -108,6 +112,7 @@ public class CifsLanBrowserAdpter {
 	}
 
 	public static class BakLanBrowserRunnable implements Runnable {
+	    private int refreshRate = 5;
 		private Handler handler;
 
 		public BakLanBrowserRunnable(Handler handler) {
@@ -140,19 +145,25 @@ public class CifsLanBrowserAdpter {
 		                int fisrtBlankIndex = info.name.indexOf(" ");
 		                String name = fisrtBlankIndex != -1  ? info.name.substring(0, fisrtBlankIndex) : info.name;
 		                
-		                Matcher matcher = ASCII.matcher(name);
+		                Matcher matcher = ASCII_Pattern.matcher(name);
 		                if (! matcher.matches()){
 		                    Log.i(TAG, "illegal name:" + name);
-		                    continue;
+		                    if(name.matches("^[a-zA-Z0-9].*")){
+		                        name = name.replaceAll("[^a-zA-Z0-9-].*", "");
+		                        Log.i(TAG, "modified illegal name:" + name);
+		                    }else{
+		                        continue;
+		                    }
 		                }
 		                info.name = name;
-		                
 						info.num = idx++;
+						
 						m = handler.obtainMessage();
 						m.what = CifsConstants.GUI_THREADING_NOTIIER;
 						m.obj = info;
+						
+						m.arg1 = (i != 0 && i % refreshRate == 0 ? 1 : 0);
 						handler.sendMessage(m);
-						//list.add(info);
 					} catch (SocketTimeoutException e) {
 					    //Log.e(TAG, e.getMessage(), e);
 					} catch (Exception e) {

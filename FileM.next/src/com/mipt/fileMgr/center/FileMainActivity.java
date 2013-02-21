@@ -1,16 +1,31 @@
 package com.mipt.fileMgr.center;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.DirViewFragment;
@@ -18,6 +33,7 @@ import com.mipt.mediacenter.center.MediaCenterApplication;
 import com.mipt.mediacenter.center.file.FileOperatorEvent;
 import com.mipt.mediacenter.center.file.FileOperatorEvent.Model;
 import com.mipt.mediacenter.center.server.DeviceInfo;
+import com.mipt.mediacenter.center.server.FileInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.ActivitiesManager;
 import com.mipt.mediacenter.utils.Util;
@@ -35,6 +51,10 @@ public class FileMainActivity extends Activity {
     private TextView viewTypeTag;
     private TextView currentNum;
     
+    String[] menuListItem = null;
+    FrameLayout mmLayout = null; 
+    LinearLayout menuLayout = null;
+    boolean menuShow = false;  //default not show.
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,13 +84,14 @@ public class FileMainActivity extends Activity {
         addFragmentToStack(-1, dInfo);
 
         //add right menu
-        //menuListItem = getResources().getStringArray(R.array.items_fm);
-        //LayoutInflater mInflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-        //mmLayout = (FrameLayout) mInflater.inflate(R.layout.pp_menu_layout, menuLayout);        
-        //ListView menuList = (ListView) mmLayout.findViewById(R.id.menuList);
-        //menuList.setAdapter(new ToolAdapter(this, R.id.tool_name, menuListItem));
-        //menuLayout = (LinearLayout)findViewById(R.id.menu_layout);
+        menuListItem = getResources().getStringArray(R.array.items_fm);
+        LayoutInflater mInflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        mmLayout = (FrameLayout) mInflater.inflate(R.layout.pp_menu_layout, menuLayout);        
+        ListView menuList = (ListView) mmLayout.findViewById(R.id.menuList);
+        menuList.setAdapter(new ToolAdapter(this, R.id.tool_name, menuListItem));
+        menuLayout = (LinearLayout)findViewById(R.id.menu_layout);
         //showMenu();
+        menuList.setOnItemClickListener(new MenuOnItemClickListener(this));
     }
 
     @Override
@@ -141,14 +162,21 @@ public class FileMainActivity extends Activity {
         switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_CENTER:
                 break;
-            case KeyEvent.KEYCODE_DPAD_LEFT:
+            case KeyEvent.KEYCODE_DPAD_UP:
                 break;
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
+            case KeyEvent.KEYCODE_DPAD_DOWN:
                 break;
             case KeyEvent.KEYCODE_MENU:
+                Log.i(TAG, "KEYCODE_MENU......");
+                if(!menuShow){
+                    showMenu();
+                }
                 break;
             case KeyEvent.KEYCODE_BACK:
-                break;
+                if(menuShow){
+                    hideMenu(false);
+                    return true;
+                }
         }
         return super.onKeyDown(keyCode, event);
     }        
@@ -160,8 +188,84 @@ public class FileMainActivity extends Activity {
         ActivitiesManager.getInstance().unRegisterActivity(
                 ActivitiesManager.ACTIVITY_FILE_VIEW);
     }
-        
-/*    private void hideMenu(boolean isAnimation) {
+    
+    public DeviceInfo getCurrentDeviceInfo() {
+        return dInfo;
+    }
+
+    public ArrayList<FileInfo> handleTreeList(ArrayList<FileInfo> _orginList,
+            Comparator<FileInfo> comparator) {
+        ArrayList<FileInfo> orginList = new ArrayList<FileInfo>();
+        orginList.addAll(_orginList);
+        ArrayList<FileInfo> returnList = new ArrayList<FileInfo>();
+        for (FileInfo fi : orginList) {
+            String date = Util.formatDateString(fi.modifiedDate);
+            if (isHas(date, returnList)) {
+                ArrayList<FileInfo> child = getChilelist(date, returnList);
+                if (!isHasFilePath(fi.filePath, child)) {
+                    child.add(fi);
+                }
+            } else {
+                FileInfo nFile = new FileInfo();
+                nFile.fileName = date;
+                nFile.fileId = fi.fileId;
+                ArrayList<FileInfo> child = new ArrayList<FileInfo>();
+                child.add(fi);
+                nFile.childs = child;
+                returnList.add(nFile);
+            }
+        }
+        // Collections.sort(returnList, comparator);
+        for (FileInfo f : returnList) {
+            // Collections.sort(f.childs, comparator);
+            f.count = f.childs.size();
+        }
+        return returnList;
+    }
+
+    @Override
+    public void onLowMemory() {
+        // TODO Auto-generated method stub
+        super.onLowMemory();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        Log.i(TAG,
+                "0000onActivityResult00000000000000000000000000requestCode:"
+                        + requestCode + ",resultCode:" + resultCode);
+        if (requestCode == MediacenterConstant.ACTIVITYR_RESULT_CODE) {
+        }
+    }
+
+    public void resetCurrentNum() {
+        currentNum.setText("0/0");
+    }
+    public void setCurrentNum(String num) {
+        currentNum.setText(num);
+    }
+    public void setCurrentPath(String path) {
+        currentPath.setText(path);
+    }
+    
+    public void onClickOrder(View v) {
+        FileOperatorEvent.onClickOrder(this, v);
+    }
+
+    public void onClickSelect(View v){
+        FileOperatorEvent.onClickSelect(this,v);
+    }
+    
+    public void onclickCopay(View v){
+        FileOperatorEvent.onClickCopy(this, v);
+    }
+    
+    public void onClickDelete(View v){
+        FileOperatorEvent.onClickDelete(this, v); 
+    }    
+    
+    private void hideMenu(boolean isAnimation) {
         Log.i(TAG, "hideMenu");
         if (!menuShow) {
             return;
@@ -195,14 +299,19 @@ public class FileMainActivity extends Activity {
             return convertView;
         }
     }
-    class MenuOnItemClickListener implements OnItemClickListener{
+    private class MenuOnItemClickListener implements OnItemClickListener{
+        private Activity activity = null;
+        
+        public MenuOnItemClickListener(Activity activity){
+            this.activity = activity;
+        }
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             Toast.makeText(FileMainActivity.this, "onitemclick...", Toast.LENGTH_SHORT).show();
             switch (arg2) {
                 case 0:
                     //排序方式
-                    
+                    FileOperatorEvent.onClickOrder(activity, arg1);
                     break;
                 case 1:
                     //文件操作,进入文件选择模式
@@ -212,16 +321,10 @@ public class FileMainActivity extends Activity {
                     break;
             }
         }        
-    }
- */    
+    }    
     
-    
-    public DeviceInfo getCurrentDeviceInfo() {
-        return dInfo;
-    }
-
-    /*
-    class ViewTypeChooseDialog extends Dialog {
+/*    
+    private class ViewTypeChooseDialog extends Dialog {
         private OnItemClickListener listener;
         private Context context;
         private String[] mStrings;
@@ -278,79 +381,7 @@ public class FileMainActivity extends Activity {
             return 0;
         }
     }
-    
-    public ArrayList<FileInfo> handleTreeList(ArrayList<FileInfo> _orginList,
-            Comparator<FileInfo> comparator) {
-        ArrayList<FileInfo> orginList = new ArrayList<FileInfo>();
-        orginList.addAll(_orginList);
-        ArrayList<FileInfo> returnList = new ArrayList<FileInfo>();
-        for (FileInfo fi : orginList) {
-            String date = Util.formatDateString(fi.modifiedDate);
-            if (isHas(date, returnList)) {
-                ArrayList<FileInfo> child = getChilelist(date, returnList);
-                if (!isHasFilePath(fi.filePath, child)) {
-                    child.add(fi);
-                }
-            } else {
-                FileInfo nFile = new FileInfo();
-                nFile.fileName = date;
-                nFile.fileId = fi.fileId;
-                ArrayList<FileInfo> child = new ArrayList<FileInfo>();
-                child.add(fi);
-                nFile.childs = child;
-                returnList.add(nFile);
-            }
-        }
-        // Collections.sort(returnList, comparator);
-        for (FileInfo f : returnList) {
-            // Collections.sort(f.childs, comparator);
-            f.count = f.childs.size();
-        }
-        return returnList;
-    }
-    */
-    @Override
-    public void onLowMemory() {
-        // TODO Auto-generated method stub
-        super.onLowMemory();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        Log.i(TAG,
-                "0000onActivityResult00000000000000000000000000requestCode:"
-                        + requestCode + ",resultCode:" + resultCode);
-        if (requestCode == MediacenterConstant.ACTIVITYR_RESULT_CODE) {
-        }
-    }
-
-    public void resetCurrentNum() {
-        currentNum.setText("0/0");
-    }
-    public void setCurrentNum(String num) {
-        currentNum.setText(num);
-    }
-    public void setCurrentPath(String path) {
-        currentPath.setText(path);
-    }
-    
-    public void onClickOrder(View v) {
-        FileOperatorEvent.onClickOrder(this, v);
-    }
-
-    public void onClickSelect(View v){
-        FileOperatorEvent.onClickSelect(this,v);
-    }
-    
-    public void onclickCopay(View v){
-        FileOperatorEvent.onClickCopy(this, v);
-    }
-    
-    public void onClickDelete(View v){
-        FileOperatorEvent.onClickDelete(this, v); 
-    }
-    
+    */    
     private void addFragmentToStack(int _viewTpe, DeviceInfo _dInfo) {
         MediaCenterApplication.getInstance().resetData();
         Fragment fg = getFragmentManager().findFragmentById(R.id.file_content);
@@ -375,7 +406,6 @@ public class FileMainActivity extends Activity {
 
     }
 
-    /*
     private void showMenu() {        
         Log.i(TAG, "show right operate Menu.");
         //mmLayout.setAnimation(AnimationUtils.loadAnimation(this, R.anim.vp_menu_in));
@@ -383,7 +413,7 @@ public class FileMainActivity extends Activity {
                 LayoutParams.MATCH_PARENT);
         menuLayout.addView(mmLayout, layoutParams);
         menuLayout.requestFocus();
-        //menuShow = true;
+        menuShow = true;
     }
     
     private boolean isHas(String name, ArrayList<FileInfo> list) {
@@ -425,6 +455,7 @@ public class FileMainActivity extends Activity {
         return null;
     }
 
+    /*
     private String getSdCardsPath(String orginPath) {
         String selectPath = orginPath;
         if (selectPath.indexOf("/sdcard") == 0) {
@@ -434,5 +465,5 @@ public class FileMainActivity extends Activity {
     }
     
     private String posPath = null;
-     */
+*/
 }

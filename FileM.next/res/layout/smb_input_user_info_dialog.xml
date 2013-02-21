@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    style="@style/show_choose_type_dialog"
+    android:layout_width="360dp"
+    android:layout_height="match_parent"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/item_select_title_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/smb_user_info"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" >
+
+        <TextView
+            android:id="@+id/user_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/relative"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/smb_user_name_title"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        <EditText
+            android:id="@+id/user_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/user_title"
+            android:layout_marginLeft="21dp"
+            android:layout_toRightOf="@+id/user_title"
+            android:cacheColorHint="#00000000"
+            android:ems="10"
+            android:text="slieer"
+            android:listSelector="@drawable/cm_pop_item_select" />
+        
+        <TextView
+            android:id="@+id/password_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_title"
+            android:layout_marginTop="31dp"
+            android:text="@string/smb_user_password_title"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        
+        <EditText
+            android:id="@+id/user_password"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/password_title"
+            android:layout_alignTop="@id/password_title"
+            android:layout_marginLeft="21dp"
+            android:cacheColorHint="#00000000"
+            android:ems="10"
+            android:text="slieer"
+            android:listSelector="@drawable/cm_pop_item_select" />
+
+        
+    </RelativeLayout>
+
+</RelativeLayout>

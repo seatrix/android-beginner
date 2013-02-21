@@ -7,8 +7,9 @@
     android:orientation="vertical"
     android:paddingLeft="5dp"
     android:paddingTop="13dp"
-    android:background="@drawable/cm_content_bg">
-     
+    >
+    <!--
+    android:background="@drawable/cm_content_bg" 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,18 +75,8 @@
             android:textSize="24sp"
             android:background="@drawable/cm_exit_btn_bg"
             />
-        <!-- 
-         <Button 
-            android:id="@+id/cm_file_undo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/right_menu_undo"
-            android:onClick="onClickUndo"
-            android:textSize="24sp"
-            />
-         -->
     </LinearLayout>
-    
+     -->
     <LinearLayout
         android:id="@+id/right_bottom_content"
         android:layout_width="match_parent"
