@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;

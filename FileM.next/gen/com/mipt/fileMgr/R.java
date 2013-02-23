@@ -224,6 +224,7 @@ public final class R {
         public static final int file_list_page_op_menu=0x7f0a0001;
     }
     public static final class string {
+        public static final int all_devices=0x7f080032;
         public static final int all_file_view_type=0x7f080008;
         public static final int app_name=0x7f080000;
         public static final int back_button_desc=0x7f080019;
@@ -258,6 +259,7 @@ public final class R {
         public static final int local_sdcard=0x7f080017;
         public static final int menu_settings=0x7f080001;
         public static final int more_tool=0x7f080021;
+        public static final int net_share_device=0x7f080033;
         public static final int no_file=0x7f080003;
         public static final int ok=0x7f080030;
         public static final int ok_open_desc=0x7f08001b;

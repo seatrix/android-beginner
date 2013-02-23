@@ -47,7 +47,10 @@ public class CifsActivity extends Activity {
         setContentView(R.layout.cm_file_list);
 
         currentPath = (TextView)findViewById(R.id.current_path_tag);
-        currentPath.setText("所有设备/网络共享设备");
+        
+        String allDevices = getResources().getString(R.string.all_devices);
+        String shareDevices = getResources().getString(R.string.net_share_device);
+        currentPath.setText(allDevices.concat("/").concat(shareDevices));
         // viewTypeTag = (TextView) findViewById(R.id.view_type_tag);
         // currentNum = (TextView) findViewById(R.id.current_num_tag);
 
@@ -154,7 +157,7 @@ public class CifsActivity extends Activity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, ip);
+                        Log.i(TAG, "ip adr is:" + ip);
                         EditText nameEdit = (EditText)view.findViewById(R.id.user_name);
                         EditText passEdit = (EditText)view.findViewById(R.id.user_password);
                         
