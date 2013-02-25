@@ -17,6 +17,7 @@ import android.view.Window;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.DeviceFragment;
+import com.mipt.mediacenter.center.db.DeviceDB;
 import com.mipt.mediacenter.center.file.FileOperatorEvent;
 import com.mipt.mediacenter.center.file.FileOperatorEvent.Model;
 import com.mipt.mediacenter.center.server.DeviceInfo;
@@ -120,6 +121,10 @@ public class MainActivity extends Activity {
 					R.drawable.cm_usb_remove_tag));
 		}
 		//从数据库中取"已成功登录过的cifs"
+		List<DeviceInfo> smbInfo = new DeviceDB(this).listSmbPath();
+		if(smbInfo != null){
+		    deviceInfos.addAll(smbInfo);
+		}
 		
 		//add “更多cifs设备”
 		deviceInfos.add(new DeviceInfo(

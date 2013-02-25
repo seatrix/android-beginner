@@ -11,7 +11,9 @@
     <string name="all_file_view_type">所有文件视图</string>
     <string name="cm_usb_desc">未连接设备</string>
     <string name="recent_content">最新内容</string>
-    <string name="cm_dlan_title">连接到共享设备</string>
+    <!-- 
+     <string name="cm_dlan_title">连接到共享设备</string>
+     -->
     <string name="cm_device_progress">可用,共</string>
     <string name="cm_file_cnt">项</string>
     <string name="cm_device_unlive_click">请连接设备,然后尝试体验</string>
@@ -59,4 +61,7 @@
     <string name="cancel">取消</string>
     <string name="all_devices">所有设备</string>
     <string name="net_share_device">网络共享设备</string>
+    <string name="op_share_device_fail">操作网络共享设备失败</string>
+    <string name="smb_multi_deivce_title">连接到共享设备。\n访问可能会不稳定，具体取决于网络连接状态。</string>
+    
 </resources>

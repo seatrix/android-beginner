@@ -41,7 +41,7 @@
             android:layout_toRightOf="@+id/user_title"
             android:cacheColorHint="#00000000"
             android:ems="10"
-            android:text="mipt"
+            android:text="slieer"
             android:listSelector="@drawable/cm_pop_item_select" />
         
         <TextView
@@ -65,7 +65,7 @@
             android:ems="10"
             android:inputType="textPassword"
             android:listSelector="@drawable/cm_pop_item_select"
-            android:text="200819901103" />
+            android:text="slieer" />
         
     </RelativeLayout>
 

@@ -1,7 +1,11 @@
 package com.mipt.mediacenter.utils.cifs;
 
-public class LanNodeInfo {
-	public int num;
+import java.io.Serializable;
+
+public class LanNodeInfo implements Serializable{
+    private static final long serialVersionUID = -1970744161067484362L;
+    
+    public int num;
 	public String ip;
 	public String name;
 	public String mac;
@@ -13,6 +17,7 @@ public class LanNodeInfo {
 		this.mac = mac;
 		
 	}
+	
 	@Override
 	public String toString() {
 		return "LanNodeInfo [ip=" + ip + ", name=" + name + ", mac=" + mac

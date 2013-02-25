@@ -21,6 +21,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,15 +29,23 @@ import android.widget.Toast;
 
 import com.mipt.fileMgr.R;
 import com.mipt.fileMgr.center.CifsActivity.CifsFragment;
+import com.mipt.mediacenter.center.db.DeviceDB;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.FileInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
+import com.mipt.mediacenter.utils.ToastFactory;
+import com.mipt.mediacenter.utils.cifs.LanInfo;
+import com.mipt.mediacenter.utils.cifs.LanNodeInfo;
 import com.mipt.mediacenter.utils.cifs.a6.MountCifs;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.containers.Mount;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.Command;
 
+/**
+ * @author slieer
+ *
+ */
 public class CifsBrowserActivity extends Activity {
     public static final String TAG = "CifsBrowserActivity";
 
@@ -47,10 +56,10 @@ public class CifsBrowserActivity extends Activity {
         setContentView(R.layout.cm_file_list);
 
         TextView currentPath = (TextView)findViewById(R.id.current_path_tag);
-        String ip = getIntent().getStringExtra(CifsActivity.IP);
+        LanNodeInfo nodeInfo = (LanNodeInfo )getIntent().getSerializableExtra(CifsActivity.NODE);
 
         String allDevices = getResources().getString(R.string.all_devices);
-        currentPath.setText(allDevices.concat("/").concat(ip));
+        currentPath.setText(allDevices.concat("/").concat(nodeInfo.ip));
 
         ArrayList<FileInfo> list = getIntent().getParcelableArrayListExtra(CifsActivity.DATA);
         if (list == null || list.size() == 0) {
@@ -84,9 +93,9 @@ public class CifsBrowserActivity extends Activity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View mRootView = inflater.inflate(R.layout.smb_device_list, container, false);
+            View mRootView = inflater.inflate(R.layout.smb_device_grid, container, false);
 
-            ListView listView = (ListView)mRootView.findViewById(R.id.list_view);
+            GridView listView = (GridView)mRootView.findViewById(R.id.file_content);
             listView.setAdapter(new Adapt(context, fileInfos));
             listView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
@@ -98,29 +107,47 @@ public class CifsBrowserActivity extends Activity {
             return mRootView;
         }
     }
-
+    
+    /**
+     * 
+     * @param server
+     * @param remotePath
+     * @return local path , if mounted, or null.
+     */
+    public static String isMountedA4(String server, String remotePath){
+        try {
+            List<Mount> mountList = RootTools.getMounts();
+            for(Mount m : mountList){
+                Log.i(TAG, "type:" + m.getType() 
+                         + ",device:" + m.getDevice().toString() 
+                         + ",flags:"+ m.getFlags() 
+                         + ",mountPoint:"+ m.getMountPoint());
+                if(!m.getType().equals("cifs")){
+                    continue;
+                }
+                String devicePath = "/" + server + "/" + remotePath;
+                Log.i(TAG, devicePath);
+                if(m.getDevice().toString().equals(devicePath))
+                    return m.getMountPoint().toString();
+                }
+        } catch (Exception e) {
+            Log.e(TAG, "getMounts--" + e.getMessage(), e);
+        }
+        return null;
+    }
+    
     /*
      * smb://slieer:slieer@192.168.1.100/Users/
      * smb://192.168.51.230/SharedDocs/
      */
     private static void mountOp(Activity context, String smbPath) {
         Log.i(TAG, "smbPath:" + smbPath);
-        String[] strArr = smbPath.split("@");
-        String remotePath = null;
-        String user = null;
-        String password = null;
-        if(strArr.length > 1){
-            remotePath = strArr[1];
-            String[] userInfo = strArr[0].replace("smb://", "").split(":");
-            user = userInfo[0];
-            password = userInfo[1];
-        }else{
-            remotePath = smbPath.replace("smb://", "");
-        }
-        if(remotePath.endsWith("/")){
-            remotePath = remotePath.substring(0, remotePath.length() - 1);
-        }
-
+        
+        String[] remoteInfo = LanInfo.getNodeInfo(smbPath);
+        String remotePath = remoteInfo[0] + "/" + remoteInfo[1];
+        String user = remoteInfo[2];
+        String password = remoteInfo[3];
+        
         Log.i(TAG, "user, password, remotePath, localPath:" + user + "," + password + ","
                 + remotePath);
 
@@ -144,7 +171,7 @@ public class CifsBrowserActivity extends Activity {
                 user = "g";
                 password = "";
             }
-            new MountCifs(context, ip, user, password, shareFolder).mountPath();
+            new MountCifs(context, ip, user, password, shareFolder).mountPath(smbPath);
         }else if("A4".equals(android.os.Build.MODEL)){
             String localPath = "/mnt/smbmount/" + remotePath;
             if(localPath.endsWith("/")){
@@ -152,12 +179,12 @@ public class CifsBrowserActivity extends Activity {
             }
             Log.i(TAG, "localPath:" + localPath);
             
-            mountA4(context, user, password, remotePath, localPath);
+            mountA4(context, user, password, remotePath, localPath,smbPath);
         }
     }
 
     private static void mountA4(Activity context, String user, String password, String remotePath,
-            String localPath) {
+            String localPath, String smbPath) {
         String createLocalPathCommand = " mkdir -p " + localPath;
         
         String linuxMountCommand = mountCommand(user, password, remotePath, localPath);
@@ -195,7 +222,7 @@ public class CifsBrowserActivity extends Activity {
                     //Fragment newFragment = DirViewFragment.newInstance(localPath, -1);
                     //ft.replace(R.id.file_content, newFragment, DirViewFragment.TAG);
                     //ft.commit();
-                    listShareDir(context, localPath);
+                    listShareDir(context, localPath, smbPath);
                     
                 }
             }
@@ -204,14 +231,28 @@ public class CifsBrowserActivity extends Activity {
         }
     }
 
-    public static void listShareDir(Activity context, String localPath) {
-        Intent intent = new Intent();
-        DeviceInfo deviceInfo = new DeviceInfo();
-        deviceInfo.devPath = localPath;
-        deviceInfo.type = DeviceInfo.TYPE_CIFS;
-        intent.putExtra(MediacenterConstant.INTENT_EXTRA, deviceInfo);
-        intent.setClass(context, FileMainActivity.class);
-        context.startActivity(intent);
+    public static void listShareDir(Activity context, String localPath, String smbPath) {
+        Log.i(TAG, "localPath, smbPath:" + localPath + "," + smbPath);
+        //收藏被点击的路径
+        if(!localPath.equals("ERROR")){
+            DeviceDB ifc = new DeviceDB(context);
+            FileInfo info = new FileInfo();
+            info.filePath = smbPath;
+            ifc.addFile(info);
+            
+            Intent intent = new Intent();
+            DeviceInfo deviceInfo = new DeviceInfo();
+            deviceInfo.devPath = localPath;
+            deviceInfo.type = DeviceInfo.TYPE_CIFS;
+            intent.putExtra(MediacenterConstant.INTENT_EXTRA, deviceInfo);
+            intent.setClass(context, FileMainActivity.class);
+            context.startActivity(intent);
+        }else{
+            ToastFactory factory = ToastFactory.getInstance();
+            factory.getToast(context,
+                    context.getString(R.string.op_share_device_fail))
+                    .show();
+        }
     }
 
     /*

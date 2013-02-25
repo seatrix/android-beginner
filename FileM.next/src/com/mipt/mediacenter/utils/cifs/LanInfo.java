@@ -6,6 +6,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import android.R.integer;
 import android.util.Log;
 
 /**
@@ -16,10 +17,34 @@ import android.util.Log;
  */
 public class LanInfo {
 	public static final String TAG = "LanInfo";
-	//0-63
-	//64 -127
-	//128-191
-	//192-255
+
+	/**
+	 * smb://slieer:slieer@192.168.1.100/Users/
+     * smb://192.168.51.230/SharedDocs/
+
+	 * @param smbFilePath
+	 * @return [remoteIp, remoteShareDir, user, password]
+	 */
+    public static String[] getNodeInfo(String smbFilePath){
+        String[] strArr = smbFilePath.split("@");
+        String remotePath = null;
+        String user = null;
+        String password = null;
+        if(strArr.length > 1){
+            remotePath = strArr[1];
+            String[] userInfo = strArr[0].replace("smb://", "").split(":");
+            user = userInfo[0];
+            password = userInfo[1];
+        }else{
+            remotePath = smbFilePath.replace("smb://", "");
+        }
+        if(remotePath.endsWith("/")){
+            remotePath = remotePath.substring(0, remotePath.length() - 1);
+        }
+        
+        int index = remotePath.indexOf("/");
+        return new String[]{remotePath.substring(0, index), remotePath.substring(index + 1), user, password};
+    }
 
 	/**
 	 * string[ip, netSegment]

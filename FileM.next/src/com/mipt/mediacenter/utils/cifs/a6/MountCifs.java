@@ -60,7 +60,7 @@ public class MountCifs {
         this.sharefolder = sharefolder;
     }
 
-    public void mountPath() {
+    public void mountPath(String smbPath) {
         // allOrShort = flag;
         builder = new StringBuilder(server);
         builder.append("/").append(sharefolder);
@@ -75,20 +75,33 @@ public class MountCifs {
                 }
             });
             progress.show();
-            MountThread thread = new MountThread();
+            MountThread thread = new MountThread(smbPath);
             thread.start();
             // end modify by qian_wei/zhou_yong 2011/10/28
         } else {
             // mounted
             Message m = handler.obtainMessage();
             m.what = MOUNTED;
-            m.obj = returnStr;
+            m.obj = returnStr.concat("|").concat(smbPath);
             handler.sendMessage(m);
         }
     }
-
+    
+    /**
+     * return path if mounted OK, or return null. 
+     * @return
+     */
+    public String isMounted(){
+        builder = new StringBuilder(server);
+        builder.append("/").append(sharefolder);
+        String returnStr = jni.getMountList(builder.toString());
+        return returnStr.equals("ERROR") ? null : returnStr;
+    }
+    
     private class MountThread extends Thread {
-        public MountThread() {
+        private String smbPath;
+        public MountThread(String smbPath) {
+            this.smbPath = smbPath;
         }
 
         public void run() {
@@ -101,7 +114,7 @@ public class MountCifs {
             Log.i(TAG, "mount result:" + result);
             Message m = handler.obtainMessage();
             m.what = result;
-            m.obj = localPath;
+            m.obj = localPath.concat("|").concat(smbPath);
             handler.sendMessage(m);
         }
 
@@ -112,9 +125,11 @@ public class MountCifs {
             Log.i(TAG, "msg.what:" + msg.what);
             Log.i(TAG, "msg.arg1:" + msg.arg1);
             Log.i(TAG, "msg.ojb:" + msg.obj);
-            progress.dismiss();
-
-            CifsBrowserActivity.listShareDir(activity, (String)msg.obj);
+            if(progress != null){
+                progress.dismiss();
+            }
+            String[] paths = ((String)msg.obj).split("\\|");
+            CifsBrowserActivity.listShareDir(activity, paths[0], paths[1]);
         }
     };
 }

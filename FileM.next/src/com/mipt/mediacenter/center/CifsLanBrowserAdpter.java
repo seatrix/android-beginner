@@ -26,10 +26,12 @@ import com.mipt.mediacenter.utils.cifs.UdpGetClientMacAddr;
 
 
 public class CifsLanBrowserAdpter {
+    private final static int REFRESH_RATE = 5;
 	public final static String TAG = "SmbAsynLanBrowserAdpter";
 	public final static String ASCII_REGEX = "[\\x21-\\x7E]+";
 	public final static Pattern ASCII_Pattern = Pattern.compile(ASCII_REGEX); //ascii visual letter.
 
+	
 	public static class LanBrowserAdapter extends ArrayAdapter<LanNodeInfo> {
 		public LanBrowserAdapter(Context thiz, List<LanNodeInfo> servers) {
 			super(thiz, R.layout.smb_device_list_item, servers);
@@ -91,6 +93,7 @@ public class CifsLanBrowserAdpter {
 			case CifsConstants.GUI_STOP_NOTIFIER:
 				listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 				bar.setVisibility(View.GONE);
+				((ArrayAdapter<LanNodeInfo>)listView.getAdapter()).notifyDataSetChanged();
 /*				
 				if(msg.obj != null){
 					@SuppressWarnings("unchecked")
@@ -112,7 +115,6 @@ public class CifsLanBrowserAdpter {
 	}
 
 	public static class BakLanBrowserRunnable implements Runnable {
-	    private int refreshRate = 5;
 		private Handler handler;
 
 		public BakLanBrowserRunnable(Handler handler) {
@@ -162,7 +164,7 @@ public class CifsLanBrowserAdpter {
 						m.what = CifsConstants.GUI_THREADING_NOTIIER;
 						m.obj = info;
 						
-						m.arg1 = (i != 0 && i % refreshRate == 0 ? 1 : 0);
+						m.arg1 = (i != 0 && i % REFRESH_RATE == 0 ? 1 : 0);
 						handler.sendMessage(m);
 					} catch (SocketTimeoutException e) {
 					    //Log.e(TAG, e.getMessage(), e);

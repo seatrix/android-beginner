@@ -31,9 +31,13 @@ import com.mipt.mediacenter.center.server.FileInfo;
 import com.mipt.mediacenter.utils.cifs.LanNodeInfo;
 import com.mipt.mediacenter.utils.cifs.ShareFile;
 
+/**
+ * @author slieer
+ *
+ */
 public class CifsActivity extends Activity {
     public static final String TAG = "CifsActivity";
-    public static final String IP = "ip";
+    public static final String NODE = "node";
     public static final String DATA = "data";
     private TextView currentPath;
 
@@ -134,18 +138,18 @@ public class CifsActivity extends Activity {
                 Log.i(TAG, "without password get shara list.size:" + files.size());
                 Intent intent = new Intent();
                 intent.putParcelableArrayListExtra(DATA, (ArrayList<FileInfo>)files);
-                intent.putExtra(IP, node.ip);
+                intent.putExtra(NODE, node);
                 intent.setClass(context, CifsBrowserActivity.class);
                 context.startActivity(intent);
             } else {
                 // pop account input dialog.
-                showInputUserInfoDialog(context, R.style.show_choose_type_dialog, node.ip);
+                showInputUserInfoDialog(context, R.style.show_choose_type_dialog, node);
             }
         }
     }
 
     public static void showInputUserInfoDialog(final Context context,
-            int theme, final String ip) {
+            int theme, final LanNodeInfo node) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
         LayoutInflater inflater = (LayoutInflater)context
@@ -157,20 +161,19 @@ public class CifsActivity extends Activity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, "ip adr is:" + ip);
+                        Log.i(TAG, "ip adr is:" + node);
                         EditText nameEdit = (EditText)view.findViewById(R.id.user_name);
                         EditText passEdit = (EditText)view.findViewById(R.id.user_password);
                         
                         String name = nameEdit.getText().toString();
                         String pass = passEdit.getText().toString();
                         
-                        ArrayList<FileInfo> files = (ArrayList<FileInfo>)ShareFile.asynRequestShareFile(ip, name, pass);
-                        Log.i(TAG, "get shara list.size:" + files.size());
-                        //save userInfo
-                        
+                        ArrayList<FileInfo> files = (ArrayList<FileInfo>)ShareFile.asynRequestShareFile(node.ip, name, pass);
+                        Log.i(TAG, "get shara list.size:" + (files != null ? files.size() : " files is null"));
+
                         Intent intent = new Intent();
                         intent.putParcelableArrayListExtra(DATA, files);
-                        intent.putExtra(IP, ip);
+                        intent.putExtra(NODE, node);
                         intent.setClass(context, CifsBrowserActivity.class);
                         context.startActivity(intent);
                     }

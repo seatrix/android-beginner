@@ -3,6 +3,7 @@ package com.mipt.mediacenter.center;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -25,12 +26,17 @@ import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
 import com.mipt.fileMgr.center.CifsActivity;
+import com.mipt.fileMgr.center.CifsBrowserActivity;
 import com.mipt.fileMgr.center.FileMainActivity;
 import com.mipt.fileMgr.center.MainActivity;
+import com.mipt.mediacenter.center.db.DeviceDB;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.ToastFactory;
 import com.mipt.mediacenter.utils.Util;
+import com.mipt.mediacenter.utils.cifs.LanInfo;
+import com.mipt.mediacenter.utils.cifs.LanNodeInfo;
+import com.mipt.mediacenter.utils.cifs.a6.MountCifs;
 /**
  * @author fang
  * @version $Id: 2013-01-21 09:26:01Z slieer $
@@ -112,6 +118,28 @@ public class DeviceFragment extends Fragment implements
                         }
                     });
 				    return ;
+				}else if(file.type == DeviceInfo.TYPE_CIFS && file.devPath != null){
+				    //检查是否已经挂载
+			        String[] remoteInfo = LanInfo.getNodeInfo(file.devPath);
+			        String remoteServer = remoteInfo[0];
+			        String shareDir = remoteInfo[1];
+			        String user = remoteInfo[2];
+			        String password = remoteInfo[3];
+			        Log.i(TAG, "s,d,u,p:" + remoteServer + ","+ shareDir + ","+ user + ","+ password);
+			        
+			        String path = null;
+				    if ("A6".equals(android.os.Build.MODEL)){
+				        path = new MountCifs(mActivity, remoteServer, user, password, shareDir).isMounted();
+				    }else if("A4".equals(android.os.Build.MODEL)){
+				        path = CifsBrowserActivity.isMountedA4(remoteServer, shareDir);
+				    }
+				    //如果不可访问,delete path storage.
+				    if(path == null){
+				        DeviceDB db = new DeviceDB(mActivity);
+				        db.deleteFile(file.devPath);
+				    }else{
+				        CifsBrowserActivity.listShareDir(mActivity, path, file.devPath);
+				    }
 				}else{
 				    if (file.isLive) {
 				        Util.runOnUiThread(mActivity, new Runnable() {
@@ -204,23 +232,24 @@ public class DeviceFragment extends Fragment implements
 				DeviceInfo device = deviceList.get(position);
 				holder.devName.setText(device.devName);
 				holder.devImg.setImageResource(device.resId);
+				
+                RelativeLayout.LayoutParams lp = new RelativeLayout.
+                        LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                int left = 80;
+                int top = 22;
+                lp.setMargins(left, top, 0, 0);
+                holder.percent.setLayoutParams(lp);
 				if (!device.isLive) {
 					int color = 0;
 					if(info.devPath == null && info.type == DeviceInfo.TYPE_CIFS){
 					    holder.pbar.setVisibility(View.GONE);
-					    holder.percent.setText("连接到共享设备。\n访问可能会不稳定，具体取决于网络连接状态。");
+					    holder.percent.setText(getString(R.string.smb_multi_deivce_title));
 					    color = Color.WHITE;
 					    holder.devStatus.setVisibility(View.GONE);
 					    
-					    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 					    //lp.setMarginsRelative(start, top, end, bottom)
 					    lp.setMargins(0, 0, 0, 0);  
 					    holder.percent.setLayoutParams(lp);
-					    //holder.percent.getm
-					    //holder.percent.setPadding(0, 0, 0, 0);
-					    //holder.percent.setGravity(Gravity.LEFT);
-					    //LayoutParams p = holder.percent.getLayoutParams();
-					    //holder.percent.setLayoutParams(p);
 					}else{
 					    color = getResources().getColor(
 	                            R.color.cm_device_unused);
@@ -235,19 +264,36 @@ public class DeviceFragment extends Fragment implements
 
 					holder.pbar.setVisibility(View.GONE);
 				} else {
-					holder.devName.setTextColor(Color.WHITE);
-					holder.devStatus.setTextColor(Color.WHITE);
-                    holder.devStatus.setVisibility(View.GONE);
-                    holder.pbar.setVisibility(View.VISIBLE);
-                    //holder.dlanDesc.setVisibility(View.GONE);
-                    int total = (int)(device.devSize / 10000000);
-                    int used = (int)(device.devUsedSize / 10000000);
-                    holder.pbar.setMax(total);
-                    holder.pbar.setProgress(used);
-                    holder.percent.setText(Util.convertStorage(device.devSize - device.devUsedSize)
-                            + getString(R.string.cm_device_progress)
-                            + Util.convertStorage(device.devSize));
-                    holder.percent.setVisibility(View.VISIBLE);
+				    if(info.devPath != null && info.type == DeviceInfo.TYPE_CIFS){
+				        holder.pbar.setVisibility(View.GONE);
+				        holder.devStatus.setVisibility(View.GONE);
+				        
+				        int index = device.devPath.indexOf("@");
+				        String basicPath = null;
+				        if(index != -1){
+				            basicPath = "//".concat(device.devPath.substring(index + 1));
+				        }else{
+				            basicPath = device.devPath.replace("smb:", "");
+				        }
+                        holder.percent.setText(basicPath);
+                        
+                        lp.setMargins(0, 0, 0, 0);  
+                        holder.percent.setLayoutParams(lp);
+				    }else{
+	                    holder.devName.setTextColor(Color.WHITE);
+	                    holder.devStatus.setTextColor(Color.WHITE);
+	                    holder.devStatus.setVisibility(View.GONE);
+	                    holder.pbar.setVisibility(View.VISIBLE);
+	                    //holder.dlanDesc.setVisibility(View.GONE);
+	                    int total = (int)(device.devSize / 10000000);
+	                    int used = (int)(device.devUsedSize / 10000000);
+	                    holder.pbar.setMax(total);
+	                    holder.pbar.setProgress(used);
+	                    holder.percent.setText(Util.convertStorage(device.devSize - device.devUsedSize)
+	                            + getString(R.string.cm_device_progress)
+	                            + Util.convertStorage(device.devSize));
+	                    holder.percent.setVisibility(View.VISIBLE);
+				    }
 					//}
 			    }
 			}
