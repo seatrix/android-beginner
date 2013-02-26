@@ -8,6 +8,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,7 +62,27 @@ public class MainActivity extends Activity {
 				List<DeviceInfo> _devs);
 	}
 
-
+	@Override
+	protected void onResume() {
+        
+        SharedPreferences share = this.getSharedPreferences(FileOperatorEvent.TAG, Context.MODE_PRIVATE);
+        Editor ed = share.edit();
+        boolean flag = share.getBoolean(CifsBrowserActivity.REFRESH_FLAG, false);
+        ed.remove(CifsBrowserActivity.REFRESH_FLAG);
+        ed.commit();
+        Log.i(TAG, "ononResume......flag:" + flag);
+        if(flag){
+            onDataChanged(-1, null);
+            DeviceFragment f = (DeviceFragment) getFragmentManager()
+                    .findFragmentById(R.id.tabcontent);
+            if (f != null) {
+                f.dataChange(deviceInfos);
+                Log.i(TAG, "onActivityResult.size:" + deviceInfos.size());
+            }
+        }
+        super.onResume();
+	}
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();

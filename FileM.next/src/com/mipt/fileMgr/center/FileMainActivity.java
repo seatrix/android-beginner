@@ -169,6 +169,7 @@ public class FileMainActivity extends Activity {
                 Log.i(TAG, "KEYCODE_MENU......");
                 if(!menuShow){
                     showMenu();
+                    //FileOperatorEvent.onClickOrder(this, v);
                 }
                 break;
             case KeyEvent.KEYCODE_BACK:
@@ -314,8 +315,10 @@ public class FileMainActivity extends Activity {
                     break;
                 case 1:
                     //文件操作,进入文件选择模式
-                    
+                    FileOperatorEvent.onClickSelect(activity, arg1);
                     break;
+                case 2:
+                    //FileOperatorEvent.onClickCopy(activity, arg1);
                 default:
                     break;
             }

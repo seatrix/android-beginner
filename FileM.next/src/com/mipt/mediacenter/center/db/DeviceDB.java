@@ -7,6 +7,7 @@ import android.R.integer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.FileObserver;
 import android.util.Log;
@@ -65,7 +66,11 @@ public class DeviceDB {
 		    
 		    ContentValues values = new ContentValues();
 		    values.putAll(DeviceDBUtils.deconstruct(fileInfo));
-		    db.insert(TABLE_FILE, null, values);
+		    try{
+		        db.insert(TABLE_FILE, null, values);
+		    }catch(SQLiteConstraintException e){
+		        Log.e(TAG, e.getMessage());
+		    }
 		}
 		db.close();
 	}

@@ -38,7 +38,7 @@
     <string name="confirm">确定</string>
     <string name="cancle">取消</string>
     <string name="cm_data_loading">数据正在加载中</string>
-    <string name="more_tool">功能选择</string>
+    <string name="more_tool">文件操作</string>
     <string name="file_right_title">文件操作</string>
 
     <string name="right_menu_order_style">排序方式</string>

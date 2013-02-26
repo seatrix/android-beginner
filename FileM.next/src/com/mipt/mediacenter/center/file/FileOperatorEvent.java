@@ -22,22 +22,20 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mipt.fileMgr.R;
 import com.mipt.mediacenter.center.DirViewFragment;
-import com.mipt.mediacenter.center.FileItemAdapter;
 import com.mipt.mediacenter.center.server.FileInfo;
 import com.mipt.mediacenter.center.server.FileSortHelper;
-import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.center.server.FileSortHelper.SortMethod;
+import com.mipt.mediacenter.center.server.MediacenterConstant;
 import com.mipt.mediacenter.utils.FileOperationHelper;
 import com.mipt.mediacenter.utils.ToastFactory;
 
 public class FileOperatorEvent {
-    private final static String TAG = "FileOperatorEvent";
+    public final static String TAG = "FileOperatorEvent";
     public final static String MODEL_TAG = "model";
     public final static String COPY_STATUS_TAG = "copy_status";
     

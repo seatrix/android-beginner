@@ -11,6 +11,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +32,7 @@ import android.widget.Toast;
 import com.mipt.fileMgr.R;
 import com.mipt.fileMgr.center.CifsActivity.CifsFragment;
 import com.mipt.mediacenter.center.db.DeviceDB;
+import com.mipt.mediacenter.center.file.FileOperatorEvent;
 import com.mipt.mediacenter.center.server.DeviceInfo;
 import com.mipt.mediacenter.center.server.FileInfo;
 import com.mipt.mediacenter.center.server.MediacenterConstant;
@@ -48,7 +51,8 @@ import com.stericson.RootTools.execution.Command;
  */
 public class CifsBrowserActivity extends Activity {
     public static final String TAG = "CifsBrowserActivity";
-
+    public static final String REFRESH_FLAG = "REFRESH_LIST_FLAG";
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,10 +122,10 @@ public class CifsBrowserActivity extends Activity {
         try {
             List<Mount> mountList = RootTools.getMounts();
             for(Mount m : mountList){
-                Log.i(TAG, "type:" + m.getType() 
-                         + ",device:" + m.getDevice().toString() 
-                         + ",flags:"+ m.getFlags() 
-                         + ",mountPoint:"+ m.getMountPoint());
+//                Log.i(TAG, "type:" + m.getType() 
+//                         + ",device:" + m.getDevice().toString() 
+//                         + ",flags:"+ m.getFlags() 
+//                         + ",mountPoint:"+ m.getMountPoint());
                 if(!m.getType().equals("cifs")){
                     continue;
                 }
@@ -239,6 +243,12 @@ public class CifsBrowserActivity extends Activity {
             FileInfo info = new FileInfo();
             info.filePath = smbPath;
             ifc.addFile(info);
+            
+            //置首页刷新标志
+            SharedPreferences share = context.getSharedPreferences(FileOperatorEvent.TAG, Context.MODE_PRIVATE);
+            Editor ed = share.edit();
+            ed.putBoolean(REFRESH_FLAG, true);
+            ed.commit();
             
             Intent intent = new Intent();
             DeviceInfo deviceInfo = new DeviceInfo();
