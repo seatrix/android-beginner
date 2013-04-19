@@ -19,7 +19,11 @@ public class Utils {
         }
     }
     
-    
+    /**
+     * 友好的显示文件路径
+     * @param fileName
+     * @return
+     */
     public static String testStringSplit(String fileName){
         //String fileName = "/mnt/sdb/sdb1/台湾阿里山视频";
         
