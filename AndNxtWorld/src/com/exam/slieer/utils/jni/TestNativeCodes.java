@@ -13,7 +13,22 @@ public class TestNativeCodes {
         for (int each : obj.arrays)
             Log.i(TAG, "" + each);
         
-        Object o = null;
+        helloNextNative();
+        
+        helloJavaBeanNative();
     }
 
+    public static void helloNextNative(){
+        HelloNextNative h = new HelloNextNative();
+        Log.i(TAG, "getInt:" + h.getInt());
+        h.setInt(1000);
+        Log.i(TAG, "getInt:" + h.getInt());
+    }
+    
+    public static void helloJavaBeanNative(){
+        Log.i(TAG, "helloJavaBeanNative...");
+        HelloJavaBeanNative h = new HelloJavaBeanNative();
+        h.setUser("slieer");
+        Log.i(TAG, h.getUser().toString());
+    }
 }
