@@ -1,5 +1,7 @@
 package com.exam.slieer.utils.jni;
 
+import com.exam.slieer.utils.bean.User;
+
 import android.util.Log;
 
 public class TestNativeCodes {
@@ -29,6 +31,11 @@ public class TestNativeCodes {
         Log.i(TAG, "helloJavaBeanNative...");
         HelloJavaBeanNative h = new HelloJavaBeanNative();
         h.setUser("slieer");
-        Log.i(TAG, h.getUser().toString());
+        Log.i(TAG, "setUser execute finish !");
+        
+        //Log.i(TAG, h.getUser().toString());
+        
+        User user = h.getUser();
+        Log.i(TAG, "userName:" + user.getUserName());
     }
 }
