@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <stdio.h>
 #include "com_exam_slieer_utils_jni_HelloNative.h"
+
 void sort(jint * arr,jsize len);
 JNIEXPORT void JNICALL Java_com_exam_slieer_utils_jni_HelloNative_callCppFunction
   (JNIEnv *env, jobject obj){
@@ -8,28 +9,29 @@ JNIEXPORT void JNICALL Java_com_exam_slieer_utils_jni_HelloNative_callCppFunctio
   	jstring  msg;
   	const char* msg_new;
   	jstring  j_new_str;
-	//·ÃÎÊÊý×é
-	jclass    clazz     = (*env)->GetObjectClass(env,obj);
+
+  	//è®¿é—®æ•°ç»„
+	jclass clazz = (*env)->GetObjectClass(env,obj);
 
 	jfieldID  fid_array = (*env)->GetFieldID(env,clazz,"arrays","[I");
 	jintArray jint_arr  = (jintArray)(*env)->GetObjectField(env,obj,fid_array);
 	jint*     int_arr   = (*env)->GetIntArrayElements(env,jint_arr,NULL);
 
-    //·ÃÎÊ·½·¨
+	//è®¿é—®æ–¹æ³•
     jmethodID methodID_len=(*env)->GetMethodID(env,clazz,"getArrayLen","()I");
     jsize  len=(*env)->CallIntMethod(env,obj,methodID_len);
 
     sort(int_arr,len);
     (*env)->ReleaseIntArrayElements(env,jint_arr,int_arr,0);
 
-    //·ÃÎÊ×Ö·û´®
+    //è®¿é—®å­—ç¬¦ä¸²
     message_fid  = (*env)->GetFieldID(env,clazz,"message","Ljava/lang/String;");
     msg    = (jstring)(*env)->GetObjectField(env,obj,message_fid);
     msg_new = (*env)->GetStringUTFChars(env,msg,NULL);
     printf(msg_new);
     (*env)->ReleaseStringUTFChars(env,msg,msg_new);
 
-    //javaÖÐ×Ö·û²»¿É±ä Ö»ÄÜÖØÐÂ´´½¨Ò»¸ö×Ö·û
+    //javaä¸­å­—ç¬¦ä¸å¯å˜ åªèƒ½é‡æ–°åˆ›å»ºä¸€ä¸ªå­—ç¬¦
     j_new_str=(*env)->NewStringUTF(env,"mytest ");
     (*env)->SetObjectField(env,obj,message_fid,j_new_str);
 }

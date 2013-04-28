@@ -9,8 +9,4 @@ public class HelloNative {
     public int getArrayLen() {
         return arrays.length;
     }
-    
-    static {
-        System.loadLibrary("HelloNative");
-    }
 }

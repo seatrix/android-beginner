@@ -33,5 +33,6 @@ JNIEXPORT void JNICALL Java_com_exam_slieer_utils_jni_HelloJavaBeanNative_setUse
 
 JNIEXPORT jobject JNICALL Java_com_exam_slieer_utils_jni_HelloJavaBeanNative_getUser
   (JNIEnv *env, jobject thiz){
-    return user;
+	LOGI("get user info");
+	return user;
 }
