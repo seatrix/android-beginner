@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <float.h>
 
-#include "com_exam_slieer_utils_jni_corejava8jni_Printf2.h"
+#include "corejava/com_exam_slieer_utils_jni_corejava8jni_Printf2.h"
 
 static char* find_format(const char format[]);
 static char* find_format_1(const char format[]);
