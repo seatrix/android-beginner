@@ -7,6 +7,7 @@ LOCAL_SRC_FILES := hello_native.c	\
 		hello_java_bean_native.cpp	\
 		corejava/corejava8_jni_printf2.c	\
 		corejava/corejava8_jni_printf4.c	\
+		order_native.cpp \
 
 LOCAL_LDLIBS    := -llog
 include $(BUILD_SHARED_LIBRARY)
