@@ -28,6 +28,12 @@ import android.widget.TextView;
 import com.exam.slieer.R;
 import com.exam.slieer.utils.AppEntry;
 
+/**
+ *  android-sdk-windows/docs/reference/android/content/AsyncTaskLoader.html
+ * @author slieer
+ * Create Date2013-5-24
+ * version 1.0
+ */
 public class FragmentLoaderDemoActivity extends Activity {
 
     public static String[] array = { "text1,", "text2", "text3", "text4",
