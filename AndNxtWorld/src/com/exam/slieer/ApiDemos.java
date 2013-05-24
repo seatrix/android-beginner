@@ -56,7 +56,7 @@ public class ApiDemos extends ListActivity {
         getListView().setTextFilterEnabled(true);
     }
 
-    protected List<Map<String, Object>> getData(String prefix) {
+    private List<Map<String, Object>> getData(String prefix) {
         List<Map<String, Object>> myData = new ArrayList<Map<String, Object>>();
 
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
@@ -126,20 +126,20 @@ public class ApiDemos extends ListActivity {
         }
     };
 
-    protected Intent activityIntent(String pkg, String componentName) {
+    private Intent activityIntent(String pkg, String componentName) {
         Intent result = new Intent();
         result.setClassName(pkg, componentName);
         return result;
     }
     
-    protected Intent browseIntent(String path) {
+    private Intent browseIntent(String path) {
         Intent result = new Intent();
         result.setClass(this, ApiDemos.class);
         result.putExtra(CURR_PATH , path);
         return result;
     }
 
-    protected void addItem(List<Map<String, Object>> data, String name, Intent intent) {
+    private void addItem(List<Map<String, Object>> data, String name, Intent intent) {
         Map<String, Object> temp = new HashMap<String, Object>();
         temp.put("title", name);
         temp.put("intent", intent);

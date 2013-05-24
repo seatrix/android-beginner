@@ -18,7 +18,7 @@ import com.exam.slieer.utils.Utils;
 import com.exam.slieer.utils.jni.HelloNative;
 import com.exam.slieer.utils.jni.TestNativeCodes;
 
-public class TestCommand extends Activity {
+public class TestCommandActivity extends Activity {
 	private static String TAG = "TestCommand";
 	
 	@Override

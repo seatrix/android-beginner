@@ -61,7 +61,7 @@
         </activity>
         
         <activity
-            android:name=".activities.menu.TranslucentButton"
+            android:name=".activities.menu.TranslucentButtonActivity"
             android:label="@string/translucent_menu" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,21 +69,29 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.menu.TranslucentButtonMain">
+        <activity android:name=".activities.menu.TranslucentButtonMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.SAMPLE_CODE" />
             </intent-filter>
         </activity>   
         
-        <activity android:name=".activities.TestCommand"
-			android:label="TestCommand"
-            >
+        <activity android:name=".activities.TestCommandActivity"
+			android:label="TestCommand">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".activities.FragmentLoaderDemoActivity"
+            android:label="FragmentLoader">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.SAMPLE_CODE" />
             </intent-filter>
         </activity>   
+        
         
     </application>
 
