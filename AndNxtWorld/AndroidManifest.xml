@@ -92,6 +92,20 @@
             </intent-filter>
         </activity>   
         
+        <activity android:name=".activities.AidlMusicPlayActivity"
+            android:label="MusicPlay">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>   
+        <activity android:name=".activities.AidlTestActivity"
+            android:label="AidlTest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>   
         
     </application>
 
