@@ -107,6 +107,9 @@
             </intent-filter>
         </activity>   
         
+        
+        <service android:name=".services.MusicService"></service>
+        <service android:name=".services.MyService"></service>
     </application>
 
 </manifest>
