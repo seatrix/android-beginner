@@ -20,7 +20,7 @@ public class MusicService extends Service {
         Toast.makeText(this, "MusicSevice onCreate()"
                 , Toast.LENGTH_SHORT).show();
         Log.e(TAG, "MusicSerice onCreate()");
-        
+
         mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.music);
         //设置可以重复播放
         mPlayer.setLooping(true);

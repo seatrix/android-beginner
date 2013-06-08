@@ -69,7 +69,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.menu.TranslucentButtonMainActivity">
+        <activity android:name=".activities.menu.TranslucentButtonMainActivity"
+            android:label="TranslucentButtonMain">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.SAMPLE_CODE" />
@@ -110,6 +111,13 @@
         
         <service android:name=".services.MusicService"></service>
         <service android:name=".services.MyService"></service>
+        
+        <receiver android:name="clsReceiver2">
+            <intent-filter>
+                <action
+                    android:name="com.testBroadcastReceiver.Internal_2"/>
+            </intent-filter>
+        </receiver>        
     </application>
 
 </manifest>
