@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:Android="http://schemas.android.com/apk/res/android"
+    Android:layout_width="fill_parent"
+    Android:layout_height="fill_parent" >
+
+    <TextView
+        Android:id="@+id/gallerytext"
+        Android:text="hello"
+        Android:layout_width="50dp"
+        Android:layout_height="60dp" >
+    </TextView>
+    <TextView
+        Android:id="@+id/gallery"
+        Android:text="left"
+        Android:layout_width="50"
+        Android:layout_height="60dp"
+        Android:layout_toLeftOf="@id/gallerytext"
+        >
+    </TextView>
+    
+    <Button
+        Android:id="@+id/btngal"
+        Android:layout_width="200dp"
+        Android:layout_height="100dp"
+        Android:layout_alignParentBottom="true"
+        Android:layout_centerHorizontal="true"
+        Android:gravity="left|center_vertical"
+        Android:text="返回主界面"
+        Android:textSize="20sp" />
+
+</RelativeLayout>
