@@ -61,7 +61,7 @@
         </activity>
         
         <activity
-            android:name=".activities.menu.TranslucentButton"
+            android:name=".activities.menu.TranslucentButtonActivity"
             android:label="@string/translucent_menu" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,22 +69,55 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.menu.TranslucentButtonMain">
+        <activity android:name=".activities.menu.TranslucentButtonMainActivity"
+            android:label="TranslucentButtonMain">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.SAMPLE_CODE" />
             </intent-filter>
         </activity>   
         
-        <activity android:name=".activities.TestCommand"
-			android:label="TestCommand"
-            >
+        <activity android:name=".activities.TestCommandActivity"
+			android:label="TestCommand">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".activities.FragmentLoaderDemoActivity"
+            android:label="FragmentLoader">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.SAMPLE_CODE" />
             </intent-filter>
         </activity>   
         
+        <activity android:name=".activities.AidlMusicPlayActivity"
+            android:label="MusicPlay">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>   
+        <activity android:name=".activities.AidlTestActivity"
+            android:label="AidlTest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>   
+        
+        
+        <service android:name=".services.MusicService"></service>
+        <service android:name=".services.MyService"></service>
+        
+        <receiver android:name="clsReceiver2">
+            <intent-filter>
+                <action
+                    android:name="com.testBroadcastReceiver.Internal_2"/>
+            </intent-filter>
+        </receiver>        
     </application>
 
 </manifest>

@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.exam.slieer.R;
 
-public class TranslucentButton extends Activity {
+public class TranslucentButtonActivity extends Activity {
 	int m_nSreenHeight = 0;
 	Button m_menu1;
     /** Called when the activity is first created. */
@@ -51,25 +51,25 @@ public class TranslucentButton extends Activity {
     }
     private OnClickListener menu1ClickListener = new OnClickListener() {
     	public void onClick(View v) {
-    		Toast.makeText(TranslucentButton.this, "menu1 clicked!", 
+    		Toast.makeText(TranslucentButtonActivity.this, "menu1 clicked!", 
     				Toast.LENGTH_SHORT).show();
     	}
     };
     private OnClickListener menu2ClickListener = new OnClickListener() {
     	public void onClick(View v) {
-    		Toast.makeText(TranslucentButton.this, "menu2 clicked!", 
+    		Toast.makeText(TranslucentButtonActivity.this, "menu2 clicked!", 
     				Toast.LENGTH_SHORT).show();
     	}
     };
     private OnClickListener menu3ClickListener = new OnClickListener() {
     	public void onClick(View v) {
-    		Toast.makeText(TranslucentButton.this, "menu3 clicked!", 
+    		Toast.makeText(TranslucentButtonActivity.this, "menu3 clicked!", 
     				Toast.LENGTH_SHORT).show();
     	}
     };
     private OnClickListener menu4ClickListener = new OnClickListener() {
     	public void onClick(View v) {
-    		Toast.makeText(TranslucentButton.this, "menu4 clicked!", 
+    		Toast.makeText(TranslucentButtonActivity.this, "menu4 clicked!", 
     				Toast.LENGTH_SHORT).show();
     	}
     };

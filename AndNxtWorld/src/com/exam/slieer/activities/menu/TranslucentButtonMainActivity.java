@@ -7,7 +7,7 @@ import android.view.KeyEvent;
 
 import com.exam.slieer.R;
 
-public class TranslucentButtonMain extends Activity {
+public class TranslucentButtonMainActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -17,7 +17,7 @@ public class TranslucentButtonMain extends Activity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
     	if (keyCode == KeyEvent.KEYCODE_MENU) {
-    		startActivity(new Intent(TranslucentButtonMain.this, TranslucentButton.class));
+    		startActivity(new Intent(this, TranslucentButtonActivity.class));
     		overridePendingTransition(R.anim.fade, R.anim.hold);
     	}
     	return super.onKeyUp(keyCode, event);

@@ -45,18 +45,28 @@ public class ApiDemos extends ListActivity {
         
         Intent intent = getIntent();
         String path = intent.getStringExtra(CURR_PATH);
-        
+        Log.i(TAG, "curr path:" + path);
         if (path == null) {
             path = "";
         }
-
-        setListAdapter(new SimpleAdapter(this, getData(path),
+        List<Map<String, Object>> list = getData(path);
+        Log.i(TAG, "Map:" + list);
+        setListAdapter(new SimpleAdapter(this, list,
                 android.R.layout.simple_list_item_1, new String[] { "title" },
                 new int[] { android.R.id.text1 }));
         getListView().setTextFilterEnabled(true);
     }
 
-    protected List<Map<String, Object>> getData(String prefix) {
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Map<String, Object> map = (Map<String, Object>)l.getItemAtPosition(position);
+        Log.i(TAG, "Map:" + map);
+        Intent intent = (Intent) map.get("intent");
+        startActivity(intent);
+    }
+    
+    private List<Map<String, Object>> getData(String prefix) {
         List<Map<String, Object>> myData = new ArrayList<Map<String, Object>>();
 
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
@@ -126,32 +136,23 @@ public class ApiDemos extends ListActivity {
         }
     };
 
-    protected Intent activityIntent(String pkg, String componentName) {
+    private Intent activityIntent(String pkg, String componentName) {
         Intent result = new Intent();
         result.setClassName(pkg, componentName);
         return result;
     }
     
-    protected Intent browseIntent(String path) {
+    private Intent browseIntent(String path) {
         Intent result = new Intent();
         result.setClass(this, ApiDemos.class);
         result.putExtra(CURR_PATH , path);
         return result;
     }
 
-    protected void addItem(List<Map<String, Object>> data, String name, Intent intent) {
+    private void addItem(List<Map<String, Object>> data, String name, Intent intent) {
         Map<String, Object> temp = new HashMap<String, Object>();
         temp.put("title", name);
         temp.put("intent", intent);
         data.add(temp);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        Map<String, Object> map = (Map<String, Object>)l.getItemAtPosition(position);
-
-        Intent intent = (Intent) map.get("intent");
-        startActivity(intent);
     }
 }

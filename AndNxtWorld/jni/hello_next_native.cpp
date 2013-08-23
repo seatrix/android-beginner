@@ -3,7 +3,7 @@
 
 #include <jni.h>
 #include <android/log.h>
-#include "com_exam_slieer_utils_jni_HelloNextNative.h"
+#include "header/com_exam_slieer_utils_jni_HelloNextNative.h"
 
 #define  LOG_TAG    "HelloNextNative"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
